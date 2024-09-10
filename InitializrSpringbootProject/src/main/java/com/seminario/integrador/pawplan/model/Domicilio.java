@@ -13,5 +13,5 @@ public class Domicilio {
     private Ciudad ciudad;
     private String calle;
     private String numero;
-    
+    private String observaciones;
 }
