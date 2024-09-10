@@ -4,10 +4,15 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+import java.sql.Time;
+
 /**
  *
- * @author sebastian
+ * @author maite
  */
-public class TipoEspecialidad {
-    
+public class TipoConsulta {
+    private float monto;
+    private String nombre;
+    private String duracion; // TIme??
+    private String descripcion;
 }
