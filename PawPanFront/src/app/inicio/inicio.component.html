@@ -1,1 +1,33 @@
-<p>inicio works!</p>
+<form [formGroup]="formGroup" class="form">
+    <div class="container">
+        <mat-card class="cardContainer">
+            <mat-card-title class="cardTitle">
+                <img src="../../assets/LogoCompleto.png" alt="pawplan">
+            </mat-card-title>
+            <mat-card-content class="cardContent"> 
+                <mat-form-field appearance="outline" class="field">
+                    <mat-label>Usuario</mat-label>
+                    <input matInput formControlName="usuario" placeholder="Ingrese su usuario" />
+                    <mat-error *ngIf="formGroup.get('usuario')?.hasError('required')">
+                      El usuario es requerido.
+                    </mat-error>
+                </mat-form-field>
+            
+                <mat-form-field appearance="outline" class="field">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput formControlName="contrasenia" placeholder="Ingrese su contraseña" type="password" />
+                    <mat-error *ngIf="formGroup.get('contrasenia')?.hasError('required')">
+                      La contraseña es requerida.
+                    </mat-error>
+                </mat-form-field>
+                  
+                <button mat-flat-button class="button">
+                    <span style="margin-right: 15px;">Ingresar</span>
+                    <mat-icon>login</mat-icon>
+                </button>
+                <a [routerLink]="'../crear-cuenta'">No tenes cuenta? Registrate aca</a>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+</form>
