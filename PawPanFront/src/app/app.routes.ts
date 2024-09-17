@@ -7,6 +7,9 @@ import { AdmVeterinariosComponent } from './adm-veterinarios/adm-veterinarios.co
 import { CrearCuentaComponent } from './crear-cuenta/crear-cuenta.component';
 import { InicioComponent } from './inicio/inicio.component';
 import { MascotaEditComponent } from './mascota-edit/mascota-edit.component';
+import { CrearCuentaClienteComponent } from './crear-cuenta-cliente/crear-cuenta-cliente.component';
+import { CrearCuentaVeterinarioComponent } from './crear-cuenta-veterinario/crear-cuenta-veterinario.component';
+import { CrearCuentaLocalComponent } from './crear-cuenta-local/crear-cuenta-local.component';
 
 export const routes: Routes = [
 
@@ -18,6 +21,9 @@ export const routes: Routes = [
     { path: 'crear-cuenta', component: CrearCuentaComponent },
     { path: 'mascota/:id', component: MascotaEditComponent },
     { path: 'home', component: InicioComponent  },
+    { path: 'crear-cuenta-paciente', component: CrearCuentaClienteComponent},
+    { path: 'crear-cuenta-veterinario', component: CrearCuentaVeterinarioComponent},
+    { path: 'crear-cuenta-local', component: CrearCuentaLocalComponent},
 
     { path: '*', component: InicioComponent }
     
