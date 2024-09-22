@@ -1,0 +1,52 @@
+<!-- <mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" position="start">
+    <app-header></app-header>
+    <div class="sidenav-content">
+      <p>Contenido del Sidenav</p>
+    </div>
+  </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <div class="header-container">
+      <button type="button" mat-button (click)="drawer.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <app-header class="main-header"></app-header>
+    </div>
+
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</mat-drawer-container> -->
+
+
+@if (shouldRun) {
+  <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="example-toolbar">
+      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      <h1 class="example-app-name"><app-header></app-header></h1>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container"
+                          [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+      <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+        <mat-nav-list>
+          @for (item of menuItems; track item) {
+            <a  mat-list-item  [routerLink]="[item.path]">
+              <mat-icon style="margin-right: 5px;">{{item.icono}}</mat-icon>
+              <span> {{item.nombre}}</span>
+            </a>
+          }
+        </mat-nav-list>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+} @else {
+  <div>Please open on Stackblitz to see result</div>
+}

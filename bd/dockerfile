@@ -1,0 +1,16 @@
+# Usa la imagen oficial de PostgreSQL
+FROM postgres:14
+
+# Establece las variables de entorno para la configuración de PostgreSQL
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=1234
+ENV POSTGRES_DB=pawplan
+
+# Exponer el puerto 5432 para conexiones a la base de datos
+EXPOSE 5432
+
+# Copia el archivo SQL de inicialización si tienes uno
+# COPY init.sql /docker-entrypoint-initdb.d/
+
+# Instrucción por defecto al ejecutar el contenedor
+CMD ["postgres"]

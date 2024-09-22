@@ -67,9 +67,15 @@
             <version>1.0.2.Final</version>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>2.2.2.RELEASE</version>
+=======
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+>>>>>>> origin/desarrollo
         </dependency>
     </dependencies>
 

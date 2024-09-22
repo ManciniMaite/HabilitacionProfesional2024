@@ -1,0 +1,95 @@
+// .example-container {
+//     height: 100%;
+//     width: 100%;
+//     position: relative; /* Asegura que el container sea el contexto de posicionamiento para el sidenav */
+//   }
+  
+//   .example-sidenav {
+//     width: 300px; /* Ancho fijo del sidenav */
+//     background: #f0f0f0; /* Color de fondo del sidenav */
+//     position: absolute; /* Posiciona el sidenav de manera absoluta */
+//     top: 0;
+//     left: 0;
+//     height: 100%; /* Ocupa toda la altura de la ventana */
+//     z-index: 1000; /* Asegura que el sidenav esté por encima del contenido */
+//     overflow-y: auto; /* Permite el desplazamiento si el contenido es más largo que el sidenav */
+//     transform: translateX(-100%); /* Oculta el sidenav por defecto */
+//     transition: transform 0.3s ease; /* Transición para el efecto de deslizamiento */
+//   }
+  
+//   mat-drawer.mat-drawer-opened {
+//     transform: translateX(0); /* Muestra el sidenav cuando está abierto */
+//   }
+  
+//   .sidenav-content {
+//     display: flex;
+//     flex-direction: column;
+//     height: 100%;
+//   }
+  
+//   .header-container {
+//     display: flex;
+//     align-items: center; /* Alinea verticalmente el botón y el header */
+//     height: 64px; /* Altura del header */
+//     background: #fff; /* Fondo para el contenedor del header */
+//     padding: 0 20px; /* Espaciado horizontal */
+//     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Opcional: sombra para el contenedor del header */
+//     position: relative;
+//     z-index: 1001; /* Asegura que el header y el botón estén por encima del sidenav */
+//   }
+  
+//   .menu-button {
+//     margin-right: 16px; /* Espacio entre el botón y el header */
+//   }
+  
+//   .main-header {
+//     flex: 1; /* El header ocupa el espacio restante en la fila */
+//   }
+  
+//   .main-content {
+//     margin-top: 64px; /* Espacio arriba para el header */
+//     padding: 20px;
+//     position: relative;
+//     z-index: 1; /* Asegura que el contenido principal esté debajo del header pero encima del sidenav */
+//   }
+  
+
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .example-is-mobile .example-toolbar {
+    position: fixed;
+    /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+    z-index: 2;
+  }
+  
+  h1.example-app-name {
+    margin-left: 8px;
+  }
+  
+  .example-sidenav-container {
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+       causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    flex: 1;
+  }
+  
+  .example-is-mobile .example-sidenav-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+       `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+  }
+
+  .menu-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+  }
