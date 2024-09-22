@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UsuarioRestController {
     
-    @RequestMapping(value = "/aludar", method = RequestMethod.POST)
+    @RequestMapping(value = "/aludar", method = RequestMethod.GET)
     public String testeando() {
         return "HOLA MUNDO";
     }
