@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import {MatStepperModule} from '@angular/material/stepper';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -9,7 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-crear-cuenta-cliente',
@@ -25,6 +26,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatIconModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   templateUrl: './crear-cuenta-cliente.component.html',
   styleUrl: './crear-cuenta-cliente.component.scss'
@@ -63,5 +66,11 @@ export class CrearCuentaClienteComponent {
     })
   }
  
+  onConfirmar(){
+    console.log("Cuenta creada! datos:");
+    console.log(this.datosPersonales.value);
+    console.log(this.mascotas.value);
+    console.log(this.ubicacion.value);
+  }
 
 }

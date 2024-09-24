@@ -10,6 +10,8 @@ import { MascotaEditComponent } from './mascota-edit/mascota-edit.component';
 import { CrearCuentaClienteComponent } from './crear-cuenta-cliente/crear-cuenta-cliente.component';
 import { CrearCuentaVeterinarioComponent } from './crear-cuenta-veterinario/crear-cuenta-veterinario.component';
 import { CrearCuentaLocalComponent } from './crear-cuenta-local/crear-cuenta-local.component';
+import { AdmReservarTurnoComponent } from './adm-reservar-turno/adm-reservar-turno.component';
+import { EmergenciaComponent } from './emergencia/emergencia.component';
 
 export const routes: Routes = [
 
@@ -17,6 +19,7 @@ export const routes: Routes = [
     { path: 'adm-mascotas', component: AdmMascotasComponent },
     { path: 'adm-turnos-perdientes', component: AdmTurnosPendientesComponent },
     { path: 'adm-turnos-reservados', component: AdmTurnosReservadosComponent },
+    { path: 'adm-reservar-turno', component: AdmReservarTurnoComponent},
     { path: 'adm-veterinarios', component: AdmVeterinariosComponent },
     { path: 'crear-cuenta', component: CrearCuentaComponent },
     { path: 'mascota/:id', component: MascotaEditComponent },
@@ -24,7 +27,8 @@ export const routes: Routes = [
     { path: 'crear-cuenta-paciente', component: CrearCuentaClienteComponent},
     { path: 'crear-cuenta-veterinario', component: CrearCuentaVeterinarioComponent},
     { path: 'crear-cuenta-local', component: CrearCuentaLocalComponent},
-
-    { path: '*', component: InicioComponent }
+    { path: 'emergencia', component: EmergenciaComponent},
+    
+    { path: '**', redirectTo: 'home' }
     
 ];

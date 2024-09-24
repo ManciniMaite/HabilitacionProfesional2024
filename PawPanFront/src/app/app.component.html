@@ -35,8 +35,12 @@
         <mat-nav-list>
           @for (item of menuItems; track item) {
             <a  mat-list-item  [routerLink]="[item.path]">
-              <mat-icon style="margin-right: 5px;">{{item.icono}}</mat-icon>
-              <span> {{item.nombre}}</span>
+              <div style="display: flex;">
+                <mat-icon style="margin: 0 15px;">
+                  <img [src]="item.icono" class="svg-icon">
+                </mat-icon>
+                <span style="margin-top: 2px;"> {{item.nombre}}</span>
+              </div>
             </a>
           }
         </mat-nav-list>

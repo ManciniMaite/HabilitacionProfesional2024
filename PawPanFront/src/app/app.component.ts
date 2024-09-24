@@ -50,7 +50,11 @@ export class AppComponent implements OnDestroy, OnInit{
 
   ngOnInit(): void {
     this.menuItems=[
-      {nombre: 'Inicio', icono:'home', path: 'home', hidden:false},
+      {nombre: 'Inicio', icono:'../assets/iconos-menu-lateral/home.svg', path: 'home', hidden:false},
+      {nombre: 'Reservar Turno', icono:'../assets/iconos-menu-lateral/calendar_add_on.svg', path: 'adm-reservar-turno', hidden:false},
+      {nombre: 'Turnos Reservados', icono:'../assets/iconos-menu-lateral/calendar_clock.svg', path: 'adm-turnos-reservados', hidden:false},
+      {nombre: 'Ver Mis Mascotas', icono:'../assets/iconos-menu-lateral/pet_supplies.svg', path: 'mascota/1', hidden:false},
+      {nombre: 'Emergencia', icono:'../assets/iconos-menu-lateral/e911_emergency.svg', path: 'emergencia', hidden:false},
     ]
       
   }

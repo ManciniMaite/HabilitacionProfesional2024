@@ -31,7 +31,7 @@
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <input matInput placeholder="Correo Electronico" formControlName="correo" required>
                                 </mat-form-field>
-                                <div style="display: flex; flex-direction: row; justify-content: end;">
+                                <div style="display: flex; flex-direction: row; align-self: flex-end;">
                                     <button mat-button matStepperNext>Siguiente</button>
                                 </div>
                             </div>
@@ -40,24 +40,58 @@
                     <mat-step [stepControl]="mascotas">
                       <form [formGroup]="mascotas">
                         <ng-template matStepLabel>Mascota</ng-template>
-                        <mat-form-field>
-                          <input matInput placeholder="Address" formControlName="nombreMascota" required>
-                        </mat-form-field>
-                        <div>
-                          <button mat-button matStepperPrevious>Back</button>
-                          <button mat-button matStepperNext>Next</button>
+                        <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                <mat-label>Especie</mat-label>
+                                <mat-select formControlName="especie" required>
+                                    <mat-option value="1">Perro</mat-option>
+                                    <mat-option value="2">Gato</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                <mat-label>Fecha de Nacimiento</mat-label>
+                                <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                <input matInput placeholder="Peso en kg" formControlName="peso" required>
+                            </mat-form-field>
+                        </div>
+                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                          <button mat-button matStepperPrevious>Anterior</button>
+                          <button mat-button matStepperNext>Siguiente</button>
                         </div>
                       </form>
                     </mat-step>
                     <mat-step>
-                      <ng-template matStepLabel>Done</ng-template>
-                      You are now done.
-                      <div>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button (click)="stepper.reset()">Reset</button>
-                      </div>
+                        <form [formGroup]="ubicacion">
+                            <ng-template matStepLabel>Domicilio</ng-template>
+                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Ciudad</mat-label>
+                                    <mat-select formControlName="ciudad" required>
+                                        <mat-option value="1">Marcos Juarez</mat-option>
+                                        <mat-option value="2">Villa Maria</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Calle" formControlName="calle" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Número" formControlName="numero" required>
+                                </mat-form-field>
+                            </div>
+                            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                <button mat-button matStepperPrevious>Anterior</button>
+                                <button mat-button (click)="onConfirmar()">Confirmar</button>
+                            </div>
+                        </form>
                     </mat-step>
-                  </mat-horizontal-stepper>
+                </mat-horizontal-stepper>
             </mat-card-content>
         </mat-card>
     </div>
