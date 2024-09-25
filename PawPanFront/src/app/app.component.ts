@@ -7,6 +7,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { MenuItems } from './model/MenuItems';
+import { menuItems } from './model/data/data-MenuItems';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +22,7 @@ export class AppComponent implements OnDestroy, OnInit{
   
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
   
-  menuItems: {nombre:string, icono: string, path: string, hidden:boolean}[];
+  menuItems: MenuItems[] = menuItems;
   
 
   fillerContent = Array.from(
@@ -48,16 +50,7 @@ export class AppComponent implements OnDestroy, OnInit{
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  ngOnInit(): void {
-    this.menuItems=[
-      {nombre: 'Inicio', icono:'../assets/iconos-menu-lateral/home.svg', path: 'home', hidden:false},
-      {nombre: 'Reservar Turno', icono:'../assets/iconos-menu-lateral/calendar_add_on.svg', path: 'adm-reservar-turno', hidden:false},
-      {nombre: 'Turnos Reservados', icono:'../assets/iconos-menu-lateral/calendar_clock.svg', path: 'adm-turnos-reservados', hidden:false},
-      {nombre: 'Ver Mis Mascotas', icono:'../assets/iconos-menu-lateral/pet_supplies.svg', path: 'mascota/1', hidden:false},
-      {nombre: 'Emergencia', icono:'../assets/iconos-menu-lateral/e911_emergency.svg', path: 'emergencia', hidden:false},
-    ]
-      
-  }
+  ngOnInit(): void {}
 
   
   shouldRun = true;

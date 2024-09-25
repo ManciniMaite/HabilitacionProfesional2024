@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 
@@ -19,7 +19,8 @@ import {MatIconModule} from '@angular/material/icon';
     ReactiveFormsModule,
     RouterLink,
     MatButtonModule,
-    MatIconModule ],
+    MatIconModule,
+  ],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.scss'
 })
@@ -30,11 +31,16 @@ export class InicioComponent implements OnInit{
   }
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private routes: Router
   ){
     this.formGroup = this.fb.group({
       usuario:      new FormControl("",[Validators.required]),
       contrasenia:  new FormControl("", [Validators.required])
     });
+  }
+  
+  ingresar(){
+    this.routes.navigate(['home']);
   }
 }
