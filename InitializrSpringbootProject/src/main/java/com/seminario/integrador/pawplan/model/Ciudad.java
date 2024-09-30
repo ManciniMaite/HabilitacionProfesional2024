@@ -8,22 +8,34 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.ArrayList;
 
 /**
  *
- * @author maite
+ * @author sebastian
  */
 @Entity
-public class Veterinaria {
+public class Ciudad {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String razonSocial;
-    private String cuit;
-    private boolean haceGuardia;
-    private boolean aptoCirugia;
-    private ArrayList<DiaHorarioAtencion> horarioAtencion;
-    private ArrayList<Veterinario> veterinarios;
-    private boolean heceDomicilio;
+    private String nombre;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    
 }
