@@ -4,7 +4,7 @@
  */
 package com.seminario.integrador.pawplan.repository;
 
-import com.seminario.integrador.pawplan.model.DiaHorarioAtencion;
+import com.seminario.integrador.pawplan.model.Veterinario;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author sebastian
  */
 @Repository
-public interface DiaHorarioAtencionRepository extends CrudRepository<DiaHorarioAtencion, Long>{
+public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>{
     
 }
