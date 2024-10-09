@@ -53,7 +53,7 @@ export class CrearCuentaClienteComponent {
     this.datosPersonales = this.fb.group({
       nombre:     new FormControl('', Validators.required),
       apellido:   new FormControl('', Validators.required),
-      fechaNac:   new FormControl('',Validators.required),
+      fechaNac:   new FormControl('', Validators.required),
       dni:        new FormControl('', Validators.required),
       correo:     new FormControl('', [Validators.required, Validators.email]),
       telefono:   new FormControl('', Validators.required)

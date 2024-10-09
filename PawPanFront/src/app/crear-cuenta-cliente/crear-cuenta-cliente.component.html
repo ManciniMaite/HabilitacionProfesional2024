@@ -22,6 +22,9 @@
                                     <input matInput placeholder="Apellido" formControlName="apellido" required>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="DNI" formControlName="dni" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <mat-label>Fecha de Nacimiento</mat-label>
                                     <input matInput [matDatepicker]="picker" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNac">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -73,7 +76,7 @@
                         </div>
 
                         <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
-                            <button mat-button (click)="agregarAnimal()">Agregar</button>
+                            <button mat-button type="reset" (click)="agregarAnimal()">Agregar</button>
                         </div>
 
                         <mat-chip-set style="margin-bottom: 10px;">

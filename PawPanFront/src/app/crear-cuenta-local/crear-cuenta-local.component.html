@@ -1,1 +1,144 @@
-<p>crear-cuenta-local works!</p>
+<div class="form">
+    <div class="container">
+        <mat-card style="width: 90%; height: fit-content;">
+            <div class="titleContainer">
+                <button mat-flat-button (click)="volver()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <mat-card-title class="title">
+                    CREAR CUENTA
+                </mat-card-title>
+            </div>
+            <mat-card-content>
+                <mat-horizontal-stepper [linear]="false" #stepper [animationDuration]="animationDuration">
+                    <mat-step [stepControl]="datosLocal">
+                        <form [formGroup]="datosLocal">
+                            <ng-template matStepLabel>Datos del Local</ng-template>
+                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Razon Social" formControlName="razonSocial" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="CUIT" formControlName="cuit" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Correo Electronico" formControlName="correo" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Teléfono" formControlName="telefono" required>
+                                </mat-form-field>
+                                <div style="display: flex; flex-direction: row; align-self: flex-end;">
+                                    <button mat-button matStepperNext>Siguiente</button>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-step>
+                    
+                    <mat-step [stepControl]="ubicacion">
+                        <form [formGroup]="ubicacion">
+                            <ng-template matStepLabel>Domicilio</ng-template>
+                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Ciudad</mat-label>
+                                    <mat-select formControlName="ciudad" required>
+                                        <mat-option value="mJuarez">Marcos Juarez</mat-option>
+                                        <mat-option value="vMaria">Villa Maria</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Calle" formControlName="calle" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Número" formControlName="numero" required>
+                                </mat-form-field>
+                            </div>
+                            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                <button mat-button matStepperPrevious>Anterior</button>
+                                <button mat-button matStepperNext>Siguiente</button>
+                            </div>
+                        </form>
+                    </mat-step>
+
+                    <mat-step [stepControl]="hoarioTrabajo">
+                        <form [formGroup]="hoarioTrabajo">
+                            <ng-template matStepLabel>Horaios de Trabajo</ng-template>
+                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Dia</mat-label>
+                                    <mat-select formControlName="dia" required>
+                                        <mat-option value="1">Lunes</mat-option>
+                                        <mat-option value="2">Martes</mat-option>
+                                        <mat-option value="3">Miercoles</mat-option>
+                                        <mat-option value="4">Jueves</mat-option>
+                                        <mat-option value="5">Viernes</mat-option>
+                                        <mat-option value="6">Sábado</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <div style="display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 21px; width: 80%;">
+                                    <mat-label>¿Hace horario corrido?</mat-label>
+                                    <mat-radio-group formControlName="corrido" style="margin-left: 20px;">
+                                        <mat-radio-button value="si">Si</mat-radio-button>
+                                        <mat-radio-button value="no">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                                <!-- agregar validacion para la opcion seleccionada -->
+                                <!-- Corregir las condiciones para que se activen al seleccionar si -->
+                                <mat-form-field *ngIf="hoarioTrabajo.value.corrido" appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <!-- <mat-label>Turno Mañana:</mat-label> -->
+                                    <div style="display: flex; flex-direction: row; width: 30%;">
+                                        <span>Horaio Apertura:</span>
+                                        <input matInput placeholder="08:00" formControlName="horarioApertura" required>
+                                    </div>
+                                </mat-form-field>
+                                <mat-form-field *ngIf="hoarioTrabajo.value.corrido" appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <div style="display: flex; flex-direction: row; width: 30%;">
+                                        <span>Horaio Cierre:</span>
+                                        <input matInput placeholder="12:00" formControlName="horarioCierre" required>
+                                    </div>
+                                </mat-form-field>
+                            
+                                <!-- raza va a depender de la seleccion en la especia, el campo deberia mostrarse una vez seleccionado dicho valor -->
+                                <!-- <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Raza</mat-label>
+                                    <mat-select formControlName="raza" required>
+                                        <mat-option value="gDanes">Gran Danes (perro)</mat-option>
+                                        <mat-option value="persa">Persa (gato)</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Fecha de Nacimiento</mat-label>
+                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Peso en kg" formControlName="peso" required>
+                                </mat-form-field> -->
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
+                                <button mat-button (click)="agregarHorario()">Agregar</button>
+                            </div>
+  
+                            <mat-chip-set style="margin-bottom: 10px;">
+                                @for (item of horarios; track $index) {
+                                    <mat-chip-row (removed)="quitarHorario(item)">
+                                        {{item.horaInicio}} - {{item.horaFin}}
+                                        <button matChipRemove>
+                                        <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip-row>
+                                }
+                            </mat-chip-set>
+  
+                            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                <button mat-button matStepperPrevious>Anterior</button>
+                                <button mat-button disabled="{{horarios == undefined || horarios.length == 0}}" (click)="onConfirmar()">Confirmar</button>
+                            </div>
+                        </form>
+                    </mat-step>
+                </mat-horizontal-stepper>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
