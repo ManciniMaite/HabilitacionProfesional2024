@@ -9,7 +9,7 @@ package com.seminario.integrador.pawplan.controller.values;
  * @author sebastian
  */
 public class Response {
-    
+    //ERROR , OK
     private String estado;
     private String mensaje;
 

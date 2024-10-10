@@ -25,7 +25,7 @@ public class Cliente {
     private String apellido;
     private String dni;
     
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private ArrayList<Animal> animales;
 
     public Long getId() {
