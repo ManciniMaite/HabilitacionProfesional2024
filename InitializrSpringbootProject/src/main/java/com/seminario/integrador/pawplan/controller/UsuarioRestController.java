@@ -30,4 +30,16 @@ public class UsuarioRestController {
         animalRepository.save(a);
         return "HOLA MUNDO";
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
