@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 
 /**
  *
@@ -20,7 +20,7 @@ public class Domicilio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Ciudad ciudad;
     private String calle;
     private String numero;

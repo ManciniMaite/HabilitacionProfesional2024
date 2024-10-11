@@ -25,4 +25,29 @@ public class DiaHorarioAtencion {
     private String dia;
     @OneToMany(cascade = CascadeType.ALL)
     private ArrayList<Horario> horario;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDia() {
+        return dia;
+    }
+
+    public void setDia(String dia) {
+        this.dia = dia;
+    }
+
+    public ArrayList<Horario> getHorario() {
+        return horario;
+    }
+
+    public void setHorario(ArrayList<Horario> horario) {
+        this.horario = horario;
+    }
+    
 }

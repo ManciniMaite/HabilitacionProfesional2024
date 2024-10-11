@@ -24,12 +24,15 @@ public class Animal {
     private Long id;
     private boolean esActivo;
     private String nombre;
+    @ManyToOne
+    @JoinColumn(name = "especie_id")
     private Especie especie;
     private Date fechaNac;
     private float peso;
     @Lob
     private String foto;
-    
+    @ManyToOne
+    @JoinColumn(name = "raza_id")
     private Raza raza;
     
     @ManyToOne

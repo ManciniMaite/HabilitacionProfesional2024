@@ -15,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AnimalRepository extends CrudRepository<Animal, Long> {
-    List<Animal> findByIdCliente(Long idCliente);
+    List<Animal> findByCliente_Id(Long idCliente);
 }

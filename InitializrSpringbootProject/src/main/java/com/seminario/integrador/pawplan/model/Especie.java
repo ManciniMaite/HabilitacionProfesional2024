@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 
@@ -22,7 +24,8 @@ public class Especie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tipo_especie_id")
     private TipoEspecie tipoEspecie;
 
     public Long getId() {

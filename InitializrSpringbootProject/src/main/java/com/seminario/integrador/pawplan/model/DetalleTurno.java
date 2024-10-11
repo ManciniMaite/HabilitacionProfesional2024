@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 /**
@@ -22,9 +23,12 @@ public class DetalleTurno {
     private Long id;
     private float monto;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tipo_consulta_id")
     private TipoConsulta tipoConsulta;
     private int cantidad;
     private String descripcion;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "animal_id")
     private Animal animal;
 
     public Long getId() {

@@ -32,7 +32,7 @@ public class AnimalService {
         List<Animal> animales =  new ArrayList<>();
         
         try{
-            animales = this.repository.findByIdCliente(idCliente);
+            animales = this.repository.findByCliente_Id(idCliente);
             
             if(animales == null){
                 rs.setEstado("ERROR");
