@@ -10,6 +10,8 @@ import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.exception.PawPlanRuleException;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
+
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +96,37 @@ public class SessionManager {
         return encodedToken;
 
     }
+    
+	/**
+	 * Obtener el {@link AuthenticationBit}, conteniendo el {@link PrincipalBit} relacionado al token de autenticacion
+	 * 
+	 * @param encodedToken
+	 * 
+	 * @return Si esta todo bien se devuelve el objeto AuthenticationBit,pero si hay algun problema se retorna null. 
+	 */
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	public AuthenticationPawPlan getAuthtentication(String encodedToken) {
+		
+		PrincipalPawplan principal = null;
+		
+		try {		
+			
+			String rawToken = encriptador.desencriptar(encodedToken);
+			principal = mapper.readValue(rawToken, PrincipalPawplan.class);
+			
+		} catch (GeneralSecurityException se) {
+			logger.warn("Token invalido, no puede ser desencriptado : " + encodedToken, se);
+			return null;
+			
+		} catch (Exception e) {
+			logger.warn("No se puede trabajar con el token : " + encodedToken, e);
+			return null;
+		}
+		
+		AuthenticationPawPlan result = new AuthenticationPawPlan(principal);
+		
+		return result;
+	}
     
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public String hashPassword(String rawPassword) {
