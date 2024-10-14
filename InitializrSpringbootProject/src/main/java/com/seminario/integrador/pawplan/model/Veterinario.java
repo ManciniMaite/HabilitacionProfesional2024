@@ -10,16 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author maite
  */
 @Entity
-public class Veterinario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Veterinario extends Usuario {
+    
     private String nombre;
     private String apellido;
     private String dni;
@@ -29,18 +28,11 @@ public class Veterinario {
     private boolean esIndependiente;
     private boolean haceGuardia;
     @OneToMany
-    private ArrayList<DiaHorarioAtencion> horario;
+    private List<DiaHorarioAtencion> horario;
     @OneToMany
-    private ArrayList<Especialidad> especialidad;
-    private boolean heceDomicilio;
+    private List<Especialidad> especialidad;
+    private boolean haceDomicilio;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;
@@ -106,28 +98,28 @@ public class Veterinario {
         this.haceGuardia = haceGuardia;
     }
 
-    public ArrayList<DiaHorarioAtencion> getHorario() {
+    public List<DiaHorarioAtencion> getHorario() {
         return horario;
     }
 
-    public void setHorario(ArrayList<DiaHorarioAtencion> horario) {
+    public void setHorario(List<DiaHorarioAtencion> horario) {
         this.horario = horario;
     }
 
-    public ArrayList<Especialidad> getEspecialidad() {
+    public List<Especialidad> getEspecialidad() {
         return especialidad;
     }
 
-    public void setEspecialidad(ArrayList<Especialidad> especialidad) {
+    public void setEspecialidad(List<Especialidad> especialidad) {
         this.especialidad = especialidad;
     }
 
-    public boolean isHeceDomicilio() {
-        return heceDomicilio;
+    public boolean isHaceDomicilio() {
+        return haceDomicilio;
     }
 
-    public void setHeceDomicilio(boolean heceDomicilio) {
-        this.heceDomicilio = heceDomicilio;
+    public void setHaceDomicilio(boolean heceDomicilio) {
+        this.haceDomicilio = heceDomicilio;
     }
     
     

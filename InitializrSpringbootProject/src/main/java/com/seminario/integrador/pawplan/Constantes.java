@@ -34,6 +34,13 @@ public class Constantes {
     public static final String URL_PATH_SESSION_MANAGER = "/SessionManager";
     public static final String URL_PATH_HASH = "/Hash";
     
+    public static final String URL_PATH_CREAR = "/Crear";
+    public static final String URL_PATH_MODIFICAR = "/Modificar";
+    public static final String URL_PATH_ELIMINAR = "/Eliminar";
+    public static final String URL_PATH_CONSULTAR = "/Consultar";
+    
+    public static final String URL_PATH_USUARIO = "/Usuario";
+    
     
     
     

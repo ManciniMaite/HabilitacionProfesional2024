@@ -10,33 +10,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author maite
  */
 @Entity
-public class Veterinaria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Veterinaria extends Usuario{
+   
     private String razonSocial;
     private String cuit;
     private boolean haceGuardia;
     private boolean aptoCirugia;
     @OneToMany
-    private ArrayList<DiaHorarioAtencion> horarioAtencion;
+    private List<DiaHorarioAtencion> horarioAtencion;
     @OneToMany
-    private ArrayList<Veterinario> veterinarios;
-    private boolean heceDomicilio;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private List<Veterinario> veterinarios;
+    private boolean haceDomicilio;
 
     public String getRazonSocial() {
         return razonSocial;
@@ -70,28 +61,28 @@ public class Veterinaria {
         this.aptoCirugia = aptoCirugia;
     }
 
-    public ArrayList<DiaHorarioAtencion> getHorarioAtencion() {
+    public List<DiaHorarioAtencion> getHorarioAtencion() {
         return horarioAtencion;
     }
 
-    public void setHorarioAtencion(ArrayList<DiaHorarioAtencion> horarioAtencion) {
+    public void setHorarioAtencion(List<DiaHorarioAtencion> horarioAtencion) {
         this.horarioAtencion = horarioAtencion;
     }
 
-    public ArrayList<Veterinario> getVeterinarios() {
+    public List<Veterinario> getVeterinarios() {
         return veterinarios;
     }
 
-    public void setVeterinarios(ArrayList<Veterinario> veterinarios) {
+    public void setVeterinarios(List<Veterinario> veterinarios) {
         this.veterinarios = veterinarios;
     }
 
-    public boolean isHeceDomicilio() {
-        return heceDomicilio;
+    public boolean isHaceDomicilio() {
+        return haceDomicilio;
     }
 
-    public void setHeceDomicilio(boolean heceDomicilio) {
-        this.heceDomicilio = heceDomicilio;
+    public void setHaceDomicilio(boolean heceDomicilio) {
+        this.haceDomicilio = heceDomicilio;
     }
     
     

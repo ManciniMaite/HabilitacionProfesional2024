@@ -61,10 +61,10 @@ public class SessionManager {
         }
 
         //verificar si el usuario esta habilitado
-        //TODO usar la enumeracion correspondiente y no el codigo hardcoded
-        /*if (user.getStatus() != 1) {
+       
+        if (user.isActivo() != true) {
             throw new PawPlanRuleException(EnumCodigoErrorLogin.LOGIN_2410);
-        }*/
+        }
         //verificar el password
         if (!hasher.compareHash(password, user.getContrasenia())) {
             throw new PawPlanRuleException(EnumCodigoErrorLogin.LOGIN_2400);
@@ -94,4 +94,9 @@ public class SessionManager {
         return encodedToken;
 
     }
+    
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+	public String hashPassword(String rawPassword) {
+		return hasher.hash(rawPassword);
+	}
 }

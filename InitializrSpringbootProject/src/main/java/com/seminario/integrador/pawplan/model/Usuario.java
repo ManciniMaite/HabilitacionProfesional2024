@@ -4,6 +4,8 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
 import com.seminario.integrador.pawplan.security.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 
 /**
  *
@@ -34,6 +37,15 @@ public class Usuario {
     private String correo;
     private String contrasenia;
 
+    private boolean isActivo = true;
+    
+    @PrePersist
+    protected void onCreate() {
+        if (isActivo == false) {
+            isActivo = true;  // Establece el valor por defecto como true si no se especifica
+        }
+    }
+    
     public Long getId() {
         return id;
     }
@@ -73,6 +85,14 @@ public class Usuario {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
+
+	public boolean isActivo() {
+		return isActivo;
+	}
+
+	public void setActivo(boolean esActivo) {
+		this.isActivo = esActivo;
+	}
 
     
     

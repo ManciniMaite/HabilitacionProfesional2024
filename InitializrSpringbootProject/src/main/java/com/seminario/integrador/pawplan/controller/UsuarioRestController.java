@@ -4,9 +4,17 @@
  */
 package com.seminario.integrador.pawplan.controller;
 
-import com.seminario.integrador.pawplan.model.Animal;
-import com.seminario.integrador.pawplan.repository.AnimalRepository;
+import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
+import com.seminario.integrador.pawplan.controller.values.UsuarioResponse;
+import com.seminario.integrador.pawplan.model.Usuario;
+import com.seminario.integrador.pawplan.repository.UsuarioRepository;
+import com.seminario.integrador.pawplan.services.UsuarioService;
+
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,26 +24,76 @@ import org.springframework.web.bind.annotation.RestController;
  * @author sebastian
  */
 @RestController
+@RequestMapping(Constantes.URL_PATH_USUARIO)
 public class UsuarioRestController {
     
     @Autowired(required = true)
-    private AnimalRepository animalRepository;
+    private UsuarioService usuarioService;
     
-    @RequestMapping(value = "/aludar", method = RequestMethod.GET)
-    public String testeando() {
-        Animal a = new Animal();
-        a.setEsActivo(true);
-        a.setNombre("carlos");
-        a.setPeso(7);
-        animalRepository.save(a);
-        return "HOLA MUNDO";
+    @RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.GET)
+    public UsuarioResponse<?> consultar() {
+		
+    	UsuarioResponse<ArrayList<?>> result;
+    	try {
+    		result = usuarioService.consultar();
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al obtener todos los usuarios - 01. " + e.getMessage());
+		}
+    	
+    	return result;
+       
+    }
+    
+    @RequestMapping(value = Constantes.URL_PATH_CREAR, method = RequestMethod.POST)
+    public UsuarioResponse<?> crear(@RequestBody UsuarioRequest usuarioRequest) {
+		
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.CrearUsuario(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+		}
+    	
+    	return result;
+       
     }
     
     
+    @RequestMapping(value = Constantes.URL_PATH_MODIFICAR, method = RequestMethod.POST)
+    public UsuarioResponse<?> modificar(@RequestBody UsuarioRequest usuarioRequest) {
+		
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.modificarUsuario(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+		}
+    	
+    	return result;
+       
+    }
     
-    
-    
-    
+    @RequestMapping(value = Constantes.URL_PATH_ELIMINAR, method = RequestMethod.POST)
+    public UsuarioResponse<?> eliminar(@RequestBody UsuarioRequest usuarioRequest) {
+		
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.eliminarUsuario(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+		}
+    	
+    	return result;
+       
+    }
     
     
     

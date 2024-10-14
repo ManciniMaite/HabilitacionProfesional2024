@@ -11,30 +11,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author maite
  */
 @Entity
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Cliente extends Usuario{
+    
     private String nombre;
     private String apellido;
     private String dni;
     
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private ArrayList<Animal> animales;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private List<Animal> animales;
 
     public String getNombre() {
         return nombre;
@@ -60,11 +51,11 @@ public class Cliente {
         this.dni = dni;
     }
 
-    public ArrayList<Animal> getAnimales() {
+    public List<Animal> getAnimales() {
         return animales;
     }
 
-    public void setAnimales(ArrayList<Animal> animales) {
+    public void setAnimales(List<Animal> animales) {
         this.animales = animales;
     }
 }
