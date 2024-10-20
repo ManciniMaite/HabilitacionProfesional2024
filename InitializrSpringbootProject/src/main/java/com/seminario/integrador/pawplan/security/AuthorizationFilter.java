@@ -39,6 +39,8 @@ public class AuthorizationFilter implements Filter	 {
 		
 		//Si es un intento de login, no hacemos nada y dejamos que continue.
 		if (   Constantes.URL_PATH_SESSION_MANAGER.equals( ((HttpServletRequest) request).getServletPath() )
+			|| (Constantes.URL_PATH_USUARIO+Constantes.URL_PATH_CREAR).equals( ((HttpServletRequest) request).getServletPath() )
+			|| (Constantes.URL_PATH_USUARIO+Constantes.URL_PATH_CONSULTAR).equals( ((HttpServletRequest) request).getServletPath() )
 			|| /*Constantes.URL_PATH_HEARTBEAT.equals( ((HttpServletRequest) request).getServletPath() )
 			|| Constantes.URL_PATH_ACERCA_DE.equals( ((HttpServletRequest) request).getServletPath() )
 			||*/ Constantes.URL_PATH_HASH.equals( ((HttpServletRequest) request).getServletPath() )
@@ -58,7 +60,7 @@ public class AuthorizationFilter implements Filter	 {
 	        while (headerValues.hasMoreElements()) {
 	        	String autorizacion = headerValues.nextElement();
 	        	
-	            if ( autorizacion.startsWith("Bit") ) { //La cabecera de validacion de Bit se encuentra presente?.
+	            if ( autorizacion.startsWith("Pawplan") ) { //La cabecera de validacion de Bit se encuentra presente?.
 	            	
 	            	//setear los datos del usuario en el contexto de seguridad
 	            	Authentication authentication = sessionManager.getAuthtentication( autorizacion.substring(4) ); //Enviar el token para ser procesado
@@ -72,12 +74,11 @@ public class AuthorizationFilter implements Filter	 {
 	            	}
 	            	
 	            	//Si es una pagina de administracion del sitio, debera ser un usuario administrador de plataforma
-	            	/*if ( (((HttpServletRequest) request).getServletPath()).startsWith(Constantes.URL_PATH_ADMIN_PLATFORM)
-	            		 || (((HttpServletRequest) request).getServletPath()).startsWith(Constantes.URL_PATH_ADMIN_ACTUATOR)) {
+	            	if ( (((HttpServletRequest) request).getServletPath()).matches(Constantes.URL_PATH_ADMIN_PLATFORM)){
 	            		if ( ((PrincipalPawplan)authentication.getPrincipal()).getRole() != Role.PLATFORM_ADMIN ) {
 	            			break;
 	            		}	            		
-	            	}*/
+	            	}
 	            	
 	            	SecurityContextHolder.getContext().setAuthentication(authentication);
 	            	
