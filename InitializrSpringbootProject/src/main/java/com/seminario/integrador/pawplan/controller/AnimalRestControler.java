@@ -30,9 +30,9 @@ public class AnimalRestControler {
     private AnimalService service;
     
     
-    @GetMapping("findByClient/{idCliente}")
-    public ListaAnimalesRs findByClient (@PathVariable Long idCliente){
-        return this.service.findByCliente(idCliente);
+    @GetMapping("findByClient")
+    public ListaAnimalesRs findByClient (){
+        return this.service.findByCliente();
     }
     
     @PostMapping("crear")

@@ -9,6 +9,9 @@ import com.seminario.integrador.pawplan.controller.values.ListaAnimalesRs;
 import com.seminario.integrador.pawplan.controller.values.Response;
 import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.repository.AnimalRepository;
+import com.seminario.integrador.pawplan.security.PrincipalPawplan;
+import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +24,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service
 public class AnimalService {
+	@Autowired
+    private IAuthenticationFacade authenticationFacade;
     @Autowired
     private AnimalRepository repository;
     
-    public ListaAnimalesRs findByCliente(Long idCliente){
+    public ListaAnimalesRs findByCliente(){
+    	
+    	PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+    	
         ListaAnimalesRs rs = new ListaAnimalesRs();
         rs.setEstado("OK");
         rs.setMensaje("");
@@ -32,7 +40,7 @@ public class AnimalService {
         List<Animal> animales =  new ArrayList<>();
         
         try{
-            animales = this.repository.findByCliente_Id(idCliente);
+            animales = this.repository.findByCliente_Id(principalPawplan.getClienteId());
             
             if(animales == null){
                 rs.setEstado("ERROR");

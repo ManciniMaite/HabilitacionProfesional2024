@@ -13,6 +13,7 @@ import java.time.LocalTime;
 /**
  *
  * @author maite
+ * GUARDIA/ CONTROL/ VACUNACION/CIRUGIA (ESTE SOLO LO SACA EL VETERINARIO) 
  */
 @Entity
 public class TipoConsulta {

@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 /**
  *
  * @author maite
- * posibles.. PENDIENTE, ATENDIDO o  AUSENTE
+ * posibles.. PENDIENTE, ATENDIDO o  AUSENTE, CANCELADO
  */
 @Entity
 public class Estado {

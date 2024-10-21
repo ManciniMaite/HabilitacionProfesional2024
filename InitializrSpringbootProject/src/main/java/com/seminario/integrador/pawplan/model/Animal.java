@@ -22,7 +22,7 @@ public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean esActivo;
+    private boolean esActivo = true;;
     private String nombre;
     @ManyToOne
     @JoinColumn(name = "especie_id")

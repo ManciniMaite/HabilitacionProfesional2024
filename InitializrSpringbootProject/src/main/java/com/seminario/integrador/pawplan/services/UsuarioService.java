@@ -16,8 +16,10 @@ import com.seminario.integrador.pawplan.repository.ClienteRepository;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.repository.VeterinariaRepository;
 import com.seminario.integrador.pawplan.repository.VeterinarioRepository;
+import com.seminario.integrador.pawplan.security.PrincipalPawplan;
 import com.seminario.integrador.pawplan.security.Role;
 import com.seminario.integrador.pawplan.security.SessionManager;
+import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
 @Service
 public class UsuarioService {
@@ -36,6 +38,9 @@ public class UsuarioService {
 	
 	@Autowired
 	private VeterinarioRepository veterinarioRepository;
+	
+	@Autowired
+    private IAuthenticationFacade authenticationFacade;
 
 	public UsuarioResponse<ArrayList<?>> consultar() {
 		UsuarioResponse<ArrayList<?>> consulta = new UsuarioResponse<ArrayList<?>>();
@@ -98,10 +103,16 @@ public class UsuarioService {
 	}
 
 	public UsuarioResponse<?> modificarUsuario(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		
+		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+		
 		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
 
 		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
 
+		if(principalPawplan.getClienteId()!=usuario.getId()) {
+			throw new PawPlanRuleException(0,"EL USUARIO NO COINCIDE");
+		}
 		if (usuario == null) {
 			throw new PawPlanRuleException(0,"USUARIO NULL");
 		}
