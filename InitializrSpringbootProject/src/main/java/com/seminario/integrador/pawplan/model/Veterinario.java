@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +20,21 @@ import java.util.List;
 @Entity
 public class Veterinario extends Usuario {
     
+    @NotNull(message = "debe contener nombre")
     private String nombre;
+    @NotNull(message = "debe contener apellido")
     private String apellido;
+    @NotNull(message = "debe contener dni")
     private String dni;
     private String fechaNac;
-    private String cuil;
+    @NotNull(message = "debe contener matricula")
     private int matricula;
     private boolean esIndependiente;
     private boolean haceGuardia;
     @OneToMany
     private List<DiaHorarioAtencion> horario;
     @OneToMany
+    @NotNull(message = "debe especificar su/s especialidad/es")
     private List<Especialidad> especialidad;
     private boolean haceDomicilio;
 
@@ -64,14 +69,6 @@ public class Veterinario extends Usuario {
 
     public void setFechaNac(String fechaNac) {
         this.fechaNac = fechaNac;
-    }
-
-    public String getCuil() {
-        return cuil;
-    }
-
-    public void setCuil(String cuil) {
-        this.cuil = cuil;
     }
 
     public int getMatricula() {

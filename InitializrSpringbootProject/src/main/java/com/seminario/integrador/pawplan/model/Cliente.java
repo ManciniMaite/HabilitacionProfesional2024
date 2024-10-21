@@ -6,11 +6,8 @@ package com.seminario.integrador.pawplan.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -19,12 +16,15 @@ import java.util.List;
  */
 @Entity
 public class Cliente extends Usuario{
-    
+    @NotNull(message = "debe contener nombre")
     private String nombre;
+    @NotNull(message = "debe contener apellido")
     private String apellido;
+    @NotNull(message = "debe contener dni")
     private String dni;
     
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @NotNull(message = "debe agregar al menos un animal")
     private List<Animal> animales;
 
     public String getNombre() {

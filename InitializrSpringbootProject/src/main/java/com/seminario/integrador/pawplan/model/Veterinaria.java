@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +19,14 @@ import java.util.List;
  */
 @Entity
 public class Veterinaria extends Usuario{
-   
+    @NotNull(message = "debe contener razon social del establecimiento")
     private String razonSocial;
+    @NotNull(message = "debe contener cuit")
     private String cuit;
     private boolean haceGuardia;
     private boolean aptoCirugia;
     @OneToMany
+    @NotNull(message = "debe especificar sus horarios")
     private List<DiaHorarioAtencion> horarioAtencion;
     @OneToMany
     private List<Veterinario> veterinarios;

@@ -194,7 +194,6 @@ public class UsuarioService {
 		veterinario.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
 		veterinario.setFechaNac(usuarioRequest.getFechaNac());
-		veterinario.setCuil(usuarioRequest.getCuil());
 		veterinario.setMatricula(usuarioRequest.getMatricula());
 		veterinario.setEsIndependiente(usuarioRequest.isEsIndependiente());
 		veterinario.setHaceGuardia(usuarioRequest.isHaceGuardia());

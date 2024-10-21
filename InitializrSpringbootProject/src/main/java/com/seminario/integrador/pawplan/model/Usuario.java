@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.validation.constraints.NotNull;
 
 /**
  *
@@ -34,7 +35,9 @@ public class Usuario {
     private Role role;
     
     @Column(unique = true,  nullable = false)
+    @NotNull(message = "El correo no puede ser nulo")
     private String correo;
+    @NotNull(message = "La contrasenia no puede ser nula")
     private String contrasenia;
 
     private boolean isActivo = true;

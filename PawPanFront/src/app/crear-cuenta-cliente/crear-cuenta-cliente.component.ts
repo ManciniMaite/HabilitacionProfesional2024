@@ -106,4 +106,19 @@ export class CrearCuentaClienteComponent {
     this.location.back();
   }
 
+  // mostrarFecha(){
+  //   const fecha = this.datosPersonales.get('fechaNac')?.value;
+
+  //   // Formato para la fecha: dd/MM/yyyy
+  //   const opcionesFecha: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  //   const fechaFormateada = fecha.toLocaleDateString('es-AR', opcionesFecha);
+
+  //   // Nombre completo del día
+  //   const opcionesDia: Intl.DateTimeFormatOptions = { weekday: 'long' };
+  //   const diaSemana = fecha.toLocaleDateString('es-AR', opcionesDia);
+
+  //   console.log(`Día: ${diaSemana}, Fecha: ${fechaFormateada}`);
+  //   console.log('fecha: ', this.datosPersonales.get('fechaNac')?.value)
+  // }
+
 }
