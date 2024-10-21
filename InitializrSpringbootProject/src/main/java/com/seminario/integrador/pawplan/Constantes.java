@@ -40,6 +40,7 @@ public class Constantes {
     public static final String URL_PATH_CONSULTAR = "/Consultar";
     
     public static final String URL_PATH_USUARIO = "/Usuario";
+    public static final String URL_PATH_TURNO = "/Turno";
     
     
     
