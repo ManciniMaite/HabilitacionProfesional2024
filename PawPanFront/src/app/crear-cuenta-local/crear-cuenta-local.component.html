@@ -2,7 +2,7 @@
     <div class="container">
         <mat-card style="width: 90%; height: fit-content;">
             <div class="titleContainer">
-                <button mat-flat-button (click)="volver()">
+                <button mat-icon-button (click)="volver()" color="primary" style="background-color: lightblue;">
                     <mat-icon>arrow_back</mat-icon>
                 </button>
                 <mat-card-title class="title">
@@ -59,21 +59,23 @@
                         </form>
                     </mat-step>
 
-                    <mat-step [stepControl]="hoarioTrabajo">
-                        <form [formGroup]="hoarioTrabajo">
+                    <mat-step [stepControl]="horarioTrabajo">
+                        <form [formGroup]="horarioTrabajo">
                             <ng-template matStepLabel>Horaios de Trabajo</ng-template>
                             <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <mat-label>Dia</mat-label>
-                                    <mat-select formControlName="dia" required>
-                                        <mat-option value="1">Lunes</mat-option>
-                                        <mat-option value="2">Martes</mat-option>
-                                        <mat-option value="3">Miercoles</mat-option>
-                                        <mat-option value="4">Jueves</mat-option>
-                                        <mat-option value="5">Viernes</mat-option>
-                                        <mat-option value="6">Sábado</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
+                                <section class="example-section">
+                                    <span class="example-list-section">
+                                      <ul style="display: flex; flex-direction: row;">
+                                        @for (dia of semana().dias; track dia; let i = $index) {
+                                            <span>
+                                                <mat-checkbox [checked]="dia.seleccionado">
+                                                  {{dia.nombre}}
+                                                </mat-checkbox>
+                                            </span>
+                                        }
+                                      </ul>
+                                    </span>
+                                </section>
                                 <div style="display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 21px; width: 80%;">
                                     <mat-label>¿Hace horario corrido?</mat-label>
                                     <mat-radio-group formControlName="corrido" style="margin-left: 20px;">
@@ -83,39 +85,79 @@
                                 </div>
                                 <!-- agregar validacion para la opcion seleccionada -->
                                 <!-- Corregir las condiciones para que se activen al seleccionar si -->
-                                <mat-form-field *ngIf="hoarioTrabajo.value.corrido" appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <!-- <mat-label>Turno Mañana:</mat-label> -->
-                                    <div style="display: flex; flex-direction: row; width: 30%;">
-                                        <span>Horaio Apertura:</span>
-                                        <input matInput placeholder="08:00" formControlName="horarioApertura" required>
+                                
+                                <!-- Horario de corrido -->
+                                <mat-card *ngIf="horarioTrabajo.value.corrido == 'si'" style="width: 80%;">
+                                    <mat-card-title style="margin: 15px;">Horario de corrido:</mat-card-title>
+                                    <div style="display: flex; align-items: center; justify-content: space-around;">
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                            <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                <span>Horario Apertura:</span>
+                                                <div>
+                                                    <input matInput [ngxTimepicker]="picker" placeholder="Ej: 8:00 AM" formControlName="horarioApertura">
+                                                    <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                            <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                <span>Horario Cierre:</span>
+                                                <div>
+                                                    <input matInput [ngxTimepicker]="picker2" placeholder="Ej: 5:00 PM" formControlName="horarioCierre">
+                                                    <ngx-material-timepicker #picker2></ngx-material-timepicker>
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
                                     </div>
-                                </mat-form-field>
-                                <mat-form-field *ngIf="hoarioTrabajo.value.corrido" appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <div style="display: flex; flex-direction: row; width: 30%;">
-                                        <span>Horaio Cierre:</span>
-                                        <input matInput placeholder="12:00" formControlName="horarioCierre" required>
+                                </mat-card>
+
+                                <!-- Horario cortado -->
+                                <mat-card *ngIf="horarioTrabajo.value.corrido == 'no'" style="width: 80%;">
+                                    <mat-card-title style="margin: 15px;">Turno Mañana:</mat-card-title>
+                                    <div style="display: flex; align-items: center; justify-content: space-around;">
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                            <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                <span>Hora Inicio:</span>
+                                                <div>
+                                                    <input matInput [ngxTimepicker]="picker3" placeholder="Ej: 8:00 AM" formControlName="mañanaInicio">
+                                                    <ngx-material-timepicker #picker3></ngx-material-timepicker>
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                            <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                <span>Hora Fin:</span>
+                                                <div>
+                                                    <input matInput [ngxTimepicker]="picker4" placeholder="Ej: 12:00 AM" formControlName="mañanaFin">
+                                                    <ngx-material-timepicker #picker4></ngx-material-timepicker>
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
                                     </div>
-                                </mat-form-field>
-                            
-                                <!-- raza va a depender de la seleccion en la especia, el campo deberia mostrarse una vez seleccionado dicho valor -->
-                                <!-- <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <mat-label>Raza</mat-label>
-                                    <mat-select formControlName="raza" required>
-                                        <mat-option value="gDanes">Gran Danes (perro)</mat-option>
-                                        <mat-option value="persa">Persa (gato)</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <mat-label>Fecha de Nacimiento</mat-label>
-                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
-                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker2></mat-datepicker>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Peso en kg" formControlName="peso" required>
-                                </mat-form-field> -->
+                                    <mat-card-title style="margin: 15px;">Turno Tarde:</mat-card-title>
+                                    <div style="display: flex; align-items: center; justify-content: space-around;">
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                            <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                <span>Hora Inicio:</span>
+                                                <div>
+                                                    <input matInput [ngxTimepicker]="picker5" placeholder="Ej: 4:00 PM" formControlName="tardeInicio">
+                                                    <ngx-material-timepicker #picker5></ngx-material-timepicker>
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                            <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                <span>Hora Fin:</span>
+                                                <div>
+                                                    <input matInput [ngxTimepicker]="picker6" placeholder="Ej: 8:00 PM" formControlName="tardeInicio">
+                                                    <ngx-material-timepicker #picker6></ngx-material-timepicker>
+                                                </div>
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-card>
                             </div>
-                            
+
                             <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
                                 <button mat-button (click)="agregarHorario()">Agregar</button>
                             </div>
