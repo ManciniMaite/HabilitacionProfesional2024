@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import { AuthService } from '../services/auth.service';
+import { SessionManagerRequest } from '../model/SessionManagerRequest';
 
 @Component({
   selector: 'app-inicio',
@@ -32,7 +34,8 @@ export class InicioComponent implements OnInit{
 
   constructor(
     private fb: FormBuilder,
-    private routes: Router
+    private routes: Router,
+    private authService: AuthService
   ){
     this.formGroup = this.fb.group({
       usuario:      new FormControl("",[Validators.required]),
@@ -41,6 +44,16 @@ export class InicioComponent implements OnInit{
   }
   
   ingresar(){
+    let rq: SessionManagerRequest = new SessionManagerRequest();
+    rq.correo = this.formGroup.get('usuario')?.value; 
+    rq.password = this.formGroup.get('contrasenia')?.value
+    this.authService.onLogIn(rq).subscribe({
+      next:(data) => {
+        console.log(data); 
+      }, error: (error)=>{
+        console.log(error);
+      }
+    });
     this.routes.navigate(['home']);
   }
 }

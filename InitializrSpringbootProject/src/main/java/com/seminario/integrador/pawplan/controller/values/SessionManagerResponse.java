@@ -12,6 +12,8 @@ public class SessionManagerResponse extends Response{
     
     
     private String token;
+    private String rol;
+    private String nombre;
 
     public String getToken() {
         return token;
@@ -22,6 +24,22 @@ public class SessionManagerResponse extends Response{
     }
 
     public SessionManagerResponse() {
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
     

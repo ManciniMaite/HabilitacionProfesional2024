@@ -34,8 +34,8 @@ public class SessionRestController {
     	
     	String token = null;
 		try {
-			token = sessionManager.login(loginRequest.getCorreo(), loginRequest.getPassword());
-			loginResponse = new SessionManagerResponse();
+                        loginResponse = new SessionManagerResponse();
+			loginResponse = sessionManager.login(loginRequest.getCorreo(), loginRequest.getPassword());
                         loginResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getCodigo()));
                         loginResponse.setMensaje(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getMensaje()));
                         loginResponse.setToken(token);

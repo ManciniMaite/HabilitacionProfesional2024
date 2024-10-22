@@ -1,13 +1,13 @@
 
-DROP TABLE IF EXISTS `provincia`;
-CREATE TABLE IF NOT EXISTS `provincia` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+DROP TABLE IF EXISTS provincia CASCADE;
+CREATE TABLE IF NOT EXISTS provincia (
+  id INTEGER NOT NULL,
+  nombre varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+);
 
 
-INSERT INTO `provincias` (`id`, `nombre`) VALUES
+INSERT INTO provincia (id, nombre) VALUES
 (1, 'Buenos Aires'),
 (2, 'Buenos Aires-GBA'),
 (3, 'Capital Federal'),
@@ -39,19 +39,19 @@ INSERT INTO `provincias` (`id`, `nombre`) VALUES
 -- Estructura de tabla para la tabla `localidades`
 --
 
-DROP TABLE IF EXISTS `ciudad`;
-CREATE TABLE IF NOT EXISTS `ciudad` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_provincia` int(11) NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2383 ;
+DROP TABLE IF EXISTS ciudad CASCADE;
+CREATE TABLE IF NOT EXISTS ciudad (
+  id BIGINT NOT NULL ,
+  id_provincia INTEGER NOT NULL,
+  nombre varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+) ;
 
 --
 -- Volcar la base de datos para la tabla `localidades`
 --
 
-INSERT INTO `localidades` (`id`, `id_provincia`, `nombre`) VALUES
+INSERT INTO ciudad (id, id_provincia, nombre) VALUES
 (1, 1, '25 de Mayo'),
 (2, 1, '3 de febrero'),
 (3, 1, 'A. Alsina'),
@@ -2125,7 +2125,7 @@ INSERT INTO `localidades` (`id`, `id_provincia`, `nombre`) VALUES
 (2071, 22, 'Palacios'),
 (2072, 22, 'Pavón'),
 (2073, 22, 'Pavón Arriba');
-INSERT INTO `localidades` (`id`, `id_privincia`, `localidad`) VALUES
+INSERT INTO ciudad (id, id_provincia, nombre) VALUES
 (2074, 22, 'Pedro Gómez Cello'),
 (2075, 22, 'Pérez'),
 (2076, 22, 'Peyrano'),
@@ -2435,3 +2435,57 @@ INSERT INTO `localidades` (`id`, `id_privincia`, `localidad`) VALUES
 (2380, 25, 'Yánima'),
 (2381, 25, 'Yerba Buena'),
 (2382, 25, 'Yerba Buena (S)');
+
+
+
+
+-- Crear tabla TipoEspecie
+DROP TABLE IF EXISTS tipo_especie CASCADE;
+CREATE TABLE tipo_especie (
+    id BIGINT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL
+);
+
+-- Crear tabla Especie
+DROP TABLE IF EXISTS especie CASCADE;
+CREATE TABLE especie (
+    id BIGINT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    tipo_especie_id BIGINT,
+    FOREIGN KEY (tipo_especie_id) REFERENCES tipo_especie(id)
+);
+
+-- Crear tabla Raza
+DROP TABLE IF EXISTS raza CASCADE;
+CREATE TABLE raza (
+    id BIGINT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    especie_id BIGINT,
+    FOREIGN KEY (especie_id) REFERENCES Especie(id)
+);
+
+-- Insertar datos iniciales en TipoEspecie con IDs explícitos
+INSERT INTO tipo_especie (id, nombre) VALUES (1, 'Mamífero');
+INSERT INTO tipo_especie (id, nombre) VALUES (2, 'Ave');
+INSERT INTO tipo_especie (id, nombre) VALUES (3, 'Reptil');
+
+-- Insertar datos iniciales en Especie con IDs explícitos
+INSERT INTO especie (id, nombre, tipo_especie_id) VALUES (1, 'Perro', 1);
+INSERT INTO especie (id, nombre, tipo_especie_id) VALUES (2, 'Gato', 1);
+INSERT INTO especie (id, nombre, tipo_especie_id) VALUES (3, 'Canario', 2);
+INSERT INTO especie (id, nombre, tipo_especie_id) VALUES (4, 'Iguana', 3);
+
+-- Insertar datos iniciales en Raza con IDs explícitos
+INSERT INTO raza (id, nombre, especie_id) VALUES (1, 'Labrador', 1);
+INSERT INTO raza (id, nombre, especie_id) VALUES (2, 'Bulldog', 1);
+INSERT INTO raza (id, nombre, especie_id) VALUES (3, 'Siames', 2);
+INSERT INTO raza (id, nombre, especie_id) VALUES (4, 'Persa', 2);
+
+
+
+
+
+
+
+
+

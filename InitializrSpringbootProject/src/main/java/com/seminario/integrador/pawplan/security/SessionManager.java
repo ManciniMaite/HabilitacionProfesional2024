@@ -6,9 +6,13 @@ package com.seminario.integrador.pawplan.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.SessionManagerResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.exception.PawPlanRuleException;
+import com.seminario.integrador.pawplan.model.Cliente;
 import com.seminario.integrador.pawplan.model.Usuario;
+import com.seminario.integrador.pawplan.model.Veterinaria;
+import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 
 import java.security.GeneralSecurityException;
@@ -52,7 +56,9 @@ public class SessionManager {
      *
      */
     @Transactional(propagation = Propagation.SUPPORTS)
-    public String login(String correo, String password) throws PawPlanRuleException {
+    public SessionManagerResponse login(String correo, String password) throws PawPlanRuleException {
+        
+        SessionManagerResponse rs = new SessionManagerResponse();
 
         //obtener los datos del usuario desde la base de datos. 
         Usuario user = usuarioRepository.findByCorreo(correo);
@@ -93,7 +99,28 @@ public class SessionManager {
         //generar token a devolver
         String encodedToken = encriptador.encriptar(rawToken);
 
-        return encodedToken;
+        rs.setToken(encodedToken);
+        rs.setRol(user.getRole().getRole());
+        
+        switch (user.getRole()) {
+            case PACIENTE:
+                    Cliente cliente = (Cliente) user;
+                    rs.setNombre(cliente.getNombre() + " " + cliente.getApellido());
+                    break;
+            case VETERINARIA:
+                    Veterinaria veterinaria = (Veterinaria) user;
+                    rs.setNombre(veterinaria.getRazonSocial());
+                    break;
+            case VETERINARIO:
+                    Veterinario veterinario = (Veterinario) user;
+                    rs.setNombre(veterinario.getNombre() + " " + veterinario.getApellido());
+                    break;
+            default:
+                    throw new IllegalArgumentException("Unexpected value: " + user.getRole());
+        }
+        
+        
+        return rs;
 
     }
     
