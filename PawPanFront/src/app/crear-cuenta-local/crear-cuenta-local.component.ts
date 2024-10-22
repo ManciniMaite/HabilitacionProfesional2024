@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, signal } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Horario } from '../model/Horario';
 import { Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
@@ -14,13 +14,20 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
+export interface Week {
+  completado: boolean;
+  dias?: {nombre: string, seleccionado: boolean}[];
+}
 
 @Component({
   selector: 'app-crear-cuenta-local',
   standalone: true,
   imports: [
     MatStepperModule,
-    MatCardModule, 
+    MatCardModule,
     MatFormFieldModule, 
     MatInputModule, 
     CommonModule, 
@@ -32,19 +39,37 @@ import { MatRadioModule } from '@angular/material/radio';
     MatOptionModule,
     MatSelectModule,
     MatChipsModule,
-    MatRadioModule
+    MatRadioModule,
+    MatCheckboxModule,
+    NgxMaterialTimepickerModule,
+    FormsModule
   ],
   templateUrl: './crear-cuenta-local.component.html',
   styleUrl: './crear-cuenta-local.component.scss'
 })
 export class CrearCuentaLocalComponent {
   animationDuration = '1000'
-
+  
   datosLocal: FormGroup;
   ubicacion: FormGroup;
-  hoarioTrabajo: FormGroup;
+  horarioTrabajo: FormGroup;
 
   horarios: Horario[];
+
+  readonly semana = signal<Week>(
+    {
+      completado: false,
+      dias: [
+        {nombre: "Lunes", seleccionado: false},
+        {nombre: "Martes", seleccionado: false},
+        {nombre: "Miercoles", seleccionado: false},
+        {nombre: "jueves", seleccionado: false},
+        {nombre: "Viernes", seleccionado: false},
+        {nombre: "Sabado", seleccionado: false},
+        {nombre: "Domingo", seleccionado: false}
+      ]
+    }
+  )
 
   constructor(
     private fb: FormBuilder,
@@ -59,11 +84,15 @@ export class CrearCuentaLocalComponent {
       telefono:     new FormControl('',Validators.required),
     });
 
-    this.hoarioTrabajo = this.fb.group({
+    this.horarioTrabajo = this.fb.group({
       dia:              new FormControl('', Validators.required),
       corrido:          new FormControl(''),
       horarioApertura:  new FormControl(''),
-      horarioCierre:    new FormControl('')
+      horarioCierre:    new FormControl(''),
+      mañanaInicio:    new FormControl(''),
+      mañanaFin:    new FormControl(''),
+      tardeInicio:    new FormControl(''),
+      tardeFin:    new FormControl(''),
     });
 
     this.ubicacion = this.fb.group({
@@ -73,10 +102,23 @@ export class CrearCuentaLocalComponent {
     })
   }
 
+  update(completed: boolean, index?: number) {
+    this.semana.update(element => {
+      if (index === undefined) {
+        element.completado = completed;
+        element.dias?.forEach(d => (d.seleccionado = completed));
+      } else {
+        element.dias![index].seleccionado = completed;
+        element.completado = element.dias?.every(d => d.seleccionado) ?? true;
+      }
+      return {...element};
+    });
+  }
+
   agregarHorario(){
     let selectedHorario = new Horario;
-    selectedHorario.horaInicio = this.hoarioTrabajo.value.horarioApertura;
-    selectedHorario.horaFin = this.hoarioTrabajo.value.horarioCierre;
+    selectedHorario.horaInicio = this.horarioTrabajo.value.horarioApertura;
+    selectedHorario.horaFin = this.horarioTrabajo.value.horarioCierre;
     if (this.horarios == undefined) {
       this.horarios = [selectedHorario];
     } else {
@@ -95,7 +137,7 @@ export class CrearCuentaLocalComponent {
   onConfirmar(){
     console.log("Cuenta creada! datos:");
     console.log(this.datosLocal.value);
-    console.log(this.hoarioTrabajo.value);
+    console.log(this.horarioTrabajo.value);
     console.log(this.ubicacion.value);
   }
 
