@@ -31,7 +31,7 @@ public class AnimalRestControler {
     
     
     @GetMapping("findByClient")
-    public ListaAnimalesRs findByClient (){
+    public ListaAnimalesRs findByClient(){
         return this.service.findByCliente();
     }
     

@@ -18,9 +18,9 @@ public class Constantes {
     //duracion de 24hs 
     public static final long milisecondsDurationLogin = 1000 * 60 * 60 * 24;
 
-    public static final String bitsaGetCryptoPassword = "9d3d93181c082b3791844c73786d41ca";
-    public static final String bitsaGetCryptoSalt = "4cb148388500cf647daf8c4e26dffe4f";
-    public static final String bitsaGetTokenduracion = "28800000";
+    public static final String pawplanGetCryptoPassword = "9d3d93181c082b3791844c73786d41ca";
+    public static final String pawplanGetCryptoSalt = "4cb148388500cf647daf8c4e26dffe4f";
+    public static final String pawplanGetTokenduracion = "28800000";
 
     
     

@@ -14,7 +14,8 @@ public enum EnumCodigoErrorLogin implements EnumErroresInterface{
     LOGIN_401(401,"No Autorizado."),
     LOGIN_2000(2000,"Error interno procesando request."),
     LOGIN_2400(2400,"Credenciales de login invalidas."),
-    LOGIN_2410(2410,"El usuario esta deshabilitado.");
+    LOGIN_2410(2410,"El usuario esta deshabilitado."),
+    LOGIN_2420(2420,"La session caduco.");
     
     private final int codigo;
     private final String mensaje;

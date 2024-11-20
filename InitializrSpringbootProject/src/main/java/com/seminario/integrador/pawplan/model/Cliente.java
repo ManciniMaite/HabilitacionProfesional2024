@@ -24,7 +24,7 @@ public class Cliente extends Usuario{
     private String dni;
     
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @NotNull(message = "debe agregar al menos un animal")
+    //@NotNull(message = "debe agregar al menos un animal")
     private List<Animal> animales;
 
     public String getNombre() {

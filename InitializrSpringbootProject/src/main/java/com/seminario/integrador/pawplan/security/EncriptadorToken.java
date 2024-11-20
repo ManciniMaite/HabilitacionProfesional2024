@@ -89,8 +89,8 @@ public final class EncriptadorToken {
      */
     public synchronized void inicializarEncryptor() {
 
-    	String password = Constantes.bitsaGetCryptoPassword;
-    	String salt = Constantes.bitsaGetCryptoSalt;
+    	String password = Constantes.pawplanGetCryptoPassword;
+    	String salt = Constantes.pawplanGetCryptoSalt;
         
     	this.encrytor = Encryptors.standard(password, salt);
     	
