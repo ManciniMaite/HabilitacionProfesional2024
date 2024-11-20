@@ -28,23 +28,11 @@ import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
 @Service
 public class TurnoService {
-
-	@Autowired
-    private IAuthenticationFacade authenticationFacade;
 	
 	@Autowired
 	private TurnoRepository turnoRepository;
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-	@Autowired
-	private ClienteRepository clienteRepository;
-
-	@Autowired
-	private VeterinarioRepository veterinarioRepository;
-
-	@Autowired
-	private VeterinariaRepository veterinariaRepository;
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
@@ -85,6 +73,32 @@ public class TurnoService {
 		
 		Turno turnoFinal = new Turno();
 		
+		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
+		
+		switch (usuario.getRole()) {
+		case PACIENTE:
+			Cliente cliente = (Cliente) usuario;
+			
+			break;
+		case VETERINARIA:
+			Veterinaria veterinaria = (Veterinaria) usuario;
+
+			break;
+		case VETERINARIO:
+			Veterinario veterinario = (Veterinario) usuario;
+
+			break;
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + usuario.getRole());
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 		turnoFinal.setCliente((clienteRepository.findById(session.getClienteId())).get());
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
 		turnoFinal.setFecha(turnoRequest.getFechaReserva());
@@ -109,28 +123,8 @@ public class TurnoService {
 		return result;
 		//return null;
 		
-		Usuario usuario = usuarioRepository.findById(principalPawplan.getClienteId()).get();
-		
-		switch (usuario.getRole()) {
-		case PACIENTE:
-			Cliente cliente = (Cliente) usuario;
-			
-			break;
-		case VETERINARIA:
-			Veterinaria veterinaria = (Veterinaria) usuario;
-
-			break;
-		case VETERINARIO:
-			Veterinario veterinario = (Veterinario) usuario;
-
-			break;
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + usuario.getRole());
-		}
 		
 		
-
-		return result;
 
 	}
 	

@@ -56,7 +56,7 @@ public class TurnoRequest {
 	public void setCiudad(Ciudad ciudad) {
 		this.ciudad = ciudad;
 	}
-s
+
 	public Date getFechaReserva() {
 		return fechaReserva;
 	}
