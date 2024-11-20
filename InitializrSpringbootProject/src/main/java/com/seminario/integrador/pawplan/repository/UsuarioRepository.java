@@ -6,11 +6,13 @@ package com.seminario.integrador.pawplan.repository;
 
 import com.seminario.integrador.pawplan.model.Usuario;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author sebastian
  */
+@Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Long>{
     
     public Usuario findByCorreo(String correo);
