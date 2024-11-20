@@ -46,6 +46,14 @@ public class TurnoService {
 	@Autowired
 	private VeterinariaRepository veterinariaRepository;
 	
+	@Autowired
+	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private VeterinarioRepository veterinarioRepository;
+
+	@Autowired
+	private VeterinariaRepository veterinariaRepository;
 	
 	@Autowired
 	private IAuthenticationFacade authenticationFacade;
@@ -96,7 +104,7 @@ public class TurnoService {
 		turnoFinal.setEsGuardia(turnoRequest.isEsGuardia());
 		
 		turnoFinal.setMonto(turnoRequest.getMonto());
-		
+
 		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
 		return result;
 		//return null;
@@ -121,6 +129,9 @@ public class TurnoService {
 		}
 		
 		
+
+		return result;
+
 	}
 	
 }

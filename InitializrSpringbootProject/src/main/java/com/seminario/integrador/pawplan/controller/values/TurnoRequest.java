@@ -5,7 +5,6 @@ import java.util.Date;
 
 import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.model.TipoEspecie;
-
 import com.seminario.integrador.pawplan.model.Cliente;
 import com.seminario.integrador.pawplan.model.DetalleTurno;
 import com.seminario.integrador.pawplan.model.Estado;
@@ -15,6 +14,7 @@ import com.seminario.integrador.pawplan.model.Veterinario;
 public class TurnoRequest {
 
 	private Date fechaConsulta;
+
 	private TipoEspecie tipoEspecie;
 	private Ciudad ciudad;
 	private Date fechaReserva; 
@@ -56,7 +56,7 @@ public class TurnoRequest {
 	public void setCiudad(Ciudad ciudad) {
 		this.ciudad = ciudad;
 	}
-
+s
 	public Date getFechaReserva() {
 		return fechaReserva;
 	}
