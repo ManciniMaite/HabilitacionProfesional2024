@@ -36,7 +36,7 @@ public class SessionRestController {
 		try {
                         loginResponse = new SessionManagerResponse();
 			loginResponse = sessionManager.login(loginRequest.getCorreo(), loginRequest.getPassword());
-                        loginResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getCodigo()));
+                        loginResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getEstado()));
                         loginResponse.setMensaje(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getMensaje()));
                         
 		} catch (PawPlanRuleException e) {

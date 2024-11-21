@@ -11,4 +11,5 @@ package com.seminario.integrador.pawplan.enums;
 public interface EnumErroresInterface {
 	public int getCodigo();
 	public String getMensaje();
+	public String getEstado();
 }
