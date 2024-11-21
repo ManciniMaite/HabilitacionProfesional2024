@@ -36,12 +36,9 @@ public class UsuarioRequest {
     private String cuil;
     private int matricula;
     private boolean esIndependiente;
-    //private boolean haceGuardia;
-    @OneToMany
     private ArrayList<DiaHorarioAtencion> horario;
-    @OneToMany
     private ArrayList<Especialidad> especialidad;
-    //private boolean heceDomicilio;
+    
 	public Role getTipoUsuario() {
 		return tipoUsuario;
 	}

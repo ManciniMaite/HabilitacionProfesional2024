@@ -5,6 +5,7 @@ package com.seminario.integrador.pawplan.controller;
 */
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,14 +22,14 @@ public class TurnoController {
 	@Autowired
 	private TurnoService turnoService;
 
-	@RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.GET)
-    public TurnoResponse consultarTurnosDisponible(TurnoRequest request) {
+	@RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.POST)
+    public TurnoResponse consultarTurnosDisponible(@RequestBody TurnoRequest request) {
 		
-		return turnoService.getTurnosDisponibles(request.getFechaConsulta());
+		return turnoService.getTurnosDisponibles(request);
 	}
 	
-	@RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.GET)
-    public TurnoResponse reservarTurnos(TurnoRequest request) {
+	@RequestMapping(value = Constantes.URL_PATH_CONSULTAR+"1s", method = RequestMethod.POST)
+    public TurnoResponse reservarTurnos(@RequestBody TurnoRequest request) {
 		
 		return turnoService.reservarturno(request);
 	}

@@ -1,6 +1,5 @@
 package com.seminario.integrador.pawplan.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,22 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
+import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
+import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
 import com.seminario.integrador.pawplan.model.Cliente;
+import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
-import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
-import com.seminario.integrador.pawplan.model.Animal;
-import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.repository.ClienteRepository;
 import com.seminario.integrador.pawplan.repository.TurnoRepository;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
-import com.seminario.integrador.pawplan.security.PrincipalPawplan;
-import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 import com.seminario.integrador.pawplan.repository.VeterinariaRepository;
 import com.seminario.integrador.pawplan.repository.VeterinarioRepository;
 import com.seminario.integrador.pawplan.security.PrincipalPawplan;
-import com.seminario.integrador.pawplan.security.Role;
 import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
 @Service
@@ -46,7 +42,7 @@ public class TurnoService {
 	@Autowired
 	private IAuthenticationFacade authenticationFacade;
 	
-	public TurnoResponse getTurnosDisponibles(Date fecha){
+	public TurnoResponse getTurnosDisponibles(TurnoRequest turnoRequest){
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -56,7 +52,18 @@ public class TurnoService {
 			return result;
 		}
 		
-		result.setHorariosDisponibles(turnoRepository.consultarTurnosDisponibles(fecha));
+		long vetId = 0;
+		if (turnoRequest.getVeterinariaId() != null) {
+			vetId = turnoRequest.getVeterinariaId();
+		} else if (turnoRequest.getVeterinarioId() != null) {
+			vetId = turnoRequest.getVeterinarioId();
+		} else {
+			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10001.getCodigo()));
+			result.setMensaje(EnumEstadosGenerales.ERROR_10001.getMensaje());
+			return result;
+		}
+		
+		result.setHorariosDisponibles(turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFechaConsulta()));
 		
 		return result;
 	}

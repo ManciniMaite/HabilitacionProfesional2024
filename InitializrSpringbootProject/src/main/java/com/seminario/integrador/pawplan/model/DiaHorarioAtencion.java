@@ -11,7 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,8 +26,8 @@ public class DiaHorarioAtencion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String dia;
-    @OneToMany(cascade = CascadeType.ALL)
-    private ArrayList<Horario> horario;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Horario horario;
 
     public Long getId() {
         return id;
@@ -42,11 +45,11 @@ public class DiaHorarioAtencion {
         this.dia = dia;
     }
 
-    public ArrayList<Horario> getHorario() {
+    public Horario getHorario() {
         return horario;
     }
 
-    public void setHorario(ArrayList<Horario> horario) {
+    public void setHorario(Horario horario) {
         this.horario = horario;
     }
     

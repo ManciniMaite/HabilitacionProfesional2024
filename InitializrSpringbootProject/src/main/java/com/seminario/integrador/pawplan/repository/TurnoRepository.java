@@ -12,6 +12,7 @@ import java.util.Date;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,8 +22,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TurnoRepository extends CrudRepository<Turno, Long>{
     
-	@Query("select funcion(:date)")
-	public ArrayList<Horario> consultarTurnosDisponibles(Date fecha);
+	@Query("select calcular_turnos_disponibles(:clienteId, :fecha )")
+	public ArrayList<Horario> consultarTurnosDisponibles(@Param("clienteId") Long clienteId,@Param("fecha") Date fecha);
 	
 	
 }
