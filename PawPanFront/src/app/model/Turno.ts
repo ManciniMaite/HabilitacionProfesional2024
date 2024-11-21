@@ -6,7 +6,7 @@ import { Veterinario } from "./Veterinario";
 
 export class Turno {
     fechaHoraReserva: string;
-    feha: string;
+    fecha: string;
     hora: string;
     detalleTurno: DetalleTurno[];
     estado: Estado;

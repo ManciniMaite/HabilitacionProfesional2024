@@ -9,11 +9,12 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MenuItems } from './model/MenuItems';
 import { menuItems } from './model/data/data-MenuItems';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,RouterLink ,MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, HeaderComponent],
+  imports: [RouterOutlet,RouterLink ,MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, HeaderComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

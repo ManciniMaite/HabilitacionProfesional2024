@@ -10,6 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { AuthService } from '../services/auth.service';
 import { SessionManagerRequest } from '../model/SessionManagerRequest';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-inicio',
@@ -22,6 +23,7 @@ import { SessionManagerRequest } from '../model/SessionManagerRequest';
     RouterLink,
     MatButtonModule,
     MatIconModule,
+    HttpClientModule
   ],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.scss'
@@ -50,10 +52,10 @@ export class InicioComponent implements OnInit{
     this.authService.onLogIn(rq).subscribe({
       next:(data) => {
         console.log(data); 
+        this.routes.navigate(['home']);
       }, error: (error)=>{
         console.log(error);
       }
     });
-    this.routes.navigate(['home']);
   }
 }
