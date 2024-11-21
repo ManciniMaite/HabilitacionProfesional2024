@@ -99,7 +99,7 @@ public class SessionManager {
         //generar token a devolver
         String encodedToken = encriptador.encriptar(rawToken);
 
-        rs.setToken(encodedToken);
+        rs.setToken("Pawplan "+encodedToken);
         rs.setRol(user.getRole().getRole());
         
         switch (user.getRole()) {

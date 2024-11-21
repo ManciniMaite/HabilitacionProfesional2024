@@ -158,7 +158,7 @@ export class CrearCuentaClienteComponent implements OnInit{
     let selectedAnimal = new Animal;
     selectedAnimal.nombre = this.mascota.value.nombreMascota;
     selectedAnimal.fechaNac = this.mascota.value.fechaNacMascota;
-    selectedAnimal.especie = this.mascota.value.especie;
+    selectedAnimal.raza.especie = this.mascota.value.especie;
     selectedAnimal.raza = this.mascota.value.raza;
     selectedAnimal.peso = this.mascota.value.peso;
     this.animales.push(selectedAnimal);

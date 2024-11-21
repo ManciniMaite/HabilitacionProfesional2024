@@ -63,7 +63,7 @@ public class AuthorizationFilter implements Filter	 {
 	            if ( autorizacion.startsWith("Pawplan") ) { //La cabecera de validacion de Bit se encuentra presente?.
 	            	
 	            	//setear los datos del usuario en el contexto de seguridad
-	            	Authentication authentication = sessionManager.getAuthtentication( autorizacion.substring(autorizacion.indexOf(" ")) ); //Enviar el token para ser procesado
+	            	Authentication authentication = sessionManager.getAuthtentication( autorizacion.substring(autorizacion.indexOf(" ")+1) ); //Enviar el token para ser procesado
 	            	
 	            	if (authentication == null) {
 	            		break;

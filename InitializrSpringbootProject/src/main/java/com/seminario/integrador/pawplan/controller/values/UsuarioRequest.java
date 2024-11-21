@@ -50,8 +50,7 @@ public class UsuarioRequest {
 //VETERINARIA - PACIENTE
     private Domicilio domicilio;
     
-    
-    
+
 	public Role getTipoUsuario() {
 		return tipoUsuario;
 	}

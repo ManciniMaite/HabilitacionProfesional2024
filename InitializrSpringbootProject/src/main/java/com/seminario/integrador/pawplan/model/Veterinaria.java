@@ -4,6 +4,7 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,10 +26,10 @@ public class Veterinaria extends Usuario{
     private String cuit;
     private boolean haceGuardia;
     private boolean aptoCirugia;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @NotNull(message = "debe especificar sus horarios")
     private List<DiaHorarioAtencion> horarioAtencion;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Veterinario> veterinarios;
     private boolean haceDomicilio;
 

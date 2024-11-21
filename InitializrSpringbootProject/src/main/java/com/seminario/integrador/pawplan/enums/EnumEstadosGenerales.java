@@ -3,7 +3,8 @@ package com.seminario.integrador.pawplan.enums;
 public enum EnumEstadosGenerales implements EnumErroresInterface {
 	
 	OK(200,"OK"),
-	ERROR(10000,"ERROR");
+	ERROR(10000,"ERROR"),
+	ERROR_10001(10001,"ERROR FALTA PARAMETRO VETERINARIO/VETERINARIA");
 
 	private final int codigo;
     private final String mensaje;
@@ -14,17 +15,12 @@ public enum EnumEstadosGenerales implements EnumErroresInterface {
 		this.mensaje = mensaje;
 	}
 
-	@Override
 	public int getCodigo() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getMensaje() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        return codigo;
+    }
+    public String getMensaje() {
+        return mensaje;
+    }
 	
 	
 
