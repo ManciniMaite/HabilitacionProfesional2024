@@ -52,7 +52,10 @@ export class InicioComponent implements OnInit{
     this.authService.onLogIn(rq).subscribe({
       next:(data) => {
         console.log(data); 
-        this.routes.navigate(['home']);
+        if(data.estado!="ERROR"){
+          localStorage.setItem('authToken', data.token);
+          this.routes.navigate(['home']);
+        }
       }, error: (error)=>{
         console.log(error);
       }

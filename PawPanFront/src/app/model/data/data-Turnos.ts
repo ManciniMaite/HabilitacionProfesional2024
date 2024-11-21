@@ -22,8 +22,10 @@ export const Turnos: Turno[]=[
                 peso: 4.5,
                 foto: 'Foto del animal',
                 raza: {
+                    id:1,
                     nombre: 'Persa',
                     especie: {
+                        id:1,
                         nombre: 'Gato',
                         tipoEspecie: {
                             nombre: 'Chico',
@@ -49,8 +51,10 @@ export const Turnos: Turno[]=[
                 peso: 4.5,
                 foto: 'Foto del animal',
                 raza: {
+                    id:1,
                     nombre: 'Persa',
                     especie: {
+                        id:1,
                         nombre: 'Gato',
                         tipoEspecie: {
                             nombre: 'Chico',
