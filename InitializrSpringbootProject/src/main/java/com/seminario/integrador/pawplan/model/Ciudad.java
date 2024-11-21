@@ -42,6 +42,12 @@ public class Ciudad {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
+
+    public Provincia getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(Provincia provincia) {
+        this.provincia = provincia;
+    }
 }

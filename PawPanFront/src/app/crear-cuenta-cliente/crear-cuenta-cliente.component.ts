@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,16 @@ import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { Animal } from '../model/Animal';
 import { MatChipsModule } from '@angular/material/chips';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { UsuarioRq } from '../model/UsuarioRq';
+import { Domicilio } from '../model/Domicilio';
+import { UsuarioService } from '../services/usuario.service';
+import { EspecieService } from '../services/especie.service';
+import { RazaService } from '../services/raza.service';
+import { CiudadService } from '../services/ciudad.service';
+import { Ciudad } from '../model/Ciudad';
+import { Especie } from '../model/Especie';
+import { Raza } from '../model/Raza';
 
 @Component({
   selector: 'app-crear-cuenta-cliente',
@@ -31,12 +40,13 @@ import { Router } from '@angular/router';
     MatDatepickerModule,
     MatOptionModule,
     MatSelectModule,
-    MatChipsModule
+    MatChipsModule,
+    RouterLink
   ],
   templateUrl: './crear-cuenta-cliente.component.html',
   styleUrl: './crear-cuenta-cliente.component.scss'
 })
-export class CrearCuentaClienteComponent {
+export class CrearCuentaClienteComponent implements OnInit{
   animationDuration = '1000'
 
   datosPersonales: FormGroup;
@@ -45,18 +55,30 @@ export class CrearCuentaClienteComponent {
 
   animales: Animal[] = [];
 
+  ciudades: Ciudad[] = [];
+  especies: Especie[] = [];
+  razas: Raza[] = [];
+
+  usCreado: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private service: UsuarioService,
+    private especieService: EspecieService,
+    private razasService: RazaService,
+    private ciudadesService: CiudadService
   ){
     this.datosPersonales = this.fb.group({
-      nombre:     new FormControl('', Validators.required),
-      apellido:   new FormControl('', Validators.required),
-      fechaNac:   new FormControl('', Validators.required),
-      dni:        new FormControl('', Validators.required),
-      correo:     new FormControl('', [Validators.required, Validators.email]),
-      telefono:   new FormControl('', Validators.required)
+      nombre:               new FormControl('', Validators.required),
+      apellido:             new FormControl('', Validators.required),
+      fechaNac:             new FormControl('', Validators.required),
+      dni:                  new FormControl('', Validators.required),
+      correo:               new FormControl('', [Validators.required, Validators.email]),
+      telefono:             new FormControl('', Validators.required),
+      contrasenia:          new FormControl('', Validators.required),
+      validarContrasenia:   new FormControl('', Validators.required)
     });
 
     this.mascota = this.fb.group({
@@ -73,6 +95,63 @@ export class CrearCuentaClienteComponent {
       calle:     new FormControl(''),
       numero:    new FormControl('')
     })
+  }
+
+  ngOnInit(): void {
+      this.especieService.getAll().subscribe({
+        next:(data)=> {
+            if(data.estado != "ERROR"){
+              this.especies = data.especies;
+            } else {
+              /**
+               * TODO: DIALOGO DE ERROR
+               */
+              console.log(data.mensaje);
+            }
+        }, error: (error)=>{
+          /**
+           * TODO: DIALOGO DE ERROR 
+           */
+          console.log(error);
+        }
+      });
+      this.ciudadesService.getAll().subscribe({
+        next:(data)=> {
+            if(data.estado != "ERROR"){
+              this.ciudades = data.ciudades;
+            } else {
+              /**
+               * TODO: DIALOGO DE ERROR
+               */
+              console.log(data.mensaje);
+            }
+        }, error: (error)=>{
+          /**
+           * TODO: DIALOGO DE ERROR 
+           */
+          console.log(error);
+        }
+      });
+  }
+
+  getRazas(id: number){
+    this.razasService.getAll(id).subscribe({
+      next:(data)=> {
+          if(data.estado != "ERROR"){
+            this.razas = data.razas;
+          } else {
+            /**
+             * TODO: DIALOGO DE ERROR
+             */
+            console.log(data.mensaje);
+          }
+      }, error: (error)=>{
+        /**
+         * TODO: DIALOGO DE ERROR 
+         */
+        console.log(error);
+      }
+    });
   }
 
   agregarAnimal(){
@@ -96,6 +175,35 @@ export class CrearCuentaClienteComponent {
   }
  
   onConfirmar(){
+    if (this.validarDatosPersonales() && this.validarMascotas()){
+      let rq: UsuarioRq = new UsuarioRq();
+      rq.tipoUsuario="PACIENTE";
+      rq.telefono=this.datosPersonales.get('telefono')?.value;
+      rq.correo=this.datosPersonales.get('telefono')?.value;
+      rq.contrasenia=this.datosPersonales.get('contrasenia')?.value;
+      rq.nombre=this.datosPersonales.get('nombre')?.value;
+      rq.apellido=this.datosPersonales.get('apellido')?.value;
+      rq.dni=this.datosPersonales.get('dni')?.value;
+      rq.fechaNac=this.datosPersonales.get('fechaNac')?.value;
+      rq.animales = this.animales;
+
+      let domicilio: Domicilio = new Domicilio();
+      domicilio.calle = this.ubicacion.get('calle')?.value;
+      domicilio.ciudad = this.ubicacion.get('ciudad')?.value;
+      domicilio.numero= this.ubicacion.get('numero')?.value;
+
+      rq.domicilio = domicilio;
+
+      this.service.crearCuenta(rq).subscribe({
+        next:(data) => {
+          this.usCreado = true;
+          console.log(data); 
+        }, error: (error)=>{
+          console.log(error);
+        }
+      });
+      
+    }
     console.log("Cuenta creada! datos:");
     console.log(this.datosPersonales.value);
     console.log(this.mascota.value);
@@ -104,6 +212,26 @@ export class CrearCuentaClienteComponent {
 
   volver(){
     this.location.back();
+  }
+
+  validarDatosPersonales(): boolean{
+    return (this.datosPersonales.get('nombre')?.value != null && this.datosPersonales.get('nombre')?.value != undefined && this.datosPersonales.get('nombre')?.value != "")&&
+           (this.datosPersonales.get('apellido')?.value != null && this.datosPersonales.get('apellido')?.value != undefined && this.datosPersonales.get('apellido')?.value != "")&&
+           (this.datosPersonales.get('fechaNac')?.value != null && this.datosPersonales.get('fechaNac')?.value != undefined && this.datosPersonales.get('fechaNac')?.value != "")&&
+           (this.datosPersonales.get('dni')?.value != null && this.datosPersonales.get('dni')?.value != undefined && this.datosPersonales.get('dni')?.value != "")&&
+           (this.datosPersonales.get('correo')?.value != null && this.datosPersonales.get('correo')?.value != undefined && this.datosPersonales.get('correo')?.value != "")&&
+           (this.datosPersonales.get('telefono')?.value != null && this.datosPersonales.get('telefono')?.value != undefined && this.datosPersonales.get('telefono')?.value != "")&&
+           (this.datosPersonales.get('contrasenia')?.value != null && this.datosPersonales.get('contrasenia')?.value != undefined && this.datosPersonales.get('contrasenia')?.value != "")&&
+           (this.datosPersonales.get('validarContrasenia')?.value != null && this.datosPersonales.get('validarContrasenia')?.value != undefined && this.datosPersonales.get('validarContrasenia')?.value != "")&&
+           this.validarContrasenias();
+  }
+
+  validarContrasenias(): boolean{
+    return this.datosPersonales.get('contrasenia')?.value === this.datosPersonales.get('validarContrasenia')?.value;
+  }
+
+  validarMascotas(): boolean{
+    return this.animales.length > 0;
   }
 
   // mostrarFecha(){

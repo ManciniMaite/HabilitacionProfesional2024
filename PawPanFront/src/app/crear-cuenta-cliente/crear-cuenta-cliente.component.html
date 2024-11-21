@@ -1,127 +1,152 @@
 <div class="form">
     <div class="container">
         <mat-card style="width: 90%; height: fit-content;">
-            <div class="titleContainer">
-                <button mat-icon-button (click)="volver()" color="primary" style="background-color: lightblue;">
-                    <mat-icon>arrow_back</mat-icon>
-                </button>
-                <mat-card-title class="title">
-                    CREAR CUENTA
-                </mat-card-title>
-            </div>
-            <mat-card-content>
-                <mat-horizontal-stepper [linear]="false" #stepper [animationDuration]="animationDuration">
-                    <mat-step [stepControl]="datosPersonales">
-                        <form [formGroup]="datosPersonales">
-                            <ng-template matStepLabel>Datos personales</ng-template>
-                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Nombre" formControlName="nombre" required>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Apellido" formControlName="apellido" required>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="DNI" formControlName="dni" required>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <mat-label>Fecha de Nacimiento</mat-label>
-                                    <input matInput [matDatepicker]="picker" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNac">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Telefono" formControlName="telefono" required>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Correo Electronico" formControlName="correo" required>
-                                </mat-form-field>
-                                <div style="display: flex; flex-direction: row; align-self: flex-end;">
-                                    <button mat-button matStepperNext>Siguiente</button>
+            @if(!usCreado){
+                <div class="titleContainer">
+                    <button mat-icon-button (click)="volver()" color="primary" style="background-color: lightblue;">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <mat-card-title class="title">
+                        CREAR CUENTA
+                    </mat-card-title>
+                </div>
+                <mat-card-content>
+                    <mat-horizontal-stepper [linear]="false" #stepper [animationDuration]="animationDuration">
+                        <mat-step [stepControl]="datosPersonales">
+                            <form [formGroup]="datosPersonales">
+                                <ng-template matStepLabel>Datos personales</ng-template>
+                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Nombre" formControlName="nombre" required>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Apellido" formControlName="apellido" required>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="DNI" formControlName="dni" required>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <mat-label>Fecha de Nacimiento</mat-label>
+                                        <input matInput [matDatepicker]="picker" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNac">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Telefono" formControlName="telefono" required>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Correo Electronico" formControlName="correo" required>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Contraseña" formControlName="contrasenia" required type="password">
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Repetir contraseña" formControlName="validarContrasenia" required type="password">
+                                        @if (!validarContrasenias()) {
+                                            <mat-error>Las contrasenias no coinciden</mat-error>
+                                        }
+                                    </mat-form-field>
+                                    <div style="display: flex; flex-direction: row; align-self: flex-end;">
+                                        <button mat-button matStepperNext [disabled]="!validarDatosPersonales()">Siguiente</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                    </mat-step>
-                    <mat-step [stepControl]="mascota">
-                      <form [formGroup]="mascota">
-                        <ng-template matStepLabel>Mascotas</ng-template>
-                        <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <mat-label>Especie</mat-label>
-                                <mat-select formControlName="especie" required>
-                                    <mat-option value="perro">Perro</mat-option>
-                                    <mat-option value="gato">Gato</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <!-- raza va a depender de la seleccion en la especia, el campo deberia mostrarse una vez seleccionado dicho valor -->
-                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <mat-label>Raza</mat-label>
-                                <mat-select formControlName="raza" required>
-                                    <mat-option value="gDanes">Gran Danes (perro)</mat-option>
-                                    <mat-option value="persa">Persa (gato)</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <mat-label>Fecha de Nacimiento</mat-label>
-                                <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
-                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                <mat-datepicker #picker2></mat-datepicker>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <input matInput placeholder="Peso en kg" formControlName="peso" required>
-                            </mat-form-field>
-                        </div>
-
-                        <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
-                            <button mat-button type="reset" (click)="agregarAnimal()">Agregar</button>
-                        </div>
-
-                        <mat-chip-set style="margin-bottom: 10px;">
-                            @for (item of animales; track $index) {
-                                <mat-chip-row (removed)="quitarAnimal(item)">
-                                    {{item.nombre}}
-                                  <button matChipRemove>
-                                    <mat-icon>cancel</mat-icon>
-                                  </button>
-                                </mat-chip-row>
-                            }
-                        </mat-chip-set>
-
-                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                          <button mat-button matStepperPrevious>Anterior</button>
-                          <button mat-button matStepperNext>Siguiente</button>
-                        </div>
-                      </form>
-                    </mat-step>
-                    <mat-step>
-                        <form [formGroup]="ubicacion">
-                            <ng-template matStepLabel>Domicilio</ng-template>
+                            </form>
+                        </mat-step>
+                        <mat-step [stepControl]="mascota">
+                        <form [formGroup]="mascota">
+                            <ng-template matStepLabel>Mascotas</ng-template>
                             <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <mat-label>Ciudad</mat-label>
-                                    <mat-select formControlName="ciudad" required>
-                                        <mat-option value="mJuarez">Marcos Juarez</mat-option>
-                                        <mat-option value="vMaria">Villa Maria</mat-option>
+                                    <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Especie</mat-label>
+                                    <mat-select formControlName="especie" required>
+                                        <mat-option value="">Seleccione una especie...</mat-option>
+                                        @for (item of this.especies; track $index) {
+                                            <mat-option [value]="item" (click)="getRazas(item.id)">{{item.nombre}}</mat-option>
+                                        }
                                     </mat-select>
                                 </mat-form-field>
+                                <!-- raza va a depender de la seleccion en la especia, el campo deberia mostrarse una vez seleccionado dicho valor -->
+                                @if(this.mascota.get('especie')?.value){
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <mat-label>Raza</mat-label>
+                                        <mat-select formControlName="raza" required>
+                                            <mat-option value="">Seleccione una raza...</mat-option>
+                                            @for (item of this.razas; track $index) {
+                                                <mat-option [value]="item">{{item.nombre}}</mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                }
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Calle" formControlName="calle" required>
+                                    <mat-label>Fecha de Nacimiento</mat-label>
+                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Número" formControlName="numero" required>
+                                    <input matInput placeholder="Peso en kg" formControlName="peso" required>
                                 </mat-form-field>
                             </div>
+
+                            <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
+                                <button mat-button type="reset" (click)="agregarAnimal()">Agregar</button>
+                            </div>
+
+                            <mat-chip-set style="margin-bottom: 10px;">
+                                @for (item of animales; track $index) {
+                                    <mat-chip-row (removed)="quitarAnimal(item)">
+                                        {{item.nombre}}
+                                    <button matChipRemove>
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                    </mat-chip-row>
+                                }
+                            </mat-chip-set>
+
                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                <button mat-button matStepperPrevious>Anterior</button>
-                                <button mat-button (click)="onConfirmar()">Confirmar</button>
+                            <button mat-button matStepperPrevious>Anterior</button>
+                            <button mat-button matStepperNext [disabled]="!validarMascotas()">Siguiente</button>
                             </div>
                         </form>
-                    </mat-step>
-                </mat-horizontal-stepper>
-            </mat-card-content>
+                        </mat-step>
+                        <mat-step>
+                            <form [formGroup]="ubicacion">
+                                <ng-template matStepLabel>Domicilio</ng-template>
+                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <mat-label>Ciudad</mat-label>
+                                        <mat-select formControlName="ciudad" required>
+                                            <mat-option value="">Seleccione su ciudad...</mat-option>
+                                            @for (item of this.ciudades; track $index) {
+                                                <mat-option [value]="item">{{item.nombre}}</mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Calle" formControlName="calle" required>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Número" formControlName="numero" required>
+                                    </mat-form-field>
+                                </div>
+                                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                    <button mat-button matStepperPrevious>Anterior</button>
+                                    <button mat-button (click)="onConfirmar()">Confirmar</button>
+                                </div>
+                            </form>
+                        </mat-step>
+                    </mat-horizontal-stepper>
+                </mat-card-content>
+        }
+        @if(usCreado){
+            <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-content: center; margin-top: 20px;">
+                <mat-card-title style="display: flex; justify-content: center;">Usuario creado con éxito</mat-card-title>
+                <mat-card-content style="display: flex; justify-content: center;">El usuario fue creado exitosamente. Ya podes iniciar sesion con tu correo y contraseña <a routerLink="/iniciar-sesion" style="margin-left: 5px;">ingresando acá</a>.</mat-card-content>
+            </div>
+        }
         </mat-card>
     </div>
 </div>

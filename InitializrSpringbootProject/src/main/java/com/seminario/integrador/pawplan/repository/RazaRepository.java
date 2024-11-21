@@ -5,6 +5,7 @@
 package com.seminario.integrador.pawplan.repository;
 
 import com.seminario.integrador.pawplan.model.Raza;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RazaRepository extends CrudRepository<Raza, Long>{
-    
+    List<Raza> findByEspecie_Id(Long id);
 }

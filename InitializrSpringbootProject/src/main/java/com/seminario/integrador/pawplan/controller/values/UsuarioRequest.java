@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.DiaHorarioAtencion;
+import com.seminario.integrador.pawplan.model.Domicilio;
 import com.seminario.integrador.pawplan.model.Especialidad;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.security.Role;
@@ -12,36 +13,45 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 
 public class UsuarioRequest {
-
-	private Role tipoUsuario;
-	
-	private String telefono;
-	private String correo;
+//COMUNES
+    private Role tipoUsuario;
+    private String telefono;
+    private String correo;
     private String contrasenia;
-	
-	private String nombre;
+    
+//PACIENTE - VETERINARIO
+    private String nombre;
     private String apellido;
     private String dni;
+    private String fechaNac;
+    
+//PACIENTE
     private ArrayList<Animal> animales;
     
-	private String razonSocial;
+//VETERINARIA
+    private String razonSocial;
     private String cuit;
+    private ArrayList<Veterinario> veterinarios;
+
+//VETERINARIA - VETERINARIO
     private boolean haceGuardia;
     private boolean aptoCirugia;
     private ArrayList<DiaHorarioAtencion> horarioAtencion;
-    private ArrayList<Veterinario> veterinarios;
-    private boolean haceDomicilio;
-    
-    private String fechaNac;
-    private String cuil;
-    private int matricula;
-    private boolean esIndependiente;
-    //private boolean haceGuardia;
     @OneToMany
     private ArrayList<DiaHorarioAtencion> horario;
+    private boolean haceDomicilio;
+
+//VETERINARIO
+    private int matricula;
+    private boolean esIndependiente;
     @OneToMany
     private ArrayList<Especialidad> especialidad;
-    //private boolean heceDomicilio;
+    
+//VETERINARIA - PACIENTE
+    private Domicilio domicilio;
+    
+    
+    
 	public Role getTipoUsuario() {
 		return tipoUsuario;
 	}
@@ -138,12 +148,6 @@ public class UsuarioRequest {
 	public void setFechaNac(String fechaNac) {
 		this.fechaNac = fechaNac;
 	}
-	public String getCuil() {
-		return cuil;
-	}
-	public void setCuil(String cuil) {
-		this.cuil = cuil;
-	}
 	public int getMatricula() {
 		return matricula;
 	}
@@ -168,7 +172,15 @@ public class UsuarioRequest {
 	public void setEspecialidad(ArrayList<Especialidad> especialidad) {
 		this.especialidad = especialidad;
 	}
-    
+
+    public Domicilio getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(Domicilio domicilio) {
+        this.domicilio = domicilio;
+    }
+        
     
     
     
