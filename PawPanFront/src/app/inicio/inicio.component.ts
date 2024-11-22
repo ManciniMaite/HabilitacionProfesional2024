@@ -53,7 +53,7 @@ export class InicioComponent implements OnInit{
       next:(data) => {
         console.log(data); 
         if(data.estado!="ERROR"){
-          localStorage.setItem('authToken', data.token);
+          this.authService.setUsuario(data.token, data.nombre, data.rol);
           this.routes.navigate(['home']);
         }
       }, error: (error)=>{
