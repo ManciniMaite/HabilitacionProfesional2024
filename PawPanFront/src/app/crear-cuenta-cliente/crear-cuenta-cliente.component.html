@@ -11,7 +11,7 @@
                     </mat-card-title>
                 </div>
                 <mat-card-content>
-                    <mat-horizontal-stepper [linear]="false" #stepper [animationDuration]="animationDuration">
+                    <mat-horizontal-stepper [linear]="true" #stepper [animationDuration]="animationDuration">
                         <mat-step [stepControl]="datosPersonales">
                             <form [formGroup]="datosPersonales">
                                 <ng-template matStepLabel>Datos personales</ng-template>

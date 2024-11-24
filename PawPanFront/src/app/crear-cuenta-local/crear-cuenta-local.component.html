@@ -10,7 +10,7 @@
                 </mat-card-title>
             </div>
             <mat-card-content>
-                <mat-horizontal-stepper [linear]="false" #stepper [animationDuration]="animationDuration">
+                <mat-horizontal-stepper [linear]="true" #stepper [animationDuration]="animationDuration">
                     <mat-step [stepControl]="datosLocal">
                         <form [formGroup]="datosLocal">
                             <ng-template matStepLabel>Datos del Local</ng-template>

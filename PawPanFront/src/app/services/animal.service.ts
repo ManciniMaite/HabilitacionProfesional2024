@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONFIG } from '../config';
 import { Observable } from 'rxjs';
-import { UsuarioRq } from '../model/UsuarioRq';
 import { Animal } from '../model/Animal';
 import { DataAnimal } from '../model/data/data-Animales';
 import { AnimalGetRs } from '../model/AnimalGetRs';

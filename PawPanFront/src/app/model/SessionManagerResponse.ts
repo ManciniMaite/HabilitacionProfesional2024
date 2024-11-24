@@ -3,5 +3,6 @@ import { Response } from "./Response";
 export class SessionManagerResponse extends Response{
     token: string;
     rol: string;
-    nombre: string
+    nombre: string;
+    cuil: number;
 }
