@@ -9,7 +9,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,18 @@ public class Veterinaria extends Usuario{
     @OneToMany(cascade = CascadeType.ALL)
     private List<Veterinario> veterinarios;
     private boolean haceDomicilio;
+    
+    @OneToOne
+    @JoinColumn(name = "id_domicilio", referencedColumnName = "id") 
+    private Domicilio domicilio;
+
+    public Domicilio getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(Domicilio domicilio) {
+        this.domicilio = domicilio;
+    }
 
     public String getRazonSocial() {
         return razonSocial;

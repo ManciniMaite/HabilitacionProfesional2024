@@ -9,6 +9,7 @@ import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.repository.CiudadRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,4 +40,13 @@ public class CiudadService {
         
         return rs;
     }
+    
+    public Optional<Ciudad> findById(Long id){
+        try {
+            return this.repository.findById(id);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new UnsupportedOperationException("Ciudad no encontrada con id: " + id);
+        }
+    }  
 }

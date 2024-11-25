@@ -9,6 +9,7 @@ import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
 import com.seminario.integrador.pawplan.controller.values.UsuarioResponse;
 import com.seminario.integrador.pawplan.exception.PawPlanRuleException;
 import com.seminario.integrador.pawplan.model.Cliente;
+import com.seminario.integrador.pawplan.model.Domicilio;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
@@ -216,6 +217,11 @@ public class UsuarioService {
 		
 		return veterinario;
 	}
+        
+        
+        public ArrayList<Domicilio> getDomiciliosUsCliente(String dni){
+            return this.clienteRepository.findDomiciliosByCliente(dni);
+        }
 	
 	
 }

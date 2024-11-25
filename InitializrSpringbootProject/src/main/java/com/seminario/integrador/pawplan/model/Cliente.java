@@ -26,6 +26,17 @@ public class Cliente extends Usuario{
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     //@NotNull(message = "debe agregar al menos un animal")
     private List<Animal> animales;
+    
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Domicilio> domicilios;
+
+    public List<Domicilio> getDomicilios() {
+        return domicilios;
+    }
+
+    public void setDomicilios(List<Domicilio> domicilios) {
+        this.domicilios = domicilios;
+    }
 
     public String getNombre() {
         return nombre;
