@@ -7,6 +7,7 @@ package com.seminario.integrador.pawplan.controller;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
 import com.seminario.integrador.pawplan.controller.values.UsuarioResponse;
+import com.seminario.integrador.pawplan.model.Domicilio;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.services.UsuarioService;
@@ -14,6 +15,8 @@ import com.seminario.integrador.pawplan.services.UsuarioService;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -96,7 +99,10 @@ public class UsuarioRestController {
     }
     
     
-    
+    @GetMapping("/domicilios/{dniCliente}")
+    public ArrayList<Domicilio> getDomicilioByCliente(@PathVariable String dniCliente){
+        return this.usuarioService.getDomiciliosUsCliente(dniCliente);
+    }
     
     
     
