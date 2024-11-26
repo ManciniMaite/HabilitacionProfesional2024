@@ -106,14 +106,17 @@ public class SessionManager {
             case PACIENTE:
                     Cliente cliente = (Cliente) user;
                     rs.setNombre(cliente.getNombre() + " " + cliente.getApellido());
+                    rs.setCuil(cliente.getDni());
                     break;
             case VETERINARIA:
                     Veterinaria veterinaria = (Veterinaria) user;
                     rs.setNombre(veterinaria.getRazonSocial());
+                    rs.setCuil(veterinaria.getCuit());
                     break;
             case VETERINARIO:
                     Veterinario veterinario = (Veterinario) user;
                     rs.setNombre(veterinario.getNombre() + " " + veterinario.getApellido());
+                    rs.setCuil(veterinario.getDni());
                     break;
             default:
                     throw new IllegalArgumentException("Unexpected value: " + user.getRole());
