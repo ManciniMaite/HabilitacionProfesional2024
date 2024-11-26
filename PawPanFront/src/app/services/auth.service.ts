@@ -30,7 +30,7 @@ export class AuthService {
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   }
 
-  setUsuario(token: string, usuario: string, rol: string, cuil:number){
+  setUsuario(token: string, usuario: string, rol: string, cuil:string){
     console.log('setUs')
     // localStorage.setItem('token', token);
     // localStorage.setItem('usuario', usuario);

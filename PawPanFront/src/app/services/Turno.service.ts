@@ -1,0 +1,44 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CONFIG } from '../config';
+import { Observable } from 'rxjs';
+import { VeterinariesGetRs } from '../model/VeterinariesGetRs';
+import { DisponibilidadRq } from '../model/DisponibilidadRq';
+import { DisponibilidadRs } from '../model/DisponibilidadRs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TurnoService {
+
+  baseURL = CONFIG.urlBackend;
+
+  //Datos locales
+  horariosData = new Observable<DisponibilidadRs>((observer) => {
+    observer.next({
+        estado: 'ok',
+        mensaje: 'oke',
+        horarios: [{
+            id:0,
+            horaInicio: '08:00',
+            horaFin: '16:00'
+        }]
+    });
+    observer.complete(); // Finaliza el flujo de datos
+  });
+  
+  constructor(
+    private http: HttpClient
+  ) { }
+
+  // insert(idCiudad: number):Observable<VeterinariesGetRs>{ //Cambiar Rq y Rs
+  //   return this.VeterinariesData;
+  //   return this.http.post<VeterinariesGetRs>(this.baseURL + "/Turno/Reservar" + idCiudad);
+  // }
+
+  disponibilidad(rq: DisponibilidadRq):Observable<DisponibilidadRs>{
+    return this.horariosData;
+    // return this.http.post<DisponibilidadRs>(this.baseURL + "/Turno/Consultar", rq);
+  }
+
+}

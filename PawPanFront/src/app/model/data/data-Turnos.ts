@@ -64,8 +64,95 @@ export const Turnos: Turno[]=[
                 }
             }]
         },
-        veterinaria: {},
-        veterinario: {},
+        veterinaria: {
+            id: 0,
+            telefono: '0353564875',
+            role: {
+                role: 'admin',
+                descripcion: 'rol administrador'
+            },
+            correo: 'cahorros.sa@gmail.com',
+            contrasenia: 'qweqweqweqweqwe',
+            isActivo: true,
+            razonSocial: 'Cachorros SA',
+            cuit: '2045678932',
+            haceGuardia: true,
+            aptoCirugia: false,
+            horarioAtencion: [{
+                id: 0,
+                dia: 'Lunes',
+                horario: {
+                    id: 0,
+                    horaInicio: '08:00',
+                    horaFin: '16:00'
+                }
+            }],
+            veterinarios: [{
+                id: 0,
+                    telefono: '0353564789',
+                    role: {
+                        role: 'admin',
+                        descripcion: 'rol administrador'
+                    },
+                    correo: 'dardo@gmail.com',
+                    contrasenia: 'asdasdasdasdasd',
+                    isActivo: true,
+                nombre: 'Juan',
+                apellido: 'Carlos',
+                dni: '41234967',
+                fechaNac: '13/11/1985',
+                matricula: 1234987056,
+                esIndependiente: false,
+                haceGuardia: true,
+                horario: [{
+                    id: 0,
+                    dia: 'lunes',
+                    horario: {
+                        id: 0,
+                        horaInicio: '08:00',
+                        horaFin: '16:00'
+                    }
+                }],
+                especialidad: [{
+                    id: 0,
+                    nombre: 'Animales grandes'
+                }],
+                haceDomicilio: true
+            }],
+            haceDomicilio: true
+        },
+        veterinario: {
+            id: 0,
+            telefono: '0353564789',
+            role: {
+                role: 'admin',
+                descripcion: 'rol administrador'
+            },
+            correo: 'dardo@gmail.com',
+            contrasenia: 'asdasdasdasdasd',
+            isActivo: true,
+            nombre: 'Dardo',
+            apellido: 'Fuseneco',
+            dni: '41567892',
+            fechaNac: '05/05/1998',
+            matricula: 1234567890,
+            esIndependiente: true,
+            haceGuardia: false,
+            horario: [{
+                id: 0,
+                dia: 'lunes',
+                horario: {
+                    id: 0,
+                    horaInicio: '07:30',
+                    horaFin: '15:30'
+                }
+            }],
+            especialidad: [{
+                id: 0,
+                nombre: 'Animales pequeños'
+            }],
+            haceDomicilio: true
+        },
         esADomicilio: false,
         duracionEstimada: '30 min',
         descripcion: 'Turno de vacunacion para un gato mediano',
