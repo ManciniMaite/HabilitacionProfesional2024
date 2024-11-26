@@ -97,6 +97,7 @@ export class CrearCuentaVeterinarioComponent {
 
   agregarHorario(){
     let selectedHorario = new Horario;
+    selectedHorario.id = 0;
     selectedHorario.horaInicio = this.horarioTrabajo.value.horarioApertura;
     selectedHorario.horaFin = this.horarioTrabajo.value.horarioCierre;
     if (this.horarios == undefined) {

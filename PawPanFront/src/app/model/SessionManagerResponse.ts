@@ -4,5 +4,5 @@ export class SessionManagerResponse extends Response{
     token: string;
     rol: string;
     nombre: string;
-    cuil: number;
+    cuil: string;
 }

@@ -1,1 +1,140 @@
-<p>adm-reservar-turno works!</p>
+<div class="form">
+    <div class="container">
+        <mat-card style="width: 90%; height: fit-content;">
+            @if(!usCreado){
+                <div class="titleContainer">
+                    <button mat-icon-button (click)="volver()" color="primary" style="background-color: lightblue;">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <mat-card-title class="title">
+                        RESERVAR TURNO
+                    </mat-card-title>
+                </div>
+                <mat-card-content>
+                    <mat-horizontal-stepper [linear]="true" #stepper [animationDuration]="animationDuration">
+                        <mat-step [stepControl]="mascota">
+                            <form [formGroup]="mascota">
+                                <ng-template matStepLabel>Mascota</ng-template>
+                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <mat-label>Seleccioná tu mascota</mat-label>
+                                        <mat-select formControlName="nombreMascota" required>
+                                            @for (animal of mascotas; track $index) {
+                                                <mat-option [value]="animal">{{animal.nombre}}</mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- Al seleccionar una mascota se deben desabilitar las que no sean de la misma especie -->
+                                </div>
+                                <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+                                    <button mat-button matStepperNext>Siguiente</button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="domicilio">
+                            <form [formGroup]="domicilio">
+                                <ng-template matStepLabel>Domicilio</ng-template>
+                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                        <mat-label>Quiere ser atendido en su domicilio?</mat-label>
+                                        <mat-radio-group formControlName="aDomicilio" style="margin-left: 20px;">
+                                            <mat-radio-button value="true">SI</mat-radio-button>
+                                            <mat-radio-button value="false" (click)="getVeterinaries(domUsuario[0].ciudad.id)">NO</mat-radio-button>
+                                            <!--
+                                            si el turno no es a domicilio, por el momento se envia el id de la primera ciudad del usuario.
+                                            hasta que se refactorice para la seleccion de una de sus ciudades
+                                            en caso de poseer domicilios en mas de una ciudad.
+                                            -->
+                                        </mat-radio-group>
+                                    </div>
+                                    @if (domicilio.value.aDomicilio == 'true') {
+                                        <div style="margin-top: 15px;">
+                                            <mat-label>Por Favor seleccione un domicilio:</mat-label>
+                                            <mat-radio-group formControlName="domicilioUsuario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                                @for (dom of domUsuario; track $index) {
+                                                    <mat-radio-button value="{{dom}}" (click)="getVeterinaries(dom.ciudad.id)">{{dom.calle + ' ' + dom.numero}}</mat-radio-button>
+                                                }
+                                            </mat-radio-group>
+                                        </div>
+                                    }
+                                </div>
+                                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                    <button mat-button matStepperPrevious>Anterior</button>
+                                    <button mat-button matStepperNext>Siguiente</button>
+                                    <!-- <button mat-button (click)="onConfirmar()">Confirmar</button> -->
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="veterinaries">
+                            <form [formGroup]="veterinaries">
+                                <ng-template matStepLabel>Veterinario/as</ng-template>
+                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: baseline;">
+                                        <mat-label>Selecciona una veterinaria/veterinario</mat-label>
+                                        <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                            @for (vete of veterinariosLista; track $index) {
+                                                <mat-radio-button value="{{vete.tipo}}" (click)="veteMetod(vete)">{{vete.nombre}}</mat-radio-button>
+                                            }
+                                        </mat-radio-group>
+                                        @if (veterinaries.value.vetes == 'veterinaria') {
+                                            <mat-label>Tenes preferencia por algun veterinario?</mat-label>
+                                            <mat-radio-group formControlName="empleadoVete" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                                @for (empleado of empleadosVete; track $index) {
+                                                    <mat-radio-button value="{{empleado.dni}}">{{empleado.nombre + ' ' + empleado.apellido}}</mat-radio-button>
+                                                }
+                                            </mat-radio-group>
+                                        }
+                                    </div>
+
+                                    <div style="display: flex; flex-direction: row; align-self: flex-end;">
+                                        <button mat-button matStepperNext>Siguiente</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="turnero">
+                            <form [formGroup]="turnero">
+                                <ng-template matStepLabel>Turnero</ng-template>
+
+                                <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                    <mat-form-field>
+                                        <mat-label>Fecha:</mat-label>
+                                        <input matInput formControlName="fecha" [matDatepicker]="dp3">
+                                        <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                                        <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                                    </mat-form-field>
+                                    <button mat-button (click)="getHorariosDisponibles()">Consultar</button>
+                                </div>
+                                @if (horarios.length > 0) {
+                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: baseline;">
+                                        <mat-label>Seleccioná un Horario</mat-label>
+                                        <mat-radio-group formControlName="hora" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                            @for (item of horarios; track $index) {
+                                                <mat-radio-button value="{{item}}">{{item.horaInicio + ' - ' + item.horaFin}}</mat-radio-button>
+                                            }
+                                        </mat-radio-group>
+                                    </div>
+                                }
+
+                                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                    <button mat-button matStepperPrevious>Anterior</button>
+                                    <button mat-button>Confirmar</button>
+                                </div>
+                            </form>
+                        </mat-step>
+                    </mat-horizontal-stepper>
+                </mat-card-content>
+        }
+        @if(usCreado){
+            <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-content: center; margin-top: 20px;">
+                <mat-card-title style="display: flex; justify-content: center;">Usuario creado con éxito</mat-card-title>
+                <mat-card-content style="display: flex; justify-content: center;">El usuario fue creado exitosamente. Ya podes iniciar sesion con tu correo y contraseña <a routerLink="/iniciar-sesion" style="margin-left: 5px;">ingresando acá</a>.</mat-card-content>
+            </div>
+        }
+        </mat-card>
+    </div>
+</div>
