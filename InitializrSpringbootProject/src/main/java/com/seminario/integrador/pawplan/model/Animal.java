@@ -4,6 +4,7 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,11 +32,11 @@ public class Animal {
     private float peso;
     @Lob
     private String foto;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "raza_id")
     private Raza raza;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
@@ -111,6 +112,10 @@ public class Animal {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+
+	public Animal() {
+		
+	}
     
     
 }

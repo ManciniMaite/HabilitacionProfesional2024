@@ -4,10 +4,8 @@
  */
 package com.seminario.integrador.pawplan.repository;
 
-import com.seminario.integrador.pawplan.model.Horario;
 import com.seminario.integrador.pawplan.model.Turno;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.data.jpa.repository.Query;
@@ -22,8 +20,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TurnoRepository extends CrudRepository<Turno, Long>{
     
-	@Query("select calcular_turnos_disponibles(:clienteId, :fecha )")
-	public ArrayList<Horario> consultarTurnosDisponibles(@Param("clienteId") Long clienteId,@Param("fecha") Date fecha);
+	@Query("select calcular_turnos_disponibles(:clienteId, :fecha, :duracion )")
+	public String consultarTurnosDisponibles(@Param("clienteId") Long clienteId,@Param("fecha") Date fecha,@Param("duracion") int duracion);
 	
 	
 }

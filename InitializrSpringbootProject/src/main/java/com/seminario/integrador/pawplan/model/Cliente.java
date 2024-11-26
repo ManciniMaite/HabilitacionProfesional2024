@@ -23,10 +23,6 @@ public class Cliente extends Usuario{
     @NotNull(message = "debe contener dni")
     private String dni;
     
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    //@NotNull(message = "debe agregar al menos un animal")
-    private List<Animal> animales;
-    
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Domicilio> domicilios;
 
@@ -62,11 +58,4 @@ public class Cliente extends Usuario{
         this.dni = dni;
     }
 
-    public List<Animal> getAnimales() {
-        return animales;
-    }
-
-    public void setAnimales(List<Animal> animales) {
-        this.animales = animales;
-    }
 }

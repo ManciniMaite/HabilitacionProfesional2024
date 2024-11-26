@@ -14,6 +14,7 @@ public class SessionManagerResponse extends Response{
     private String token;
     private String rol;
     private String nombre;
+    private String cuil;
 
     public String getToken() {
         return token;
@@ -41,6 +42,14 @@ public class SessionManagerResponse extends Response{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+	public String getCuil() {
+		return cuil;
+	}
+
+	public void setCuil(String cuil) {
+		this.cuil = cuil;
+	}
     
     
     

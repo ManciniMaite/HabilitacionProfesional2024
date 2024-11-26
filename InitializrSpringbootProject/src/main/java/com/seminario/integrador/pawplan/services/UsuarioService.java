@@ -168,7 +168,7 @@ public class UsuarioService {
 		cliente.setApellido(usuarioRequest.getApellido());
 		cliente.setNombre(usuarioRequest.getNombre());
 		cliente.setDni(usuarioRequest.getDni());
-		cliente.setAnimales(usuarioRequest.getAnimales());
+		//cliente.setAnimales(usuarioRequest.getAnimales());
 		cliente.setTelefono(usuarioRequest.getTelefono());
 		cliente.setCorreo(usuarioRequest.getCorreo());
 		cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));

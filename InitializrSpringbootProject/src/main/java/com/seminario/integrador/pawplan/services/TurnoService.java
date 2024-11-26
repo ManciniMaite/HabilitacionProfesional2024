@@ -1,20 +1,29 @@
 package com.seminario.integrador.pawplan.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
 import com.seminario.integrador.pawplan.model.Cliente;
+import com.seminario.integrador.pawplan.model.Estado;
+import com.seminario.integrador.pawplan.model.Horario;
 import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.repository.ClienteRepository;
+import com.seminario.integrador.pawplan.repository.EstadoRepository;
 import com.seminario.integrador.pawplan.repository.TurnoRepository;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.repository.VeterinariaRepository;
@@ -27,6 +36,10 @@ public class TurnoService {
 	
 	@Autowired
 	private TurnoRepository turnoRepository;
+	
+	@Autowired
+	private EstadoRepository estadoRepository;
+	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
@@ -42,7 +55,7 @@ public class TurnoService {
 	@Autowired
 	private IAuthenticationFacade authenticationFacade;
 	
-	public TurnoResponse getTurnosDisponibles(TurnoRequest turnoRequest){
+	public TurnoResponse getTurnosDisponibles(TurnoRequest turnoRequest) throws JsonMappingException, JsonProcessingException{
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -63,7 +76,16 @@ public class TurnoService {
 			return result;
 		}
 		
-		result.setHorariosDisponibles(turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFechaConsulta()));
+		// Tiempo de Consulta
+		//int tiempo = 10;
+		//if (turnoRequest.get)
+		ObjectMapper mapper = Constantes.getObjectMapper();
+		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFechaConsulta(),Integer.valueOf(turnoRequest.getDuracionEstimada()));
+		ArrayList<Horario> horarios_disponibles = mapper.readValue(disponibilidad, mapper.getTypeFactory().constructCollectionType(List.class, Horario.class));
+		result.setHorariosDisponibles(horarios_disponibles);
+		
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Consulta disponibilidad Horaria ok.");
 		
 		return result;
 	}
@@ -85,7 +107,7 @@ public class TurnoService {
 		switch (usuario.getRole()) {
 		case PACIENTE:
 			Cliente cliente = (Cliente) usuario;
-			
+			turnoFinal.setCliente(cliente);
 			break;
 		case VETERINARIA:
 			Veterinaria veterinaria = (Veterinaria) usuario;
@@ -99,12 +121,8 @@ public class TurnoService {
 			throw new IllegalArgumentException("Unexpected value: " + usuario.getRole());
 		}
 		
-		
-		
-		
-		
-		
-		
+		Estado estadoReservado = estadoRepository.findByNombre("RESERVADO").get(0);
+		turnoFinal.setEstado(estadoReservado);
 		
 		turnoFinal.setCliente((clienteRepository.findById(session.getClienteId())).get());
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
@@ -126,7 +144,12 @@ public class TurnoService {
 		
 		turnoFinal.setMonto(turnoRequest.getMonto());
 
-		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+		result.setTurno(turnoRepository.save(turnoFinal));
+		result.setEstadoReserva(estadoReservado);
+		
+		
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Consulta disponibilidad Horaria ok.");
 		return result;
 		//return null;
 		

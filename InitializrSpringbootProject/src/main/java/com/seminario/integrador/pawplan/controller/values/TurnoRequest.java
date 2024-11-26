@@ -2,7 +2,9 @@ package com.seminario.integrador.pawplan.controller.values;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.model.TipoEspecie;
 import com.seminario.integrador.pawplan.model.Cliente;
@@ -27,6 +29,7 @@ public class TurnoRequest {
     private String descripcion;
     private float monto;
     private boolean esGuardia;
+    private List<Animal> animales;
 	
 	
 	
@@ -137,6 +140,14 @@ public class TurnoRequest {
 
 	public void setEsGuardia(boolean esGuardia) {
 		this.esGuardia = esGuardia;
+	}
+
+	public List<Animal> getAnimales() {
+		return animales;
+	}
+
+	public void setAnimales(List<Animal> animales) {
+		this.animales = animales;
 	}
 	
 }
