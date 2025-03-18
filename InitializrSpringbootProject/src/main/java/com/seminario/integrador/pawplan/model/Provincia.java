@@ -8,12 +8,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 /**
  *
  * @author maite
  */
 @Entity
+@Data
 public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

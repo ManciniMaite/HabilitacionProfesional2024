@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 /**
  *
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
  * posibles.. PENDIENTE, ATENDIDO o  AUSENTE, CANCELADO
  */
 @Entity
+@Data
 public class Estado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

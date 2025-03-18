@@ -6,14 +6,12 @@ package com.seminario.integrador.pawplan.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -21,6 +19,7 @@ import java.util.List;
  * @author maite
  */
 @Entity
+@Data
 public class Veterinario extends Usuario {
     
     @NotNull(message = "debe contener nombre")
@@ -40,10 +39,6 @@ public class Veterinario extends Usuario {
     @NotNull(message = "debe especificar su/s especialidad/es")
     private List<Especialidad> especialidad;
     private boolean haceDomicilio;
-    
-    @OneToOne
-    @JoinColumn(name = "id_domicilio", referencedColumnName = "id")
-    private Domicilio domicilio;
 
 
     public String getNombre() {

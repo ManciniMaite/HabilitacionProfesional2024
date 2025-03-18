@@ -7,11 +7,8 @@ import java.util.List;
 import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.model.TipoEspecie;
-import com.seminario.integrador.pawplan.model.Cliente;
 import com.seminario.integrador.pawplan.model.DetalleTurno;
 import com.seminario.integrador.pawplan.model.Estado;
-import com.seminario.integrador.pawplan.model.Veterinaria;
-import com.seminario.integrador.pawplan.model.Veterinario;
 
 public class TurnoRequest {
 

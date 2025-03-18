@@ -8,7 +8,6 @@ import com.seminario.integrador.pawplan.controller.values.CiudadesAdmRs;
 import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.repository.CiudadRepository;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

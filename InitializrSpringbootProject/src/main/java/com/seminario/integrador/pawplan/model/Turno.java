@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,6 +22,7 @@ import java.util.Date;
  * @author maite
  */
 @Entity
+@Data
 public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

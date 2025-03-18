@@ -11,14 +11,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
+import lombok.Data;
 
 /**
  *
  * @author maite
  */
 @Entity
+@Data
 public class Especie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

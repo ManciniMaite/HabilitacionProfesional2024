@@ -8,11 +8,11 @@ import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
 import com.seminario.integrador.pawplan.controller.values.UsuarioResponse;
 import com.seminario.integrador.pawplan.model.Domicilio;
-import com.seminario.integrador.pawplan.model.Usuario;
-import com.seminario.integrador.pawplan.repository.UsuarioRepository;
+import com.seminario.integrador.pawplan.services.DomicilioService;
 import com.seminario.integrador.pawplan.services.UsuarioService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +32,9 @@ public class UsuarioRestController {
     
     @Autowired(required = true)
     private UsuarioService usuarioService;
+
+	@Autowired
+	private DomicilioService domicilioService;
     
     @RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.GET)
     public UsuarioResponse<?> consultar() {
@@ -100,8 +103,8 @@ public class UsuarioRestController {
     
     
     @GetMapping("/domicilios/{dniCliente}")
-    public ArrayList<Domicilio> getDomicilioByCliente(@PathVariable String dniCliente){
-        return this.usuarioService.getDomiciliosUsCliente(dniCliente);
+    public List<Domicilio> getDomicilioByCliente(@PathVariable String dniCliente){
+        return this.domicilioService.getByUsuario(dniCliente);
     }
     
     

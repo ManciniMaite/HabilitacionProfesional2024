@@ -9,22 +9,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
+
 
 /**
  *
  * @author sebastian
  */
 @Entity
+@Data
 public class Domicilio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private Ciudad ciudad;
     private String calle;
     private String numero;
     private String observaciones;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario; 
 
     public Long getId() {
         return id;

@@ -9,7 +9,6 @@ import com.seminario.integrador.pawplan.model.Especialidad;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.security.Role;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 
 public class UsuarioRequest {

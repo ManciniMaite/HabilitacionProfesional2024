@@ -1,6 +1,8 @@
 package com.seminario.integrador.pawplan.services;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.repository.ClienteRepository;
+import com.seminario.integrador.pawplan.repository.DomicilioRepository;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.repository.VeterinariaRepository;
 import com.seminario.integrador.pawplan.repository.VeterinarioRepository;
@@ -43,6 +46,9 @@ public class UsuarioService {
 	@Autowired
     private IAuthenticationFacade authenticationFacade;
 
+	// @Autowired
+	// private DomicilioService domicilioService;
+
 	public UsuarioResponse<ArrayList<?>> consultar() {
 		UsuarioResponse<ArrayList<?>> consulta = new UsuarioResponse<ArrayList<?>>();
 
@@ -52,6 +58,11 @@ public class UsuarioService {
 		consulta.setEstado("OK");
 
 		return consulta;
+	}
+
+	public Optional<Usuario> consultarUsuario(String us) {
+		Optional<Usuario> usuario = usuarioRepository.findByDniOrCuit(us);
+		return usuario;
 	}
 
 	public UsuarioResponse<?> CrearUsuario(UsuarioRequest usuarioRequest) {
@@ -219,9 +230,9 @@ public class UsuarioService {
 	}
         
         
-        public ArrayList<Domicilio> getDomiciliosUsCliente(String dni){
-            return this.clienteRepository.findDomiciliosByCliente(dni);
-        }
+	// public List<Domicilio> getDomiciliosUsCliente(String dni){
+	// 	return this.domicilioService.getByUsuario(dni);
+	// }
 	
 	
 }

@@ -8,7 +8,6 @@ import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.SessionManagerRequest;
 import com.seminario.integrador.pawplan.controller.values.SessionManagerResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
-import com.seminario.integrador.pawplan.enums.EnumErroresInterface;
 import com.seminario.integrador.pawplan.exception.PawPlanRuleException;
 import com.seminario.integrador.pawplan.security.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;

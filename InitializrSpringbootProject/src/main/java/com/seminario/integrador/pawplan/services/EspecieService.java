@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.seminario.integrador.pawplan.model.Especie;
 import java.util.ArrayList;
-import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

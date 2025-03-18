@@ -18,6 +18,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ClienteRepository extends CrudRepository<Cliente, Long> {
-    @Query("SELECT c.domicilios FROM cliente c WHERE c.dni = :dni")
-    ArrayList<Domicilio> findDomiciliosByCliente(@Param("dni") String dni);
+    // @Query("SELECT c.domicilios FROM cliente c WHERE c.dni = :dni")
+    // ArrayList<Domicilio> findDomiciliosByCliente(@Param("dni") String dni);
 }

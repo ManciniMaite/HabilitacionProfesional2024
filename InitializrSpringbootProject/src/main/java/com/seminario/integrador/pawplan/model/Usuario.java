@@ -4,26 +4,23 @@
  */
 package com.seminario.integrador.pawplan.model;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import com.seminario.integrador.pawplan.security.Role;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 /**
  *
  * @author sebastian
  */
 @Entity
+@Data
 public class Usuario {
     
     @Id

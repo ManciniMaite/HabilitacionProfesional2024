@@ -11,12 +11,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
 
 /**
  *
  * @author maite
  */
 @Entity
+@Data
 public class Raza {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

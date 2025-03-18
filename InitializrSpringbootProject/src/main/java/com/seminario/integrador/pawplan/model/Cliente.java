@@ -4,17 +4,16 @@
  */
 package com.seminario.integrador.pawplan.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
+import lombok.Data;
 
 /**
  *
  * @author maite
  */
 @Entity
+@Data
 public class Cliente extends Usuario{
     @NotNull(message = "debe contener nombre")
     private String nombre;
@@ -22,17 +21,6 @@ public class Cliente extends Usuario{
     private String apellido;
     @NotNull(message = "debe contener dni")
     private String dni;
-    
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Domicilio> domicilios;
-
-    public List<Domicilio> getDomicilios() {
-        return domicilios;
-    }
-
-    public void setDomicilios(List<Domicilio> domicilios) {
-        this.domicilios = domicilios;
-    }
 
     public String getNombre() {
         return nombre;

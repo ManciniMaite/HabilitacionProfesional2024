@@ -6,7 +6,6 @@ package com.seminario.integrador.pawplan.controller.values;
 
 import com.seminario.integrador.pawplan.model.Ciudad;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

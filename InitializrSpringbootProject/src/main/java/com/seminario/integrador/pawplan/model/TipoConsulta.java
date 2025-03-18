@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
+
 import java.time.LocalTime;
 
 /**
@@ -16,6 +18,7 @@ import java.time.LocalTime;
  * GUARDIA/ CONTROL/ VACUNACION/CIRUGIA (ESTE SOLO LO SACA EL VETERINARIO) 
  */
 @Entity
+@Data
 public class TipoConsulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

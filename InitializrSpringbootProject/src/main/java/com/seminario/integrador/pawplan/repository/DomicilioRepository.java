@@ -5,6 +5,9 @@
 package com.seminario.integrador.pawplan.repository;
 
 import com.seminario.integrador.pawplan.model.Domicilio;
+
+import java.util.ArrayList;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +17,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DomicilioRepository extends CrudRepository<Domicilio, Long>{
-    
+   ArrayList<Domicilio> findByUsuarioId(Long id); 
 }

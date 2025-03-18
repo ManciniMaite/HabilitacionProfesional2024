@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.VeterinarioVeterinariaResponse;
 import com.seminario.integrador.pawplan.model.Ciudad;
-import com.seminario.integrador.pawplan.model.Cliente;
-import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.repository.TurnoRepository;
