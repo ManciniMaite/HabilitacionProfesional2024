@@ -24,27 +24,45 @@
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                         <input matInput placeholder="DNI" formControlName="dni" required>
+                                        <mat-error *ngIf="datosPersonales.get('dni')?.hasError('dniInvalido')">
+                                            DNI no válido.
+                                        </mat-error>
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                         <mat-label>Fecha de Nacimiento</mat-label>
                                         <input matInput [matDatepicker]="picker" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNac">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error *ngIf="datosPersonales.get('fechaNac')?.hasError('minAge')">
+                                            Debe tener al menos {{ datosPersonales.get('fechaNac')?.getError('minAge').requiredAge }} años.
+                                        </mat-error>
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                         <input matInput placeholder="Telefono" formControlName="telefono" required>
+                                        <mat-error *ngIf="datosPersonales.get('telefono')?.hasError('telefonoInvalido')">
+                                            Numero de Telefono no válido.
+                                        </mat-error>
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                         <input matInput placeholder="Correo Electronico" formControlName="correo" required>
+                                        <mat-error *ngIf="datosPersonales.get('correo')?.hasError('emailInvalido')">
+                                            Formato de correo inválido.
+                                        </mat-error>
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                         <input matInput placeholder="Contraseña" formControlName="contrasenia" required type="password">
+                                        <mat-error *ngIf="datosPersonales.get('contrasenia')?.hasError('minlength')">
+                                            La contraseña debe tener 6 caracteres como minimo
+                                        </mat-error>
                                     </mat-form-field>
                                     <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                         <input matInput placeholder="Repetir contraseña" formControlName="validarContrasenia" required type="password">
-                                        @if (!validarContrasenias()) {
-                                            <mat-error>Las contrasenias no coinciden</mat-error>
-                                        }
+                                        <mat-error *ngIf="datosPersonales.get('validarContrasenia')?.hasError('minlength')">
+                                            La contraseña debe tener 6 caracteres como minimo
+                                        </mat-error>
+                                        <mat-error *ngIf="datosPersonales.get('validarContrasenia')?.hasError('passwordsMismatch')">
+                                            Las contraseñas no coinciden.
+                                        </mat-error>
                                     </mat-form-field>
                                     <div style="display: flex; flex-direction: row; align-self: flex-end;">
                                         <button mat-button matStepperNext [disabled]="!validarDatosPersonales()">Siguiente</button>
