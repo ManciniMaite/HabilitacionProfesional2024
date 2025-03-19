@@ -44,6 +44,9 @@ public class AuthorizationFilter implements Filter	 {
 			|| /*Constantes.URL_PATH_HEARTBEAT.equals( ((HttpServletRequest) request).getServletPath() )
 			|| Constantes.URL_PATH_ACERCA_DE.equals( ((HttpServletRequest) request).getServletPath() )
 			||*/ Constantes.URL_PATH_HASH.equals( ((HttpServletRequest) request).getServletPath() )
+			|| (Constantes.URL_PATH_CIUDAD).equals( ((HttpServletRequest) request).getServletPath() )
+			|| (Constantes.URL_PATH_RAZA).equals( ((HttpServletRequest) request).getServletPath() )
+			|| (Constantes.URL_PATH_ESPECIE).equals( ((HttpServletRequest) request).getServletPath() )
 			/*|| (((HttpServletRequest) request).getServletPath()).startsWith(Constantes.URL_PATH_ADMIN_ACTUATOR)
 			|| (((HttpServletRequest) request).getServletPath()).startsWith(Constantes.URL_PATH_CONTAINER)
 			|| (((HttpServletRequest) request).getServletPath()).startsWith(Constantes.URL_PATH_ANONIMO)*/
