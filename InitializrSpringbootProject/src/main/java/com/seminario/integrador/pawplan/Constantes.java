@@ -47,7 +47,8 @@ public class Constantes {
     public static final String URL_PATH_RAZA = "/razas";
     public static final String URL_PATH_ESPECIE = "/especies";
     
-    
+    public static final String URL_PATH_ESPECIALIDADES = "/especialidades";
+    public static final String URL_PATH_VALIDAR_MATRICULA = "/validarMatricula";
     
     
     

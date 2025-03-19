@@ -4,6 +4,7 @@
  */
 package com.seminario.integrador.pawplan.controller;
 
+import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.EspecieAdmRs;
 import com.seminario.integrador.pawplan.services.EspecieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author maite
  */
 @RestController
-@RequestMapping("/especies")
+@RequestMapping(Constantes.URL_PATH_ESPECIE)
 public class EspecieRestController {
     @Autowired
     private EspecieService service;

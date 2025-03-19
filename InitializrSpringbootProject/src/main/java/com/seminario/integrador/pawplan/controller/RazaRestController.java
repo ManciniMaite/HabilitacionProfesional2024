@@ -4,6 +4,7 @@
  */
 package com.seminario.integrador.pawplan.controller;
 
+import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.RazaAdmRs;
 import com.seminario.integrador.pawplan.services.RazaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author maite
  */
 @RestController
-@RequestMapping("/razas")
+@RequestMapping(Constantes.URL_PATH_RAZA)
 public class RazaRestController {
     @Autowired
     private RazaService service;
