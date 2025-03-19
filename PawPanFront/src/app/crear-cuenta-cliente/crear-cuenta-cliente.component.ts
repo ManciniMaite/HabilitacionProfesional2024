@@ -79,7 +79,7 @@ export class CrearCuentaClienteComponent implements OnInit{
       nombre:               new FormControl('', Validators.required),
       apellido:             new FormControl('', Validators.required),
       fechaNac:             new FormControl('', [Validators.required, validacionFecha(18)]),
-      dni:                  new FormControl('', [Validators.required, validacionDni]),
+      dni:                  new FormControl('', [Validators.required, validacionDni('dni')]),
       correo:               new FormControl('', [Validators.required, Validators.email,validacionFormatoCorreo]),
       telefono:             new FormControl('', [Validators.required, validacionTelefonoBasico]),
       contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
