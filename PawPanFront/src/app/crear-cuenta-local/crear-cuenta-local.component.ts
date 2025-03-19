@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Horario } from '../model/Horario';
 import { Router } from '@angular/router';
@@ -16,6 +16,14 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { validacionContraseniasIguales } from '../validators/validacionContraseniaIguales';
+import { validacionFormatoCorreo } from '../validators/validarCorreo';
+import { validacionDni } from '../validators/validacionDni';
+import { validacionTelefonoBasico } from '../validators/numeroTelefono';
+import { VeterinariesService } from '../services/Veterinaries-service';
+import { DiaHorarioAtencion } from '../model/DiaHorarioAtencion';
+import { Ciudad } from '../model/Ciudad';
+import { CiudadService } from '../services/ciudad.service';
 
 export interface Week {
   completado: boolean;
@@ -47,14 +55,17 @@ export interface Week {
   templateUrl: './crear-cuenta-local.component.html',
   styleUrl: './crear-cuenta-local.component.scss'
 })
-export class CrearCuentaLocalComponent {
+export class CrearCuentaLocalComponent implements OnInit {
   animationDuration = '1000'
   
   datosLocal: FormGroup;
   ubicacion: FormGroup;
   horarioTrabajo: FormGroup;
 
-  horarios: Horario[];
+  horarios: Horario[] = [];
+  diasHorarios: DiaHorarioAtencion[] = [];
+
+  ciudades: Ciudad[] = [];
 
   readonly semana = signal<Week>(
     {
@@ -74,15 +85,19 @@ export class CrearCuentaLocalComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private service: VeterinariesService,
+    private ciudadService: CiudadService
   ){
-    console.log("Array de Horarios vacio: ",this.horarios);
+    //console.log("Array de Horarios vacio: ",this.horarios);
     this.datosLocal = this.fb.group({
       razonSocial:  new FormControl('', Validators.required),
-      cuit:         new FormControl('', Validators.required),
-      correo:       new FormControl('', Validators.required),
-      telefono:     new FormControl('',Validators.required),
-    });
+      cuit:         new FormControl('', [Validators.required,validacionDni('cuit')]),
+      correo:       new FormControl('', [Validators.required,Validators.email,validacionFormatoCorreo]),
+      telefono:     new FormControl('',[Validators.required,validacionTelefonoBasico]),
+      contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
+      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)])
+    }, { validators: validacionContraseniasIguales });
 
     this.horarioTrabajo = this.fb.group({
       dia:              new FormControl('', Validators.required),
@@ -96,10 +111,35 @@ export class CrearCuentaLocalComponent {
     });
 
     this.ubicacion = this.fb.group({
+      localFisico: new FormControl(''),
       ciudad:    new FormControl(''),
       calle:     new FormControl(''),
       numero:    new FormControl('')
     })
+  }
+
+  ngOnInit(): void {
+    
+  }
+
+  getCiudades(){
+    this.ciudadService.getAll().subscribe({
+      next: (data) => {
+        if (data.estado != 'ERROR'){
+          this.ciudades = data.ciudades;
+        }  else {
+          console.log(data.mensaje);
+          /**
+           * MENSAJE DE ERROR
+           */
+        }
+      }, error: (error)=>{
+        console.log(error);
+        /**
+         * TODO: mensaje Error
+         */
+      }
+    });
   }
 
   update(completed: boolean, index?: number) {
@@ -115,18 +155,106 @@ export class CrearCuentaLocalComponent {
     });
   }
 
-  agregarHorario(){
-    let selectedHorario = new Horario;
-    selectedHorario.id = 0;
-    selectedHorario.horaInicio = this.horarioTrabajo.value.horarioApertura;
-    selectedHorario.horaFin = this.horarioTrabajo.value.horarioCierre;
-    if (this.horarios == undefined) {
-      this.horarios = [selectedHorario];
+  habilitarAgregarHorario(){
+    const corrido = this.horarioTrabajo.get('corrido')?.value;
+    // console.log('Corrido:', corrido);  // Verifica si el valor de 'corrido' es correcto
+
+    const diasSeleccionados = (this.semana().dias?.filter(d => d.seleccionado).length ?? 0) > 0;
+    // console.log('Días seleccionados:', diasSeleccionados);  // Verifica si al menos un día está seleccionado
+
+    if (!diasSeleccionados) {
+      // console.log('No se han seleccionado días.');
+      return false;
+    }
+
+    if (corrido) {
+      // Si "corrido" está marcado, los campos de horario de apertura y cierre deben tener valor
+      const horarioApertura = this.horarioTrabajo.get('horarioApertura')?.value;
+      const horarioCierre = this.horarioTrabajo.get('horarioCierre')?.value;
+      // console.log('Horario Apertura:', horarioApertura);  // Verifica el valor de 'horarioApertura'
+      // console.log('Horario Cierre:', horarioCierre);      // Verifica el valor de 'horarioCierre'
+      
+      const isValidHorario = !!horarioApertura && !!horarioCierre;
+      // console.log('Es válido el horario (corrido):', isValidHorario);  // Verifica si ambos horarios están completos
+      
+      return isValidHorario; // Si ambos tienen valor, habilitar el botón
     } else {
-      this.horarios.push(selectedHorario);
+      // Si "corrido" no está marcado, los campos de mañana y tarde deben tener valor
+      const mañanaInicio = this.horarioTrabajo.get('mañanaInicio')?.value;
+      const mañanaFin = this.horarioTrabajo.get('mañanaFin')?.value;
+      const tardeInicio = this.horarioTrabajo.get('tardeInicio')?.value;
+      const tardeFin = this.horarioTrabajo.get('tardeFin')?.value;
+
+      // console.log('Mañana Inicio:', mañanaInicio); // Verifica el valor de 'mañanaInicio'
+      // console.log('Mañana Fin:', mañanaFin);       // Verifica el valor de 'mañanaFin'
+      // console.log('Tarde Inicio:', tardeInicio);   // Verifica el valor de 'tardeInicio'
+      // console.log('Tarde Fin:', tardeFin);         // Verifica el valor de 'tardeFin'
+
+      const isValidPartesDelDia = !!mañanaInicio && !!mañanaFin && !!tardeInicio && !!tardeFin;
+      // console.log('Es válido el horario (no corrido):', isValidPartesDelDia);  // Verifica si todos los campos están completos
+      
+      return isValidPartesDelDia; // Si todos los campos están completos, habilitar el botón
+    }
+}
+
+  
+
+  agregarHorario() {
+    if (this.horarioTrabajo.get('corrido')?.value) {
+      this.semana().dias?.forEach(element => {
+        if (element.seleccionado) {
+          const yaExiste = this.diasHorarios.some(dh => dh.dia === element.nombre);
+          if (!yaExiste) {
+
+            console.log('Horario service: ', this.service.crearDiaHorarioAtencionCorrido(
+              element.nombre,
+              this.horarioTrabajo.get('horarioApertura')?.value,
+              this.horarioTrabajo.get('horarioCierre')?.value
+            ))
+
+            this.diasHorarios.push(
+              this.service.crearDiaHorarioAtencionCorrido(
+                element.nombre,
+                this.horarioTrabajo.get('horarioApertura')?.value,
+                this.horarioTrabajo.get('horarioCierre')?.value
+              )
+            );
+          } else {
+            console.log(`El día ${element.nombre} ya tiene un horario agregado.`);
+          }
+        }
+      });
+    } else {
+      this.semana().dias?.forEach(element => {
+        if (element.seleccionado) {
+          const yaExiste = this.diasHorarios.some(dh => dh.dia === element.nombre);
+          if (!yaExiste) {
+
+            console.log('Dia horario del service: ', this.service.crearDiaHorarioAtencionCortado(
+              element.nombre,
+              this.horarioTrabajo.get('mañanaInicio')?.value,
+              this.horarioTrabajo.get('mañanaFin')?.value,
+              this.horarioTrabajo.get('tardeInicio')?.value,
+              this.horarioTrabajo.get('tardeFin')?.value
+            ))
+
+            this.diasHorarios.push(
+              this.service.crearDiaHorarioAtencionCortado(
+                element.nombre,
+                this.horarioTrabajo.get('mañanaInicio')?.value,
+                this.horarioTrabajo.get('mañanaFin')?.value,
+                this.horarioTrabajo.get('tardeInicio')?.value,
+                this.horarioTrabajo.get('tardeFin')?.value
+              )
+            );
+          } else {
+            console.log(`El día ${element.nombre} ya tiene un horario agregado.`);
+          }
+        }
+      });
     }
   }
-
+  
   quitarHorario(item: Horario){
     let index
     if (this.horarios.includes(item)){
@@ -140,6 +268,11 @@ export class CrearCuentaLocalComponent {
     console.log(this.datosLocal.value);
     console.log(this.horarioTrabajo.value);
     console.log(this.ubicacion.value);
+  }
+
+  tieneLocalFisico():boolean{
+    // console.log(this.ubicacion.get('localFisico')?.value)
+    return this.ubicacion.get('localFisico')?.value;
   }
 
   volver(){

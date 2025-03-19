@@ -17,15 +17,51 @@
                             <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <input matInput placeholder="Razon Social" formControlName="razonSocial" required>
+                                    <mat-error *ngIf="datosLocal.get('razonSocial')?.hasError('required')">
+                                        Por favor ingrese la razon social.
+                                    </mat-error>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <input matInput placeholder="CUIT" formControlName="cuit" required>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Correo Electronico" formControlName="correo" required>
+                                    <mat-error *ngIf="datosLocal.get('cuit')?.hasError('required')">
+                                        Por favor ingrese el cuit.
+                                    </mat-error>
+                                    <mat-error *ngIf="datosLocal.get('cuit')?.hasError('dniInvalido')">
+                                        CUIT no válido.
+                                    </mat-error>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <input matInput placeholder="Teléfono" formControlName="telefono" required>
+                                    <mat-error *ngIf="datosLocal.get('telefono')?.hasError('required')">
+                                        Por favor ingrese el telefono.
+                                    </mat-error>
+                                    <mat-error *ngIf="datosLocal.get('telefono')?.hasError('telefonoInvalido')">
+                                        Numero de telefono no válido.
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Correo Electronico" formControlName="correo" required>
+                                    <mat-error *ngIf="datosLocal.get('correo')?.hasError('required')">
+                                        Por favor ingrese un correo electronico.
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Contraseña" formControlName="contrasenia" required type="password">
+                                    <mat-error *ngIf="datosLocal.get('nombre')?.hasError('required')">
+                                        Por favor ingrese una contraseña.
+                                    </mat-error>
+                                    <mat-error *ngIf="datosLocal.get('contrasenia')?.hasError('minlength')">
+                                        La contraseña debe tener 6 caracteres como minimo
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Repetir contraseña" formControlName="validarContrasenia" required type="password">
+                                    <mat-error *ngIf="datosLocal.get('validarContrasenia')?.hasError('minlength')">
+                                        La contraseña debe tener 6 caracteres como minimo
+                                    </mat-error>
+                                    <mat-error *ngIf="datosLocal.get('validarContrasenia')?.hasError('passwordsMismatch')">
+                                        Las contraseñas no coinciden.
+                                    </mat-error>
                                 </mat-form-field>
                                 <div style="display: flex; flex-direction: row; align-self: flex-end;">
                                     <button mat-button matStepperNext>Siguiente</button>
@@ -37,19 +73,30 @@
                     <mat-step [stepControl]="ubicacion">
                         <form [formGroup]="ubicacion">
                             <ng-template matStepLabel>Domicilio</ng-template>
-                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <div style="display: flex; flex-direction: row; align-items: center;">
+                                Tiene local físico?
+                                <div style=" display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                    <mat-radio-group formControlName="localFisico" style="margin-left: 20px;">
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                            <div *ngIf="tieneLocalFisico()" style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <mat-label>Ciudad</mat-label>
-                                    <mat-select formControlName="ciudad" required>
-                                        <mat-option value="mJuarez">Marcos Juarez</mat-option>
-                                        <mat-option value="vMaria">Villa Maria</mat-option>
+                                    <mat-select formControlName="ciudad">
+                                        @for (item of ciudades; track $index) {
+                                            <mat-option [value]="item.id">{{item.nombre}}</mat-option>
+                                        }
+                                        <!-- <mat-option value="vMaria">Villa Maria</mat-option> -->
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Calle" formControlName="calle" required>
+                                    <input matInput placeholder="Calle" formControlName="calle">
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Número" formControlName="numero" required>
+                                    <input matInput placeholder="Número" formControlName="numero">
                                 </mat-form-field>
                             </div>
                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -65,15 +112,15 @@
                             <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                 <section class="example-section">
                                     <span class="example-list-section">
-                                      <ul style="display: flex; flex-direction: row;">
-                                        @for (dia of semana().dias; track dia; let i = $index) {
-                                            <span>
-                                                <mat-checkbox [checked]="dia.seleccionado">
-                                                  {{dia.nombre}}
+                                        <ul style="display: flex; flex-direction: row;">
+                                            <ng-container *ngFor="let dia of semana().dias; let i = index">
+                                              <span>
+                                                <mat-checkbox [(ngModel)]="dia.seleccionado" [ngModelOptions]="{standalone: true}">
+                                                  {{ dia.nombre }}
                                                 </mat-checkbox>
-                                            </span>
-                                        }
-                                      </ul>
+                                              </span>
+                                            </ng-container>
+                                        </ul>
                                     </span>
                                 </section>
                                 <div style="display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 21px; width: 80%;">
@@ -159,10 +206,10 @@
                             </div>
 
                             <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
-                                <button mat-button (click)="agregarHorario()">Agregar</button>
+                                <button mat-button [disabled]="!habilitarAgregarHorario()" (click)="agregarHorario()">Agregar</button>
                             </div>
   
-                            <mat-chip-set style="margin-bottom: 10px;">
+                            <!-- <mat-chip-set style="margin-bottom: 10px;">
                                 @for (item of horarios; track $index) {
                                     <mat-chip-row (removed)="quitarHorario(item)">
                                         {{item.horaInicio}} - {{item.horaFin}}
@@ -171,11 +218,28 @@
                                         </button>
                                     </mat-chip-row>
                                 }
+                            </mat-chip-set> -->
+
+                            <mat-chip-set style="margin-bottom: 10px;">
+                                <ng-container *ngFor="let item of diasHorarios; let i = index">
+                                  <mat-chip-row>
+                                    {{item.dia}} {{" ["}}
+                                    <ng-container *ngFor="let horario of item.horario; let j = index">
+                                      {{horario.horaInicio}} - {{horario.horaFin}}
+                                      <span *ngIf="j < item.horario.length - 1">, </span>  <!-- Separar con coma si no es el último horario -->
+                                    </ng-container>
+                                    {{" ]"}}
+                                    <button matChipRemove>
+                                      <mat-icon>cancel</mat-icon>
+                                    </button>
+                                  </mat-chip-row>
+                                </ng-container>
                             </mat-chip-set>
+                              
   
                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                 <button mat-button matStepperPrevious>Anterior</button>
-                                <button mat-button disabled="{{horarios == undefined || horarios.length == 0}}" (click)="onConfirmar()">Confirmar</button>
+                                <button mat-button [disabled]="diasHorarios.length==0" (click)="onConfirmar()">Confirmar</button>
                             </div>
                         </form>
                     </mat-step>

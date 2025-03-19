@@ -23,6 +23,11 @@ import { CiudadService } from '../services/ciudad.service';
 import { Ciudad } from '../model/Ciudad';
 import { Especie } from '../model/Especie';
 import { Raza } from '../model/Raza';
+import { validacionFecha } from '../validators/validacionFecha';
+import { validacionContraseniasIguales } from '../validators/validacionContraseniaIguales';
+import { validacionFormatoCorreo } from '../validators/validarCorreo';
+import { validacionTelefonoBasico } from '../validators/numeroTelefono';
+import { validacionDni } from '../validators/validacionDni';
 
 @Component({
   selector: 'app-crear-cuenta-cliente',
@@ -73,13 +78,13 @@ export class CrearCuentaClienteComponent implements OnInit{
     this.datosPersonales = this.fb.group({
       nombre:               new FormControl('', Validators.required),
       apellido:             new FormControl('', Validators.required),
-      fechaNac:             new FormControl('', Validators.required),
-      dni:                  new FormControl('', Validators.required),
-      correo:               new FormControl('', [Validators.required, Validators.email]),
-      telefono:             new FormControl('', Validators.required),
-      contrasenia:          new FormControl('', Validators.required),
-      validarContrasenia:   new FormControl('', Validators.required)
-    });
+      fechaNac:             new FormControl('', [Validators.required, validacionFecha(18)]),
+      dni:                  new FormControl('', [Validators.required, validacionDni('dni')]),
+      correo:               new FormControl('', [Validators.required, Validators.email,validacionFormatoCorreo]),
+      telefono:             new FormControl('', [Validators.required, validacionTelefonoBasico]),
+      contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
+      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)])
+    }, { validators: validacionContraseniasIguales });
 
     this.mascota = this.fb.group({
       nombreMascota:    new FormControl('', Validators.required),
