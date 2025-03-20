@@ -77,15 +77,15 @@
                                 Tiene local físico?
                                 <div style=" display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <mat-radio-group formControlName="localFisico" style="margin-left: 20px;">
-                                        <mat-radio-button [value]="true">Si</mat-radio-button>
-                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                        <mat-radio-button [value]="'SI'">Si</mat-radio-button>
+                                        <mat-radio-button [value]="'NO'">No</mat-radio-button>
                                     </mat-radio-group>
                                 </div>
                             </div>
                             <div *ngIf="tieneLocalFisico()" style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;" >
                                     <mat-label>Ciudad</mat-label>
-                                    <mat-select formControlName="ciudad">
+                                    <mat-select formControlName="ciudad" [required]="tieneLocalFisico()">
                                         @for (item of ciudades; track $index) {
                                             <mat-option [value]="item.id">{{item.nombre}}</mat-option>
                                         }
@@ -93,10 +93,10 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Calle" formControlName="calle">
+                                    <input matInput placeholder="Calle" formControlName="calle" [required]="tieneLocalFisico()">
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Número" formControlName="numero">
+                                    <input matInput placeholder="Número" formControlName="numero" [required]="tieneLocalFisico()">
                                 </mat-form-field>
                             </div>
                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -196,7 +196,7 @@
                                             <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
                                                 <span>Hora Fin:</span>
                                                 <div>
-                                                    <input matInput [ngxTimepicker]="picker6" placeholder="Ej: 8:00 PM" formControlName="tardeInicio">
+                                                    <input matInput [ngxTimepicker]="picker6" placeholder="Ej: 8:00 PM" formControlName="tardeFin">
                                                     <ngx-material-timepicker #picker6></ngx-material-timepicker>
                                                 </div>
                                             </div>
@@ -222,7 +222,7 @@
 
                             <mat-chip-set style="margin-bottom: 10px;">
                                 <ng-container *ngFor="let item of diasHorarios; let i = index">
-                                  <mat-chip-row>
+                                  <mat-chip-row (removed)="quitarHorario(item)">
                                     {{item.dia}} {{" ["}}
                                     <ng-container *ngFor="let horario of item.horario; let j = index">
                                       {{horario.horaInicio}} - {{horario.horaFin}}

@@ -7,6 +7,8 @@ import { veterinarioMock } from '../model/data/data-Veterinario';
 import { veterinariaMock } from '../model/data/data-Veterinaria';
 import { Horario } from '../model/Horario';
 import { DiaHorarioAtencion } from '../model/DiaHorarioAtencion';
+import { Response } from '../model/Response';
+import { ValidarMatriculaRq } from '../model/validarMatriculaRq';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,7 @@ export class VeterinariesService {
     console.log('horas: ', horaFin, horaInicio)
     let diaHorarioAtencion: DiaHorarioAtencion = new DiaHorarioAtencion();
     let horarios: Horario[] = [];
-    diaHorarioAtencion.dia=dia;
+    diaHorarioAtencion.dia = dia;
     horarios.push(this.crearHorario(horaInicio,horaFin));
     diaHorarioAtencion.horario = horarios;
     return diaHorarioAtencion;
@@ -44,7 +46,7 @@ export class VeterinariesService {
     console.log('horas: ', horaFin, horaInicio, horaFin2, horaInicio2)
     let diaHorarioAtencion: DiaHorarioAtencion = new DiaHorarioAtencion();
     let horarios: Horario[] = [];
-    diaHorarioAtencion.dia;
+    diaHorarioAtencion.dia = dia;
     horarios.push(this.crearHorario(horaInicio,horaFin));
     horarios.push(this.crearHorario(horaInicio2,horaFin2));
     diaHorarioAtencion.horario = horarios;
@@ -62,6 +64,10 @@ export class VeterinariesService {
   getAll(idCiudad: number):Observable<VeterinariesGetRs>{
     return this.VeterinariesData;
     // return this.http.post<VeterinariesGetRs>(this.baseURL + "/veterinaries/" + idCiudad);
+  }
+
+  validarMatricula(rq: ValidarMatriculaRq): Observable<Response>{
+    return  this.http.post<Response>(this.baseURL+"/validarMatricula", rq);
   }
 
 }

@@ -119,12 +119,13 @@ export class CrearCuentaLocalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    this.getCiudades();
   }
 
   getCiudades(){
     this.ciudadService.getAll().subscribe({
       next: (data) => {
+        console.log('data: ', data);
         if (data.estado != 'ERROR'){
           this.ciudades = data.ciudades;
         }  else {
@@ -167,7 +168,7 @@ export class CrearCuentaLocalComponent implements OnInit {
       return false;
     }
 
-    if (corrido) {
+    if (corrido =='si') {
       // Si "corrido" está marcado, los campos de horario de apertura y cierre deben tener valor
       const horarioApertura = this.horarioTrabajo.get('horarioApertura')?.value;
       const horarioCierre = this.horarioTrabajo.get('horarioCierre')?.value;
@@ -178,7 +179,7 @@ export class CrearCuentaLocalComponent implements OnInit {
       // console.log('Es válido el horario (corrido):', isValidHorario);  // Verifica si ambos horarios están completos
       
       return isValidHorario; // Si ambos tienen valor, habilitar el botón
-    } else {
+    } else if(corrido == 'no') {
       // Si "corrido" no está marcado, los campos de mañana y tarde deben tener valor
       const mañanaInicio = this.horarioTrabajo.get('mañanaInicio')?.value;
       const mañanaFin = this.horarioTrabajo.get('mañanaFin')?.value;
@@ -194,13 +195,15 @@ export class CrearCuentaLocalComponent implements OnInit {
       // console.log('Es válido el horario (no corrido):', isValidPartesDelDia);  // Verifica si todos los campos están completos
       
       return isValidPartesDelDia; // Si todos los campos están completos, habilitar el botón
+    } else{
+      return false;
     }
 }
 
   
 
   agregarHorario() {
-    if (this.horarioTrabajo.get('corrido')?.value) {
+    if (this.horarioTrabajo.get('corrido')?.value == "si") {
       this.semana().dias?.forEach(element => {
         if (element.seleccionado) {
           const yaExiste = this.diasHorarios.some(dh => dh.dia === element.nombre);
@@ -224,7 +227,7 @@ export class CrearCuentaLocalComponent implements OnInit {
           }
         }
       });
-    } else {
+    } else if(this.horarioTrabajo.get('corrido')?.value == "no"){
       this.semana().dias?.forEach(element => {
         if (element.seleccionado) {
           const yaExiste = this.diasHorarios.some(dh => dh.dia === element.nombre);
@@ -237,7 +240,7 @@ export class CrearCuentaLocalComponent implements OnInit {
               this.horarioTrabajo.get('tardeInicio')?.value,
               this.horarioTrabajo.get('tardeFin')?.value
             ))
-
+              console.log('element.nombre: ', element.nombre);
             this.diasHorarios.push(
               this.service.crearDiaHorarioAtencionCortado(
                 element.nombre,
@@ -253,13 +256,36 @@ export class CrearCuentaLocalComponent implements OnInit {
         }
       });
     }
+    this.limpiarHorario();
+  }
+
+  limpiarHorario(){
+    this.semana.set({
+      completado: false,
+      dias: [
+        { nombre: "Lunes", seleccionado: false },
+        { nombre: "Martes", seleccionado: false },
+        { nombre: "Miercoles", seleccionado: false },
+        { nombre: "jueves", seleccionado: false },
+        { nombre: "Viernes", seleccionado: false },
+        { nombre: "Sabado", seleccionado: false },
+        { nombre: "Domingo", seleccionado: false }
+      ]
+    });
+    this.horarioTrabajo.get('horarioApertura')?.reset();
+    this.horarioTrabajo.get('horarioCierre')?.reset();
+    this.horarioTrabajo.get('mañanaInicio')?.reset();
+    this.horarioTrabajo.get('mañanaFin')?.reset();
+    this.horarioTrabajo.get('tardeInicio')?.reset();
+    this.horarioTrabajo.get('tardeFin')?.reset();
+
   }
   
-  quitarHorario(item: Horario){
+  quitarHorario(item: DiaHorarioAtencion){
     let index
-    if (this.horarios.includes(item)){
-      index = this.horarios.indexOf(item);
-      this.horarios.splice(index, 1);
+    if (this.diasHorarios.includes(item)){
+      index = this.diasHorarios.indexOf(item);
+      this.diasHorarios.splice(index, 1);
     }
   }
  
@@ -272,7 +298,7 @@ export class CrearCuentaLocalComponent implements OnInit {
 
   tieneLocalFisico():boolean{
     // console.log(this.ubicacion.get('localFisico')?.value)
-    return this.ubicacion.get('localFisico')?.value;
+    return this.ubicacion.get('localFisico')?.value == 'SI';
   }
 
   volver(){

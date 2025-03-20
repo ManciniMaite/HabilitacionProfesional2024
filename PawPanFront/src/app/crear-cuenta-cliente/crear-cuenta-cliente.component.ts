@@ -163,12 +163,9 @@ export class CrearCuentaClienteComponent implements OnInit{
     let selectedAnimal = new Animal;
     selectedAnimal.nombre = this.mascota.value.nombreMascota;
     selectedAnimal.fechaNac = this.mascota.value.fechaNacMascota;
-    selectedAnimal.raza.especie = this.mascota.value.especie;
     selectedAnimal.raza = this.mascota.value.raza;
     selectedAnimal.peso = this.mascota.value.peso;
     this.animales.push(selectedAnimal);
-    console.log("animal seleccionado: ", selectedAnimal);
-    console.log("array de animales: ", this.animales);
   }
 
   quitarAnimal(item: Animal){
