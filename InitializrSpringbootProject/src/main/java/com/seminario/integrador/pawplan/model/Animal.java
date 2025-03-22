@@ -28,9 +28,6 @@ public class Animal {
     private Long id;
     private boolean esActivo = true;;
     private String nombre;
-    //@ManyToOne
-    //@JoinColumn(name = "especie_id")
-    //private Especie especie;
     private Date fechaNac;
     private float peso;
     @Lob
@@ -59,14 +56,6 @@ public class Animal {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-    /*public Especie getEspecie() {
-        return especie;
-    }
-
-    public void setEspecie(Especie especie) {
-        this.especie = especie;
-    }*/
 
     public Date getFechaNac() {
         return fechaNac;

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.DiaHorarioAtencion;
-import com.seminario.integrador.pawplan.model.Domicilio;
-import com.seminario.integrador.pawplan.model.Especialidad;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.security.Role;
 
 import jakarta.persistence.OneToMany;
+import lombok.Data;
 
+@Data
 public class UsuarioRequest {
 //COMUNES
     private Role tipoUsuario;
@@ -31,23 +31,23 @@ public class UsuarioRequest {
     private String razonSocial;
     private String cuit;
     private ArrayList<Veterinario> veterinarios;
+	private boolean localFisico;
 
 //VETERINARIA - VETERINARIO
     private boolean haceGuardia;
     private boolean aptoCirugia;
-    private ArrayList<DiaHorarioAtencion> horarioAtencion;
     @OneToMany
     private ArrayList<DiaHorarioAtencion> horario;
     private boolean haceDomicilio;
+	private ArrayList<Long> tipoEspeciesIds;
 
 //VETERINARIO
     private int matricula;
     private boolean esIndependiente;
-    @OneToMany
-    private ArrayList<Especialidad> especialidad;
+    
     
 //VETERINARIA - PACIENTE
-    private Domicilio domicilio;
+    private DomicilioRq domicilio;
     
 
 	public Role getTipoUsuario() {
@@ -122,12 +122,6 @@ public class UsuarioRequest {
 	public void setAptoCirugia(boolean aptoCirugia) {
 		this.aptoCirugia = aptoCirugia;
 	}
-	public ArrayList<DiaHorarioAtencion> getHorarioAtencion() {
-		return horarioAtencion;
-	}
-	public void setHorarioAtencion(ArrayList<DiaHorarioAtencion> horarioAtencion) {
-		this.horarioAtencion = horarioAtencion;
-	}
 	public ArrayList<Veterinario> getVeterinarios() {
 		return veterinarios;
 	}
@@ -164,23 +158,5 @@ public class UsuarioRequest {
 	public void setHorario(ArrayList<DiaHorarioAtencion> horario) {
 		this.horario = horario;
 	}
-	public ArrayList<Especialidad> getEspecialidad() {
-		return especialidad;
-	}
-	public void setEspecialidad(ArrayList<Especialidad> especialidad) {
-		this.especialidad = especialidad;
-	}
-
-    public Domicilio getDomicilio() {
-        return domicilio;
-    }
-
-    public void setDomicilio(Domicilio domicilio) {
-        this.domicilio = domicilio;
-    }
-        
-    
-    
-    
-    
+	
 }

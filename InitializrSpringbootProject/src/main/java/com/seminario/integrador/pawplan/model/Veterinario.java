@@ -7,10 +7,12 @@ package com.seminario.integrador.pawplan.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
  */
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class Veterinario extends Usuario {
     
     @NotNull(message = "debe contener nombre")
@@ -33,12 +36,18 @@ public class Veterinario extends Usuario {
     private int matricula;
     private boolean esIndependiente;
     private boolean haceGuardia;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<DiaHorarioAtencion> horario;
-    @OneToMany(cascade = CascadeType.ALL)
-    @NotNull(message = "debe especificar su/s especialidad/es")
-    private List<Especialidad> especialidad;
+    @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.ALL)
+    private List<DiaHorarioAtencion> horarios;  
     private boolean haceDomicilio;
+
+    @ManyToMany
+    @JoinTable(
+        name = "veterinario_tipo_especie",
+        joinColumns = @JoinColumn(name = "veterinario_id"),
+        inverseJoinColumns = @JoinColumn(name = "tipo_especie_id")
+    )
+    @NotNull(message = "debe especificar el/los tipo(s) de especie que atiende")
+    private List<TipoEspecie> tiposEspecie;
 
 
     public String getNombre() {
@@ -95,22 +104,6 @@ public class Veterinario extends Usuario {
 
     public void setHaceGuardia(boolean haceGuardia) {
         this.haceGuardia = haceGuardia;
-    }
-
-    public List<DiaHorarioAtencion> getHorario() {
-        return horario;
-    }
-
-    public void setHorario(List<DiaHorarioAtencion> horario) {
-        this.horario = horario;
-    }
-
-    public List<Especialidad> getEspecialidad() {
-        return especialidad;
-    }
-
-    public void setEspecialidad(List<Especialidad> especialidad) {
-        this.especialidad = especialidad;
     }
 
     public boolean isHaceDomicilio() {

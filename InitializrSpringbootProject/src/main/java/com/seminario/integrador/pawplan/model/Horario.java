@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 /**
@@ -22,6 +24,10 @@ public class Horario {
     private Long id;
     private String horaInicio;
     private String horaFin; 
+
+    @ManyToOne
+    @JoinColumn(name = "dia_horario_atencion_id")
+    private DiaHorarioAtencion diaHorarioAtencion;
 
     public Long getId() {
         return id;

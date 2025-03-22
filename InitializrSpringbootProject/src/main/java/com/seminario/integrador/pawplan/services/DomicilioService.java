@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.seminario.integrador.pawplan.controller.values.DomicilioRq;
@@ -22,6 +23,7 @@ public class DomicilioService {
     @Autowired
     private CiudadRepository ciudadRepository;
 
+    @Lazy
     @Autowired
     private UsuarioService usuarioService;
 

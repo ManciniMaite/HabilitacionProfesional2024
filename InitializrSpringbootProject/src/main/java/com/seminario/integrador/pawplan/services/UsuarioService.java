@@ -5,18 +5,23 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
 import com.seminario.integrador.pawplan.controller.values.UsuarioResponse;
 import com.seminario.integrador.pawplan.exception.PawPlanRuleException;
+import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Cliente;
-import com.seminario.integrador.pawplan.model.Domicilio;
+import com.seminario.integrador.pawplan.model.DiaHorarioAtencion;
+import com.seminario.integrador.pawplan.model.Horario;
+import com.seminario.integrador.pawplan.model.TipoEspecie;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.repository.ClienteRepository;
-import com.seminario.integrador.pawplan.repository.DomicilioRepository;
+import com.seminario.integrador.pawplan.repository.DiaHorarioAtencionRepository;
+import com.seminario.integrador.pawplan.repository.TipoEspecieRepository;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.repository.VeterinariaRepository;
 import com.seminario.integrador.pawplan.repository.VeterinarioRepository;
@@ -45,6 +50,19 @@ public class UsuarioService {
 	
 	@Autowired
     private IAuthenticationFacade authenticationFacade;
+
+	@Lazy
+	@Autowired
+	private DomicilioService domicilioService;
+
+	@Autowired
+	private AnimalService animalService;
+
+	@Autowired 
+	private TipoEspecieRepository tipoEspecieRepository;
+
+	@Autowired
+	private DiaHorarioAtencionRepository diaHorarioAtencionRepository;
 
 	// @Autowired
 	// private DomicilioService domicilioService;
@@ -184,8 +202,19 @@ public class UsuarioService {
 		cliente.setCorreo(usuarioRequest.getCorreo());
 		cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
-		clienteRepository.save(cliente);
-		
+		Cliente nuevoCliente = clienteRepository.save(cliente);
+
+		if(!usuarioRequest.getAnimales().isEmpty()){
+			for(Animal a : usuarioRequest.getAnimales()){
+				a.setCliente(nuevoCliente);
+				this.animalService.crearAnimal(a);
+			}
+		}
+
+		if(usuarioRequest.getDomicilio() != null){
+			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
+		}
+
 		return cliente;
 	}
 
@@ -193,15 +222,45 @@ public class UsuarioService {
 
 		veterinaria.setTelefono(usuarioRequest.getTelefono());
 		veterinaria.setCorreo(usuarioRequest.getCorreo());
+		veterinaria.setRazonSocial(usuarioRequest.getRazonSocial());
 		veterinaria.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
 		veterinaria.setCuit(usuarioRequest.getCuit());
 		veterinaria.setAptoCirugia(usuarioRequest.isAptoCirugia());
-		veterinaria.setHorarioAtencion(usuarioRequest.getHorarioAtencion());
+		veterinaria.setHorarioAtencion(usuarioRequest.getHorario());
 		veterinaria.setVeterinarios(usuarioRequest.getVeterinarios());
-		veterinaria.setHaceDomicilio(usuarioRequest.isHaceDomicilio());
 		
 		veterinariaRepository.save(veterinaria);
+
+		if(usuarioRequest.isLocalFisico() && usuarioRequest.getDomicilio() != null){
+			veterinaria.setHaceDomicilio(false);
+			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
+		} else{
+			veterinaria.setHaceDomicilio(true);
+		}
+
+		if(!usuarioRequest.getHorario().isEmpty()){
+			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
+			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
+				DiaHorarioAtencion diaHorario = new DiaHorarioAtencion();
+				diaHorario.setDia(diaReq.getDia());
+				diaHorario.setIdUsuario(veterinaria.getId());
+
+				List<Horario> horarios = new ArrayList<>();
+				for (Horario hReq : diaReq.getHorarios()) {
+					Horario horario = new Horario();
+					horario.setHoraInicio(hReq.getHoraInicio());
+					horario.setHoraFin(hReq.getHoraFin());
+					horario.setDiaHorarioAtencion(diaHorario); // ASOCIACIÓN INVERSA
+					horarios.add(horario);
+				}
+				diaHorario.setHorarios(horarios);
+				diasHorarios.add(diaHorario);
+			}
+
+			diaHorarioAtencionRepository.saveAll(diasHorarios);
+		}
+		
 		
 		return veterinaria;
 	}
@@ -219,16 +278,54 @@ public class UsuarioService {
 		veterinario.setFechaNac(usuarioRequest.getFechaNac());
 		veterinario.setMatricula(usuarioRequest.getMatricula());
 		veterinario.setEsIndependiente(usuarioRequest.isEsIndependiente());
-		veterinario.setHaceGuardia(usuarioRequest.isHaceGuardia());
-		veterinario.setHorario(usuarioRequest.getHorario());
-		veterinario.setEspecialidad(usuarioRequest.getEspecialidad());
-		veterinario.setHaceDomicilio(usuarioRequest.isHaceDomicilio());
-		
+		if(veterinario.isEsIndependiente()){ //si trabaja de forma independiente solo trabaja atendiendo a domicilio
+			veterinario.setHaceDomicilio(true);
+			veterinario.setHaceGuardia(usuarioRequest.isHaceGuardia());
+		} else{
+			veterinario.setHaceDomicilio(false);
+			veterinario.setHaceGuardia(false);
+		}
+
+
+		ArrayList<TipoEspecie> alte = new ArrayList<TipoEspecie>();
+		for(Long id : usuarioRequest.getTipoEspeciesIds()){
+			Optional<TipoEspecie> te = this.tipoEspecieRepository.findById(id);
+			if(te.isPresent()){
+				alte.add(te.get());
+			} else{
+				throw new IllegalArgumentException("Unexpected value of tipo_especie id: " + id);
+			}
+		}
+		veterinario.setTiposEspecie(alte);
+
 		veterinarioRepository.save(veterinario);
 		
+		if( veterinario.isEsIndependiente() && !usuarioRequest.getHorario().isEmpty()){
+			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
+			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
+				DiaHorarioAtencion diaHorario = new DiaHorarioAtencion();
+				diaHorario.setDia(diaReq.getDia());
+				diaHorario.setIdUsuario(veterinario.getId());
+	
+				List<Horario> horarios = new ArrayList<>();
+				for (Horario hReq : diaReq.getHorarios()) {
+					Horario horario = new Horario();
+					horario.setHoraInicio(hReq.getHoraInicio());
+					horario.setHoraFin(hReq.getHoraFin());
+					horario.setDiaHorarioAtencion(diaHorario); // ASOCIACIÓN INVERSA
+					horarios.add(horario);
+				}
+				diaHorario.setHorarios(horarios);
+				diasHorarios.add(diaHorario);
+			}
+	
+			diaHorarioAtencionRepository.saveAll(diasHorarios);
+		}
+
 		return veterinario;
 	}
         
+		
         
 	// public List<Domicilio> getDomiciliosUsCliente(String dni){
 	// 	return this.domicilioService.getByUsuario(dni);

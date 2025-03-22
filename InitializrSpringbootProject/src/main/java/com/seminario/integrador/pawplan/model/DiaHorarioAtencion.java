@@ -4,12 +4,14 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 
@@ -24,8 +26,11 @@ public class DiaHorarioAtencion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String dia;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Horario horario;
+    @OneToMany(mappedBy = "diaHorarioAtencion", cascade = CascadeType.ALL)
+    private List<Horario> horarios;
+
+    private Long idUsuario;
+    
 
     public Long getId() {
         return id;
@@ -42,13 +47,4 @@ public class DiaHorarioAtencion {
     public void setDia(String dia) {
         this.dia = dia;
     }
-
-    public Horario getHorario() {
-        return horario;
-    }
-
-    public void setHorario(Horario horario) {
-        this.horario = horario;
-    }
-    
 }
