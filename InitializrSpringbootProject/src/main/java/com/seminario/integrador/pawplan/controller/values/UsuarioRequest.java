@@ -25,7 +25,7 @@ public class UsuarioRequest {
     private String fechaNac;
     
 //PACIENTE
-    private ArrayList<Animal> animales;
+    private ArrayList<AnimalRq> animales;
     
 //VETERINARIA
     private String razonSocial;
@@ -92,12 +92,7 @@ public class UsuarioRequest {
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
-	public ArrayList<Animal> getAnimales() {
-		return animales;
-	}
-	public void setAnimales(ArrayList<Animal> animales) {
-		this.animales = animales;
-	}
+	
 	public String getRazonSocial() {
 		return razonSocial;
 	}

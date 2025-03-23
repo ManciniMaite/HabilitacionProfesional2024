@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.seminario.integrador.pawplan.controller.values.AnimalRq;
 import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
 import com.seminario.integrador.pawplan.controller.values.UsuarioResponse;
 import com.seminario.integrador.pawplan.exception.PawPlanRuleException;
@@ -202,11 +203,11 @@ public class UsuarioService {
 		cliente.setCorreo(usuarioRequest.getCorreo());
 		cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
-		Cliente nuevoCliente = clienteRepository.save(cliente);
+		clienteRepository.save(cliente);
 
 		if(!usuarioRequest.getAnimales().isEmpty()){
-			for(Animal a : usuarioRequest.getAnimales()){
-				a.setCliente(nuevoCliente);
+			for(AnimalRq a : usuarioRequest.getAnimales()){
+				a.setUsuarioId(cliente.getId());
 				this.animalService.crearAnimal(a);
 			}
 		}

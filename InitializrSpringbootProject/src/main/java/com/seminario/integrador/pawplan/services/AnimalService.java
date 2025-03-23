@@ -4,11 +4,17 @@
  */
 package com.seminario.integrador.pawplan.services;
 
+import com.seminario.integrador.pawplan.controller.values.AnimalRq;
 import com.seminario.integrador.pawplan.controller.values.AnimalRs;
 import com.seminario.integrador.pawplan.controller.values.ListaAnimalesRs;
 import com.seminario.integrador.pawplan.controller.values.Response;
 import com.seminario.integrador.pawplan.model.Animal;
+import com.seminario.integrador.pawplan.model.Cliente;
+import com.seminario.integrador.pawplan.model.Raza;
+import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.repository.AnimalRepository;
+import com.seminario.integrador.pawplan.repository.RazaRepository;
+import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.security.PrincipalPawplan;
 import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
@@ -28,6 +34,10 @@ public class AnimalService {
     private IAuthenticationFacade authenticationFacade;
     @Autowired
     private AnimalRepository repository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private RazaRepository razaRepository;
     
     public ListaAnimalesRs findByCliente(){
     	
@@ -61,19 +71,41 @@ public class AnimalService {
                 
     }
     
-    public AnimalRs crearAnimal(Animal rq){
+    public AnimalRs crearAnimal(AnimalRq rq){
         AnimalRs rs = new AnimalRs();
         rs.setEstado("OK");
-        try{
-            Animal nuevoAnimal = this.repository.save(rq);
+        try {
+            Animal nuevoAnimal = new Animal();
+            nuevoAnimal.setNombre(rq.getNombre());
+            nuevoAnimal.setFechaNac(rq.getFechaNac());
+            nuevoAnimal.setPeso(rq.getPeso());
+            nuevoAnimal.setFoto(rq.getFoto());
+            nuevoAnimal.setEsActivo(true);
             
-            if(nuevoAnimal == null){
+            // Buscar la raza por id
+            Optional<Raza> razaOpt = razaRepository.findById(rq.getRazaId());
+            if(razaOpt.isPresent()) {
+                nuevoAnimal.setRaza(razaOpt.get());
+            } else {
                 rs.setEstado("ERROR");
-                rs.setMensaje("Ocurrio un error al guardar el animal - 02");
+                rs.setMensaje("Raza no encontrada con ID: " + rq.getRazaId());
                 return rs;
             }
             
+            // Buscar el cliente por id
+            Optional<Usuario> usOptional = usuarioRepository.findById(rq.getUsuarioId());
+            if(usOptional.isPresent()) {
+                nuevoAnimal.setCliente((Cliente) usOptional.get());
+            } else {
+                rs.setEstado("ERROR");
+                rs.setMensaje("Cliente no encontrado con ID: " + rq.getUsuarioId());
+                return rs;
+            }
+
+            nuevoAnimal = repository.save(nuevoAnimal);
+
             rs.setAnimal(nuevoAnimal);
+
         } catch (Exception e){
             e.printStackTrace();
             rs.setEstado("ERROR");
@@ -83,79 +115,57 @@ public class AnimalService {
         return rs;
     }
     
-    public AnimalRs UpdateAnimal(Animal rq){
+    public AnimalRs updateAnimal(AnimalRq rq) {
+        System.out.println(rq);
         AnimalRs rs = new AnimalRs();
         rs.setEstado("OK");
-        try{
-            Optional<Animal> animalExistente = this.repository.findById(rq.getId());
-            
-            if(animalExistente.isPresent()){
-                Animal animal = animalExistente.get();
-                animal.setFoto(rq.getFoto());
-                animal.setNombre(rq.getNombre());
-                animal.setPeso(rq.getPeso());
-                animal.setFechaNac(rq.getFechaNac());
-                
-                Animal animalActualizado =  this.repository.save(animal);
-                
-                if(animalActualizado == null){
-                    rs.setEstado("ERROR");
-                    rs.setMensaje("Ocurrio un error al actualizar el animal");
-                    return rs;
-                }
-                
-                rs.setAnimal(animalActualizado);
-                
-            } else {
+        try {
+            Optional<Animal> animalExistente = repository.findById(rq.getId());
+            if (animalExistente.isEmpty()) {
                 rs.setEstado("ERROR");
-                rs.setMensaje("No fue posible recuperar el animal - 02");
+                rs.setMensaje("No fue posible recuperar el animal con ID: " + rq.getId());
                 return rs;
             }
-            
-        } catch (Exception e){
+
+            Animal animal = animalExistente.get();
+            animal.setFoto(rq.getFoto());
+            animal.setNombre(rq.getNombre());
+            animal.setPeso(rq.getPeso());
+            animal.setFechaNac(rq.getFechaNac());
+
+            Animal animalActualizado = repository.save(animal);
+            rs.setAnimal(animalActualizado);
+
+        } catch (Exception e) {
             e.printStackTrace();
             rs.setEstado("ERROR");
-            rs.setMensaje("Ocurrio un error al guardar el animal - 01");
-            return rs;
+            rs.setMensaje("Ocurrió un error al actualizar el animal");
         }
         return rs;
     }
-    
-    public Response delete(Long id){
+
+    public Response delete(Long id) {
         Response rs = new Response();
-        
-        try{
-            Optional<Animal> animalExistente = this.repository.findById(id);
-            
-            if(animalExistente.isPresent()){
-                Animal animal = animalExistente.get();
-                animal.setEsActivo(false);
-                
-                Animal animalActualizado =  this.repository.save(animal);
-                
-                if(animalActualizado == null){
-                    rs.setEstado("ERROR");
-                    rs.setMensaje("Ocurrio un error al eliminar el animal");
-                    return rs;
-                }
-                
-                
-            } else {
+        try {
+            Optional<Animal> animalExistente = repository.findById(id);
+            if (animalExistente.isEmpty()) {
                 rs.setEstado("ERROR");
-                rs.setMensaje("No fue posible recuperar el animal - 02");
+                rs.setMensaje("No fue posible recuperar el animal con ID: " + id);
                 return rs;
             }
-            
-        } catch (Exception e){
+
+            Animal animal = animalExistente.get();
+            animal.setEsActivo(false);
+            repository.save(animal);
+
+            rs.setEstado("OK");
+            rs.setMensaje("Registro eliminado con éxito");
+
+        } catch (Exception e) {
             e.printStackTrace();
             rs.setEstado("ERROR");
-            rs.setMensaje("No fue posible recuperar el animal - 01");
-            return rs;
+            rs.setMensaje("Ocurrió un error al eliminar el animal");
         }
-        
-        rs.setEstado("OK");
-        rs.setMensaje("Registro eliminado con exito");
         return rs;
     }
-    
 }
