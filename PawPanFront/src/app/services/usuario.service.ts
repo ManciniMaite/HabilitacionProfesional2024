@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONFIG } from '../config';
 import { Observable } from 'rxjs';
-import { UsuarioRq } from '../model/UsuarioRq';
+import { UsuarioRequest } from '../model/UsuarioRq';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class UsuarioService {
     private http: HttpClient
   ) { }
 
-  crearCuenta(rq: UsuarioRq):Observable<any>{ //ANY pq segun lo que se este crando es la rta puede ser con un cliente, un veterinario o una veterinaria
+  crearCuenta(rq: UsuarioRequest):Observable<any>{ //ANY pq segun lo que se este crando es la rta puede ser con un cliente, un veterinario o una veterinaria
     return this.http.post<any>(this.baseURL + "/Usuario/Crear", rq);
   }
 

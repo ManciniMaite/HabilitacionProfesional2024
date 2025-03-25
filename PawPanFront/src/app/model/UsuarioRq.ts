@@ -1,42 +1,44 @@
 import { Animal } from "./Animal";
+import { AnimalRq } from "./AnimalRq";
 import { DiaHorarioAtencion } from "./DiaHorarioAtencion";
 import { Domicilio } from "./Domicilio";
+import { DomicilioRq } from "./DomicilioRq";
 import { Especialidad } from "./Especialidad";
 import { Veterinario } from "./Veterinario";
 
-export class UsuarioRq {
-    //COMUNES
+export class UsuarioRequest {
+    // COMUNES
     tipoUsuario: string;
     telefono: string;
     correo: string;
     contrasenia: string;
-    
-//PACIENTE - VETERINARIO
+
+    // PACIENTE - VETERINARIO
     nombre: string;
     apellido: string;
     dni: string;
     fechaNac: string;
-    
-//PACIENTE
-   animales: Animal[];
-    
-//VETERINARIA
+
+    // PACIENTE
+    animales: AnimalRq[];
+
+    // VETERINARIA
     razonSocial: string;
     cuit: string;
     veterinarios: Veterinario[];
+    localFisico: boolean;
 
-//VETERINARIA - VETERINARIO
+    // VETERINARIA - VETERINARIO
     haceGuardia: boolean;
     aptoCirugia: boolean;
-    horarioAtencion: DiaHorarioAtencion[];
     horario: DiaHorarioAtencion[];
     haceDomicilio: boolean;
+    tipoEspeciesIds: number[];
 
-//VETERINARIO
+    // VETERINARIO
     matricula: number;
     esIndependiente: boolean;
-    especialidad:Especialidad[];
-    
-//VETERINARIA - PACIENTE
-    domicilio: Domicilio;
+
+    // VETERINARIA - PACIENTE
+    domicilio: DomicilioRq;
 }

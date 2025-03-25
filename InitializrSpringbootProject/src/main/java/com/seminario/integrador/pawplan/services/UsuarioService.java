@@ -231,13 +231,16 @@ public class UsuarioService {
 		veterinaria.setHorarioAtencion(usuarioRequest.getHorario());
 		veterinaria.setVeterinarios(usuarioRequest.getVeterinarios());
 		
+		if(usuarioRequest.isLocalFisico()){
+			veterinaria.setHaceDomicilio(false);
+		} else{
+			veterinaria.setHaceDomicilio(true);
+		}
+
 		veterinariaRepository.save(veterinaria);
 
 		if(usuarioRequest.isLocalFisico() && usuarioRequest.getDomicilio() != null){
-			veterinaria.setHaceDomicilio(false);
 			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
-		} else{
-			veterinaria.setHaceDomicilio(true);
 		}
 
 		if(!usuarioRequest.getHorario().isEmpty()){

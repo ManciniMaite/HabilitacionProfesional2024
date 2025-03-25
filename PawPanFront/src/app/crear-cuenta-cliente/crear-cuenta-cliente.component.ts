@@ -14,7 +14,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { Animal } from '../model/Animal';
 import { MatChipsModule } from '@angular/material/chips';
 import { Router, RouterLink } from '@angular/router';
-import { UsuarioRq } from '../model/UsuarioRq';
 import { Domicilio } from '../model/Domicilio';
 import { UsuarioService } from '../services/usuario.service';
 import { EspecieService } from '../services/especie.service';
@@ -28,6 +27,9 @@ import { validacionContraseniasIguales } from '../validators/validacionContrasen
 import { validacionFormatoCorreo } from '../validators/validarCorreo';
 import { validacionTelefonoBasico } from '../validators/numeroTelefono';
 import { validacionDni } from '../validators/validacionDni';
+import { UsuarioRequest } from '../model/UsuarioRq';
+import { DomicilioRq } from '../model/DomicilioRq';
+import { AnimalRq } from '../model/AnimalRq';
 
 @Component({
   selector: 'app-crear-cuenta-cliente',
@@ -177,25 +179,9 @@ export class CrearCuentaClienteComponent implements OnInit{
   }
  
   onConfirmar(){
-    if (this.validarDatosPersonales() && this.validarMascotas()){
-      let rq: UsuarioRq = new UsuarioRq();
-      rq.tipoUsuario="PACIENTE";
-      rq.telefono=this.datosPersonales.get('telefono')?.value;
-      rq.correo=this.datosPersonales.get('telefono')?.value;
-      rq.contrasenia=this.datosPersonales.get('contrasenia')?.value;
-      rq.nombre=this.datosPersonales.get('nombre')?.value;
-      rq.apellido=this.datosPersonales.get('apellido')?.value;
-      rq.dni=this.datosPersonales.get('dni')?.value;
-      rq.fechaNac=this.datosPersonales.get('fechaNac')?.value;
-      rq.animales = this.animales;
-
-      let domicilio: Domicilio = new Domicilio();
-      domicilio.calle = this.ubicacion.get('calle')?.value;
-      domicilio.ciudad = this.ubicacion.get('ciudad')?.value;
-      domicilio.numero= this.ubicacion.get('numero')?.value;
-
-      rq.domicilio = domicilio;
-
+    if(this.validarDatosPersonales() && this.validarMascotas()){
+      let rq : UsuarioRequest=this.getObject()
+      console.log('us rq: ', rq)
       this.service.crearCuenta(rq).subscribe({
         next:(data) => {
           this.usCreado = true;
@@ -204,12 +190,44 @@ export class CrearCuentaClienteComponent implements OnInit{
           console.log(error);
         }
       });
-      
     }
-    console.log("Cuenta creada! datos:");
-    console.log(this.datosPersonales.value);
-    console.log(this.mascota.value);
-    console.log(this.ubicacion.value);
+  }
+
+  getObject():UsuarioRequest{
+    let rq: UsuarioRequest = new UsuarioRequest();
+    rq.tipoUsuario="PACIENTE";
+    rq.telefono=this.datosPersonales.get('telefono')?.value;
+    rq.correo=this.datosPersonales.get('telefono')?.value;
+    rq.contrasenia=this.datosPersonales.get('contrasenia')?.value;
+    rq.nombre=this.datosPersonales.get('nombre')?.value;
+    rq.apellido=this.datosPersonales.get('apellido')?.value;
+    rq.dni=this.datosPersonales.get('dni')?.value;
+    rq.fechaNac=this.datosPersonales.get('fechaNac')?.value;
+    
+    let animalesRq: AnimalRq[] = []
+    console.log('animales: ',this.animales)
+    this.animales.forEach(a =>{
+      console.log(a);
+      let animal: AnimalRq = new AnimalRq();
+      animal.nombre = a.nombre;
+      animal.fechaNac = a.fechaNac;
+      animal.razaId=a.raza.id;
+      animal.peso=a.peso;
+      animalesRq.push(animal);
+    })
+    rq.animales = animalesRq;
+
+    let domicilio: DomicilioRq = new DomicilioRq();
+    domicilio.calle = this.ubicacion.get('calle')?.value;
+    domicilio.ciudadId = this.ubicacion.get('ciudad')?.value;
+    domicilio.numero= this.ubicacion.get('numero')?.value;
+    domicilio.usuario=this.datosPersonales.get('dni')?.value;
+
+    rq.domicilio = domicilio;
+    
+    
+    return rq
+    
   }
 
   volver(){

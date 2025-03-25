@@ -224,9 +224,9 @@
                                 <ng-container *ngFor="let item of diasHorarios; let i = index">
                                   <mat-chip-row (removed)="quitarHorario(item)">
                                     {{item.dia}} {{" ["}}
-                                    <ng-container *ngFor="let horario of item.horario; let j = index">
+                                    <ng-container *ngFor="let horario of item.horarios; let j = index">
                                       {{horario.horaInicio}} - {{horario.horaFin}}
-                                      <span *ngIf="j < item.horario.length - 1">, </span>  <!-- Separar con coma si no es el último horario -->
+                                      <span *ngIf="j < item.horarios.length - 1">, </span>  <!-- Separar con coma si no es el último horario -->
                                     </ng-container>
                                     {{" ]"}}
                                     <button matChipRemove>
@@ -235,6 +235,14 @@
                                   </mat-chip-row>
                                 </ng-container>
                             </mat-chip-set>
+
+                            <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                <mat-label>¿Realiza Guardias?</mat-label>
+                                <mat-radio-group formControlName="haceGuardia" style="margin-left: 20px;">
+                                    <mat-radio-button value="true">SI</mat-radio-button>
+                                    <mat-radio-button value="false">NO</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
                               
   
                             <div style="display: flex; flex-direction: row; justify-content: space-between;">

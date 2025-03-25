@@ -13,6 +13,7 @@ export const DataAnimal: Animal = {
             id:1,
             nombre: 'Gato',
             tipoEspecie: {
+                id:1,
                 nombre: 'Chico',
                 descripcion: 'Animales pequeños'
             }

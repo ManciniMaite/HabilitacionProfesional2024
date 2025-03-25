@@ -38,7 +38,7 @@ export class VeterinariesService {
     let horarios: Horario[] = [];
     diaHorarioAtencion.dia = dia;
     horarios.push(this.crearHorario(horaInicio,horaFin));
-    diaHorarioAtencion.horario = horarios;
+    diaHorarioAtencion.horarios = horarios;
     return diaHorarioAtencion;
   }
 
@@ -49,7 +49,7 @@ export class VeterinariesService {
     diaHorarioAtencion.dia = dia;
     horarios.push(this.crearHorario(horaInicio,horaFin));
     horarios.push(this.crearHorario(horaInicio2,horaFin2));
-    diaHorarioAtencion.horario = horarios;
+    diaHorarioAtencion.horarios = horarios;
     return diaHorarioAtencion;
   }
 

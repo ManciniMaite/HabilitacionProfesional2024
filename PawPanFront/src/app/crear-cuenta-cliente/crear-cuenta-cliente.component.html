@@ -157,7 +157,7 @@
                                         <mat-select formControlName="ciudad" required>
                                             <mat-option value="">Seleccione su ciudad...</mat-option>
                                             @for (item of this.ciudades; track $index) {
-                                                <mat-option [value]="item">{{item.nombre}}</mat-option>
+                                                <mat-option [value]="item.id">{{item.nombre}}</mat-option>
                                             }
                                         </mat-select>
                                     </mat-form-field>

@@ -24,6 +24,9 @@ import { VeterinariesService } from '../services/Veterinaries-service';
 import { DiaHorarioAtencion } from '../model/DiaHorarioAtencion';
 import { Ciudad } from '../model/Ciudad';
 import { CiudadService } from '../services/ciudad.service';
+import { UsuarioRequest } from '../model/UsuarioRq';
+import { DomicilioRq } from '../model/DomicilioRq';
+import { UsuarioService } from '../services/usuario.service';
 
 export interface Week {
   completado: boolean;
@@ -87,7 +90,8 @@ export class CrearCuentaLocalComponent implements OnInit {
     private router: Router,
     private location: Location,
     private service: VeterinariesService,
-    private ciudadService: CiudadService
+    private ciudadService: CiudadService,
+    private usuarioService: UsuarioService
   ){
     //console.log("Array de Horarios vacio: ",this.horarios);
     this.datosLocal = this.fb.group({
@@ -100,6 +104,7 @@ export class CrearCuentaLocalComponent implements OnInit {
     }, { validators: validacionContraseniasIguales });
 
     this.horarioTrabajo = this.fb.group({
+      haceGuardia: new FormControl('NO', Validators.required),
       dia:              new FormControl('', Validators.required),
       corrido:          new FormControl(''),
       horarioApertura:  new FormControl(''),
@@ -290,15 +295,52 @@ export class CrearCuentaLocalComponent implements OnInit {
   }
  
   onConfirmar(){
-    console.log("Cuenta creada! datos:");
-    console.log(this.datosLocal.value);
-    console.log(this.horarioTrabajo.value);
-    console.log(this.ubicacion.value);
+    let rq: UsuarioRequest = this.getObjet();
+    console.log(rq);
+    this.usuarioService.crearCuenta(rq).subscribe({
+      next:(value)=> {
+          console.log(value);
+      }, error: (error)=>{
+        console.log(error);
+      }
+    });
   }
 
   tieneLocalFisico():boolean{
     // console.log(this.ubicacion.get('localFisico')?.value)
     return this.ubicacion.get('localFisico')?.value == 'SI';
+  }
+
+  getObjet(): UsuarioRequest {
+    let request: UsuarioRequest = new UsuarioRequest();
+      request.tipoUsuario= 'VETERINARIA'; 
+      request.telefono= this.datosLocal.get('telefono')?.value;
+      request.correo= this.datosLocal.get('correo')?.value;
+      request.contrasenia= this.datosLocal.get('contrasenia')?.value;
+
+      request.razonSocial= this.datosLocal.get('razonSocial')?.value;
+      request.cuit= this.datosLocal.get('cuit')?.value;
+      
+      
+      request.haceGuardia= this.horarioTrabajo.get('haceGuardia')?.value === 'SI';
+      request.aptoCirugia= false; 
+      request.horario= this.diasHorarios;
+
+      let dom: DomicilioRq = new DomicilioRq();
+      if(this.ubicacion.get('localFisico')?.value==="SI"){ //si tiene local fisico entonces no trabajan a domicilio
+        request.localFisico = true;
+        request.haceDomicilio= false; 
+        dom.ciudadId = this.ubicacion.get('ciudad')?.value
+        dom.calle = this.ubicacion.get('calle')?.value
+        dom.numero= this.ubicacion.get('numero')?.value
+        dom.usuario = this.datosLocal.get('cuit')?.value;
+        request.domicilio=dom;
+      } else { //sin local fisico solo atiende a domicilio
+        request.localFisico = false;
+        request.haceDomicilio= true; 
+      }
+  
+    return request;
   }
 
   volver(){

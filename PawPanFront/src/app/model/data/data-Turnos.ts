@@ -28,6 +28,7 @@ export const Turnos: Turno[]=[
                         id:1,
                         nombre: 'Gato',
                         tipoEspecie: {
+                            id:1,
                             nombre: 'Chico',
                             descripcion: 'Animales pequeños'
                         }
@@ -57,6 +58,7 @@ export const Turnos: Turno[]=[
                         id:1,
                         nombre: 'Gato',
                         tipoEspecie: {
+                            id:1,
                             nombre: 'Chico',
                             descripcion: 'Animales pequeños'
                         }

@@ -1,11 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +23,11 @@ import { validacionFecha } from '../validators/validacionFecha';
 import { VeterinariesService } from '../services/Veterinaries-service';
 import { ValidarMatriculaRq } from '../model/validarMatriculaRq';
 import { DiaHorarioAtencion } from '../model/DiaHorarioAtencion';
+import { TipoEspecie } from '../model/TipoEspecie';
+import { TipoEspecieService } from '../services/tipo-especie.service';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { UsuarioRequest } from '../model/UsuarioRq';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-crear-cuenta-veterinario',
@@ -43,11 +48,13 @@ import { DiaHorarioAtencion } from '../model/DiaHorarioAtencion';
     MatRadioModule,
     MatCheckboxModule,
     NgxMaterialTimepickerModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   templateUrl: './crear-cuenta-veterinario.component.html',
   styleUrl: './crear-cuenta-veterinario.component.scss'
 })
-export class CrearCuentaVeterinarioComponent {
+export class CrearCuentaVeterinarioComponent implements OnInit{
   animationDuration = '1000';
 
   datosPersonales: FormGroup;
@@ -59,6 +66,8 @@ export class CrearCuentaVeterinarioComponent {
 
   matriculaValidada: boolean = false;
   mensajeMatricula: string = "";
+
+  tipoEspecies: any = [];
 
   readonly semana = signal<Week>(
     {
@@ -78,7 +87,9 @@ export class CrearCuentaVeterinarioComponent {
   constructor(
     private fb: FormBuilder,
     private location: Location,
-    private service: VeterinariesService
+    private service: VeterinariesService,
+    private usuariosService: UsuarioService,
+    private tipoEspecieService: TipoEspecieService
   ){
     this.datosPersonales = this.fb.group({
       nombre:     new FormControl('', Validators.required),
@@ -96,7 +107,9 @@ export class CrearCuentaVeterinarioComponent {
     });
 
     this.formaTrabajo = this.fb.group({
-      independiente: new FormControl('', Validators.required)
+      tiposDeEspecie: new FormControl(''),
+      independiente: new FormControl('', Validators.required),
+      haceGuardia: new FormControl('NO', Validators.required)
     });
 
     this.horarioTrabajo = this.fb.group({
@@ -110,12 +123,40 @@ export class CrearCuentaVeterinarioComponent {
       tardeFin:    new FormControl(''),
     });
   }
+
+  ngOnInit(): void {
+      this.getTipoEspecies();
+  }
+
+  getTipoEspecies(){
+    this.tipoEspecieService.getAll().subscribe({
+      next:(data) => {
+        this.tipoEspecies = data.map(especie => ({
+          ...especie,
+          selected: false
+        }));
+      }, error: (error) =>{
+        console.log(error)
+      }
+    });
+  }
+
+  selectTipoEspecie(event: any, item: any) {
+    item.selected = event.checked; // Usar el estado del checkbox
+    console.log('especies: ', this.tipoEspecies);
+  }
+
+
   onConfirmar(){
-    console.log("Cuenta creada! datos:");
-    console.log(this.datosPersonales.value);
-    console.log(this.matricula.value);
-    console.log(this.formaTrabajo.value);
-    console.log(this.horarioTrabajo.value);
+    let rq: UsuarioRequest = this.getObject();
+    this.usuariosService.crearCuenta(rq).subscribe({
+      next: (value) => {
+          console.log(value);
+      }, error:(err) => {
+          console.log(err);
+      },
+    });
+    console.log('obj: ', rq)
   }
 
   volver(){
@@ -307,12 +348,49 @@ export class CrearCuentaVeterinarioComponent {
 
   habilitarCrearCuenta(){
     if(this.formaTrabajo.get('independiente')?.value=='false'){
-      return true;
+      return  this.tipoEspecies.some((te: any) => te.selected==true);
     } else if(this.formaTrabajo.get('independiente')?.value=='true' && this.diasHorarios.length!=0){
-      return true;
+      return  this.tipoEspecies.some((te: any) => te.selected==true);
     } else{
       return false;
     }
+  }
+
+  getObject(): UsuarioRequest{
+    let rq: UsuarioRequest = new UsuarioRequest();
+
+    rq.tipoUsuario = "VETERINARIO";
+    rq.telefono= this.datosPersonales.get('telefono')?.value
+    rq.correo =this.datosPersonales.get('correo')?.value
+    rq.contrasenia =this.datosPersonales.get('contrasenia')?.value
+  
+    rq.nombre =this.datosPersonales.get('nombre')?.value
+    rq.apellido =this.datosPersonales.get('apellido')?.value
+    rq.dni= this.datosPersonales.get('dni')?.value
+    rq.fechaNac = this.datosPersonales.get('fechaNac')?.value
+
+    rq.matricula = this.matricula.get('numeroMatricula')?.value;
+    rq.tipoEspeciesIds= []
+    this.tipoEspecies.forEach((te: any)=>{
+      if (te.selected){
+        rq.tipoEspeciesIds.push(te.id);
+      }
+    });
+  
+    if(this.formaTrabajo.get('independiente')?.value == 'true'){
+      rq.esIndependiente=true;
+      rq.haceGuardia = this.formaTrabajo.get('haceGuardia')?.value
+      rq.haceDomicilio = true //si trabaja de forma independiente asumimos que hace domicilio
+      rq.horario = this.diasHorarios; 
+    } else{
+      rq.haceGuardia = false;
+      rq.haceDomicilio = false;
+      rq.horario = [];
+    }
+
+    rq.aptoCirugia = false;
+
+    return rq;
   }
 
 }
