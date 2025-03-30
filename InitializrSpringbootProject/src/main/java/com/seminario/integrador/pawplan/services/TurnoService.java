@@ -14,6 +14,7 @@ import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
+import com.seminario.integrador.pawplan.enums.EnumEstados;
 import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
 import com.seminario.integrador.pawplan.model.Cliente;
 import com.seminario.integrador.pawplan.model.Estado;
@@ -109,22 +110,16 @@ public class TurnoService {
 			Cliente cliente = (Cliente) usuario;
 			turnoFinal.setCliente(cliente);
 			break;
-		case VETERINARIA:
-			Veterinaria veterinaria = (Veterinaria) usuario;
-
-			break;
-		case VETERINARIO:
-			Veterinario veterinario = (Veterinario) usuario;
-
-			break;
+		
 		default:
-			throw new IllegalArgumentException("Unexpected value: " + usuario.getRole());
+			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getCodigo()));
+			result.setMensaje(EnumEstadosGenerales.ERROR_10002.getMensaje());
+			return result;
 		}
 		
-		Estado estadoReservado = estadoRepository.findByNombre("RESERVADO").get(0);
+		Estado estadoReservado = estadoRepository.findByNombre(EnumEstados.RESERVADO.getNombre()).get(0);
 		turnoFinal.setEstado(estadoReservado);
 		
-		turnoFinal.setCliente((clienteRepository.findById(session.getClienteId())).get());
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
 		turnoFinal.setFecha(turnoRequest.getFechaReserva());
 		
@@ -152,10 +147,13 @@ public class TurnoService {
 		result.setMensaje("Consulta disponibilidad Horaria ok.");
 		return result;
 		//return null;
+	}
+	
+	public TurnoResponse reservarCancelar(TurnoRequest turnoRequest) {
 		
 		
 		
-
+		return null;
 	}
 	
 }

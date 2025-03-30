@@ -36,4 +36,10 @@ public class TurnoController {
 		return turnoService.reservarturno(request);
 	}
 	
+	@RequestMapping(value = Constantes.URL_PATH_CANCELAR, method = RequestMethod.POST)
+    public TurnoResponse reservarCancelar(@RequestBody TurnoRequest request) {
+		
+		return turnoService.reservarCancelar(request);
+	}
+	
 }

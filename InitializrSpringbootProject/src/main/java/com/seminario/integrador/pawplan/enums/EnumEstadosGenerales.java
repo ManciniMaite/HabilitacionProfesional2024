@@ -4,7 +4,8 @@ public enum EnumEstadosGenerales implements EnumErroresInterface {
 	
 	OK(200,"OK","OK"),
 	ERROR(10000,"ERROR","ERROR"),
-	ERROR_10001(10001,"ERROR FALTA PARAMETRO VETERINARIO/VETERINARIA","ERROR");
+	ERROR_10001(10001,"ERROR FALTA PARAMETRO VETERINARIO/VETERINARIA","ERROR"),
+	ERROR_10002(10002,"ERROR AL REGISTRAR TURNO","ERROR");
 
 	private final int codigo;
     private final String mensaje;
