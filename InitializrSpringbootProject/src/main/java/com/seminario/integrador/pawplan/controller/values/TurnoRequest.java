@@ -28,11 +28,19 @@ public class TurnoRequest {
     private boolean esGuardia;
     private List<Animal> animales;
 	
+    private Long turnoId;
 	
 	
 	
 	
-	
+	public Long getTurnoId() {
+		return turnoId;
+	}
+
+	public void setTurnoId(Long turnoId) {
+		this.turnoId = turnoId;
+	}
+
 	public Date getFechaConsulta() {
 		return fechaConsulta;
 	}

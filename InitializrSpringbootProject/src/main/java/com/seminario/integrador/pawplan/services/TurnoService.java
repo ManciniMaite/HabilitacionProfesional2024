@@ -151,9 +151,23 @@ public class TurnoService {
 	
 	public TurnoResponse reservarCancelar(TurnoRequest turnoRequest) {
 		
+		TurnoResponse result = new TurnoResponse();
 		
+		PrincipalPawplan session = authenticationFacade.getPrincipal();
+		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+			return result;
+		}
 		
-		return null;
+		Estado estadoCancelado = estadoRepository.findByNombre(EnumEstados.CANCELADO.getNombre()).get(0);
+		
+		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		turno.setEstado(estadoCancelado);
+		result.setTurno(turnoRepository.save(turno));
+		result.setEstado(estadoCancelado.getNombre());
+		
+		return result;
 	}
 	
 }
