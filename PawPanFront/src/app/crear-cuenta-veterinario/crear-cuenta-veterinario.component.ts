@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -28,6 +28,9 @@ import { TipoEspecieService } from '../services/tipo-especie.service';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { UsuarioRequest } from '../model/UsuarioRq';
 import { UsuarioService } from '../services/usuario.service';
+import { DomicilioRq } from '../model/DomicilioRq';
+import { CiudadService } from '../services/ciudad.service';
+import { Ciudad } from '../model/Ciudad';
 
 @Component({
   selector: 'app-crear-cuenta-veterinario',
@@ -61,10 +64,12 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
   matricula: FormGroup;
   formaTrabajo: FormGroup;
   horarioTrabajo: FormGroup;
+  ubicacion: FormGroup;
   diasHorarios: DiaHorarioAtencion[] = [];
   horarios: Horario[];
+  ciudades: Ciudad[] = [];
 
-  matriculaValidada: boolean = false;
+  matriculaValidada: boolean = true;
   mensajeMatricula: string = "";
 
   tipoEspecies: any = [];
@@ -88,8 +93,10 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     private fb: FormBuilder,
     private location: Location,
     private service: VeterinariesService,
+    private ciudadesService: CiudadService,
     private usuariosService: UsuarioService,
-    private tipoEspecieService: TipoEspecieService
+    private tipoEspecieService: TipoEspecieService,
+    private cd: ChangeDetectorRef
   ){
     this.datosPersonales = this.fb.group({
       nombre:     new FormControl('', Validators.required),
@@ -103,7 +110,7 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     }, { validators: validacionContraseniasIguales });
 
     this.matricula = this.fb.group({
-      numeroMatricula: new FormControl('', Validators.required)
+      numeroMatricula: new FormControl('')
     });
 
     this.formaTrabajo = this.fb.group({
@@ -122,10 +129,17 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
       tardeInicio:    new FormControl(''),
       tardeFin:    new FormControl(''),
     });
+
+    this.ubicacion = this.fb.group({
+      ciudad:    new FormControl(''),
+      calle:     new FormControl(''),
+      numero:    new FormControl('')
+    })
   }
 
   ngOnInit(): void {
       this.getTipoEspecies();
+      this.getCiudades();
   }
 
   getTipoEspecies(){
@@ -346,12 +360,34 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     }
   }
 
-  habilitarCrearCuenta(){
-    if(this.formaTrabajo.get('independiente')?.value=='false'){
-      return  this.tipoEspecies.some((te: any) => te.selected==true);
-    } else if(this.formaTrabajo.get('independiente')?.value=='true' && this.diasHorarios.length!=0){
-      return  this.tipoEspecies.some((te: any) => te.selected==true);
-    } else{
+  // habilitarCrearCuenta(){
+  //   if(this.formaTrabajo.get('independiente')?.value=='false'){
+  //     return  this.tipoEspecies.some((te: any) => te.selected==true);
+  //   } else if(this.formaTrabajo.get('independiente')?.value=='true' && this.diasHorarios.length!=0){
+  //     return  this.tipoEspecies.some((te: any) => te.selected==true);
+  //   } else{
+  //     return false;
+  //   }
+  // }
+
+
+  habilitarCrearCuenta() {
+    const ciudadValida = this.ubicacion.get('ciudad')?.value && this.ubicacion.get('ciudad')?.value !== '0';
+    const tieneEspeciesSeleccionadas = this.tipoEspecies.some((te: any) => te.selected == true);
+    
+    console.log('ciudadValida: ', ciudadValida);
+    console.log('tieneEspecie: ', tieneEspeciesSeleccionadas)
+
+    const ciudadYEspecie = (ciudadValida && tieneEspeciesSeleccionadas);
+
+    console.log('juntas: ', ciudadYEspecie);
+    if (this.formaTrabajo.get('independiente')?.value == 'false') {
+      return tieneEspeciesSeleccionadas; 
+    } 
+    else if (this.formaTrabajo.get('independiente')?.value == 'true' && this.diasHorarios.length != 0) {
+      return ciudadYEspecie; 
+    } 
+    else {
       return false;
     }
   }
@@ -388,9 +424,37 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
       rq.horario = [];
     }
 
+    let domicilio: DomicilioRq = new DomicilioRq();
+    domicilio.calle = this.ubicacion.get('calle')?.value;
+    domicilio.ciudadId = this.ubicacion.get('ciudad')?.value;
+    domicilio.numero= this.ubicacion.get('numero')?.value;
+    domicilio.usuario=this.datosPersonales.get('dni')?.value;
+
+    rq.domicilio = domicilio;
+
     rq.aptoCirugia = false;
 
     return rq;
+  }
+
+  getCiudades(){
+    this.ciudadesService.getAll().subscribe({
+      next:(data)=> {
+          if(data.estado != "ERROR"){
+            this.ciudades = data.ciudades;
+          } else {
+            /**
+             * TODO: DIALOGO DE ERROR
+             */
+            console.log(data.mensaje);
+          }
+      }, error: (error)=>{
+        /**
+         * TODO: DIALOGO DE ERROR 
+         */
+        console.log(error);
+      }
+    });
   }
 
 }

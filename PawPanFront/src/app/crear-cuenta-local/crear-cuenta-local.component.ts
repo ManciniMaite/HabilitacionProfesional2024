@@ -116,10 +116,10 @@ export class CrearCuentaLocalComponent implements OnInit {
     });
 
     this.ubicacion = this.fb.group({
-      localFisico: new FormControl(''),
-      ciudad:    new FormControl(''),
-      calle:     new FormControl(''),
-      numero:    new FormControl('')
+      localFisico: new FormControl('', Validators.required),
+      ciudad:    new FormControl('',Validators.required),
+      calle:     new FormControl('', Validators.required),
+      numero:    new FormControl('', Validators.required)
     })
   }
 
@@ -326,19 +326,21 @@ export class CrearCuentaLocalComponent implements OnInit {
       request.aptoCirugia= false; 
       request.horario= this.diasHorarios;
 
-      let dom: DomicilioRq = new DomicilioRq();
       if(this.ubicacion.get('localFisico')?.value==="SI"){ //si tiene local fisico entonces no trabajan a domicilio
         request.localFisico = true;
         request.haceDomicilio= false; 
-        dom.ciudadId = this.ubicacion.get('ciudad')?.value
-        dom.calle = this.ubicacion.get('calle')?.value
-        dom.numero= this.ubicacion.get('numero')?.value
-        dom.usuario = this.datosLocal.get('cuit')?.value;
-        request.domicilio=dom;
       } else { //sin local fisico solo atiende a domicilio
         request.localFisico = false;
         request.haceDomicilio= true; 
       }
+
+      //hagan o no a domicilio necesitamos saber de que ciudad son para poder ofrecer el servicio
+      let dom: DomicilioRq = new DomicilioRq();
+      dom.ciudadId = this.ubicacion.get('ciudad')?.value
+      dom.calle = this.ubicacion.get('calle')?.value
+      dom.numero= this.ubicacion.get('numero')?.value
+      dom.usuario = this.datosLocal.get('cuit')?.value;
+      request.domicilio=dom;
   
     return request;
   }

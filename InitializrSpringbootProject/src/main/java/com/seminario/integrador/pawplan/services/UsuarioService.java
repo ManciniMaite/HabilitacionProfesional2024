@@ -239,7 +239,7 @@ public class UsuarioService {
 
 		veterinariaRepository.save(veterinaria);
 
-		if(usuarioRequest.isLocalFisico() && usuarioRequest.getDomicilio() != null){
+		if(usuarioRequest.getDomicilio() != null){
 			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
 		}
 
@@ -303,7 +303,8 @@ public class UsuarioService {
 		veterinario.setTiposEspecie(alte);
 
 		veterinarioRepository.save(veterinario);
-		
+
+
 		if( veterinario.isEsIndependiente() && !usuarioRequest.getHorario().isEmpty()){
 			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
 			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
@@ -324,6 +325,11 @@ public class UsuarioService {
 			}
 	
 			diaHorarioAtencionRepository.saveAll(diasHorarios);
+
+			 //agregar un domicilio para saber en que ciudad atiende
+			if(usuarioRequest.getDomicilio() != null){
+				this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
+			}
 		}
 
 		return veterinario;
