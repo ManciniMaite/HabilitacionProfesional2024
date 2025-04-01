@@ -1,16 +1,20 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authToken = localStorage.getItem('authToken'); // Recupera el token desde localStorage
+  const authService = inject(AuthService);
+  const usuario = authService.getUsuarioActual(); // Obtiene el usuario correctamente
+  const authToken = usuario?.token; // Ahora `usuario` tiene la propiedad `token`
 
   if (authToken) {
     req = req.clone({
       setHeaders: {
-        Authorization: `Pawplan ${authToken}`
+        Authorization: `${authToken}`,
+        'Content-Type': 'application/json'
       }
     });
   }
 
-  return next(req); // Continúa con la solicitud
+  return next(req);
 };
-

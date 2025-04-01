@@ -25,6 +25,8 @@ import { VeterinariesService } from '../services/Veterinaries-service';
 import { TurnoService } from '../services/Turno.service';
 import { DisponibilidadRq } from '../model/DisponibilidadRq';
 import { Horario } from '../model/Horario';
+import { AppComponent } from '../app.component';
+import { Usuario } from '../model/Usuario';
 
 @Component({
   selector: 'app-adm-reservar-turno',
@@ -51,6 +53,8 @@ import { Horario } from '../model/Horario';
 })
 export class AdmReservarTurnoComponent implements OnInit {
   animationDuration = '1000';
+
+  usuari: Usuario
 
   mascota: FormGroup;
   domicilio: FormGroup;
@@ -83,7 +87,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     private animalService: AnimalService,
     private veterinariesService: VeterinariesService,
     private domicilioService: DomicilioService,
-    private turnoService: TurnoService
+    private turnoService: TurnoService,
   ){
 
     this.mascota = this.fb.group({
@@ -108,9 +112,9 @@ export class AdmReservarTurnoComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.usuario$.subscribe(usuario => {
-      console.log('getUS')
-      this.getAnimales(42382660);
-      this.getDomicilios(42382660);
+      console.log('getUS, ', usuario)
+      this.getAnimales();
+      this.getDomicilios(usuario.cuil);
       // this.getAnimales(usuario.cuil);
       // this.getDomicilios(usuario.cuil);
     });
@@ -128,8 +132,8 @@ export class AdmReservarTurnoComponent implements OnInit {
     }
   };
 
-  getAnimales(cuil: number){
-    this.animalService.getAnimales(cuil).subscribe({
+  getAnimales(){
+    this.animalService.getAnimales().subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.mascotas = data.animales;
@@ -148,18 +152,19 @@ export class AdmReservarTurnoComponent implements OnInit {
     });
   }
 
-  getDomicilios(cuil: number){
+  getDomicilios(cuil: string){
     this.domUsuario = [];
     this.domicilioService.getDoms(cuil).subscribe({
       next:(data)=> {
-          if(data.estado != "ERROR"){
-            this.domUsuario = data.domicilios;
-          } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
-            console.log(data.mensaje);
-          }
+        this.domUsuario=data;
+          // if(data.estado != "ERROR"){
+          //   this.domUsuario = data.domicilios;
+          // } else {
+          //   /**
+          //    * TODO: DIALOGO DE ERROR
+          //    */
+          //   console.log(data.mensaje);
+          // }
       }, error: (error)=>{
         /**
          * TODO: DIALOGO DE ERROR 

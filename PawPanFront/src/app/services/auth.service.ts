@@ -6,6 +6,7 @@ import { SessionManagerResponse } from '../model/SessionManagerResponse';
 import { HttpClient } from '@angular/common/http';
 import { L } from '@angular/cdk/keycodes';
 import { Usuario } from '../model/Usuario';
+import { AppComponent } from '../app.component';
 
 @Injectable({
   providedIn: 'root'
@@ -32,9 +33,6 @@ export class AuthService {
 
   setUsuario(token: string, usuario: string, rol: string, cuil:string){
     console.log('setUs')
-    // localStorage.setItem('token', token);
-    // localStorage.setItem('usuario', usuario);
-    // localStorage.setItem('rol', rol);
     let us: Usuario = new Usuario();
     us.nombre=usuario;
     us.token=token;
@@ -42,5 +40,11 @@ export class AuthService {
     us.cuil=cuil;
     this.usuarioSubject.next(us);
   }
+
+  getUsuarioActual(): Usuario | null {
+    return this.usuarioSubject.value; // Retorna el valor actual del BehaviorSubject
+  }
+  
+  
 
 }

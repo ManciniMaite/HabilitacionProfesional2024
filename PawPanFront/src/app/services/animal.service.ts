@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Animal } from '../model/Animal';
 import { DataAnimal } from '../model/data/data-Animales';
 import { AnimalGetRs } from '../model/AnimalGetRs';
+import { ListaAnimalesRs } from '../model/ListaAnimalesRs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +26,9 @@ export class AnimalService {
     private http: HttpClient
   ) { }
 
-  getAnimales(cuil: number):Observable<AnimalGetRs>{
-    return this.animalesData;
-    // return this.http.post<Animal[]>(this.baseURL + "/animal/get", cuil);
+  getAnimales():Observable<ListaAnimalesRs>{
+    //return this.animalesData;
+    return this.http.get<ListaAnimalesRs>(this.baseURL + "/animal/findByClient");
   }
 
 }
