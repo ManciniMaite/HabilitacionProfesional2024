@@ -197,7 +197,7 @@ export class CrearCuentaClienteComponent implements OnInit{
     let rq: UsuarioRequest = new UsuarioRequest();
     rq.tipoUsuario="PACIENTE";
     rq.telefono=this.datosPersonales.get('telefono')?.value;
-    rq.correo=this.datosPersonales.get('telefono')?.value;
+    rq.correo=this.datosPersonales.get('correo')?.value;
     rq.contrasenia=this.datosPersonales.get('contrasenia')?.value;
     rq.nombre=this.datosPersonales.get('nombre')?.value;
     rq.apellido=this.datosPersonales.get('apellido')?.value;
