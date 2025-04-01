@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
+import com.seminario.integrador.pawplan.controller.values.TurnosResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.enums.EnumEstados;
 import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
@@ -81,7 +82,7 @@ public class TurnoService {
 		//int tiempo = 10;
 		//if (turnoRequest.get)
 		ObjectMapper mapper = Constantes.getObjectMapper();
-		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFechaConsulta(),Integer.valueOf(turnoRequest.getDuracionEstimada()));
+		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFechaConsulta());
 		ArrayList<Horario> horarios_disponibles = mapper.readValue(disponibilidad, mapper.getTypeFactory().constructCollectionType(List.class, Horario.class));
 		result.setHorariosDisponibles(horarios_disponibles);
 		
@@ -144,7 +145,7 @@ public class TurnoService {
 		
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
-		result.setMensaje("Consulta disponibilidad Horaria ok.");
+		result.setMensaje("Reservar turno ok.");
 		return result;
 		//return null;
 	}
@@ -165,8 +166,52 @@ public class TurnoService {
 		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
 		turno.setEstado(estadoCancelado);
 		result.setTurno(turnoRepository.save(turno));
-		result.setEstado(estadoCancelado.getNombre());
 		
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Cancelar turno ok.");
+		
+		return result;
+	}
+	
+	public TurnosResponse buscarTurnos(TurnoRequest turnoRequest) {
+		
+		TurnosResponse result = new TurnosResponse();
+		
+		PrincipalPawplan session = authenticationFacade.getPrincipal();
+		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+			return result;
+		}
+
+		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
+		Estado estadoReservado = estadoRepository.findByNombre(EnumEstados.RESERVADO.getNombre()).get(0);
+		List<Turno> turnos = new ArrayList<>();
+		switch (usuario.getRole()) {
+		case PACIENTE:
+			Cliente cliente = (Cliente) usuario;
+			turnos = turnoRepository.findByClienteAndEstado(cliente, estadoReservado);
+
+			break;
+		case VETERINARIA:
+			Veterinaria veterinaria = (Veterinaria) usuario;
+			turnos = turnoRepository.findByVeterinariaAndEstado(veterinaria, estadoReservado);
+
+			break;
+		case VETERINARIO:
+			Veterinario veterinario = (Veterinario) usuario;
+			turnos = turnoRepository.findByVeterinarioAndEstado(veterinario, estadoReservado);
+
+			break;
+		default:
+			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getCodigo()));
+			result.setMensaje(EnumEstadosGenerales.ERROR_10002.getMensaje());
+			return result;
+		}
+		
+		result.setTurnos(turnos);
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Consulta turnos dados ok.");
 		return result;
 	}
 	
