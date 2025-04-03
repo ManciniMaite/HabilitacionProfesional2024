@@ -61,9 +61,9 @@ export class VeterinariesService {
     return horario;
   }
 
-  getAll(idCiudad: number):Observable<VeterinariesGetRs>{
+  getAll(idCiudad: number, tipoEspecie: number):Observable<VeterinariesGetRs>{
     //return this.VeterinariesData;
-    return this.http.get<VeterinariesGetRs>(this.baseURL + "/veterinaries/" + idCiudad);
+    return this.http.get<VeterinariesGetRs>(this.baseURL + "/veterinaries/" + idCiudad+"/"+tipoEspecie);
   }
 
   validarMatricula(rq: ValidarMatriculaRq): Observable<Response>{

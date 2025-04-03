@@ -172,7 +172,7 @@ export class AdmReservarTurnoComponent implements OnInit {
 
   getVeterinaries(idCiudad: number){
     this.veterinariosLista = [];
-    this.veterinariesService.getAll(idCiudad).subscribe({
+    this.veterinariesService.getAll(idCiudad,this.mascota.get("nombreMascota")?.value.id).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.veterinarias = data.veterinarias;

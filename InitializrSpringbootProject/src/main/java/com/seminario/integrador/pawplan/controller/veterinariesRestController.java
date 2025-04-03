@@ -22,8 +22,8 @@ public class veterinariesRestController {
     @Autowired
     VeterinarioVeterinariaService service;
     
-    @GetMapping("/{idCiudad}")
-    public VeterinarioVeterinariaResponse getByCiudad(@PathVariable Long idCiudad){
-        return this.service.getByCiudad(idCiudad);
+    @GetMapping("/{idCiudad}/{idTipoEspecie}")
+    public VeterinarioVeterinariaResponse getByCiudad(@PathVariable("idCiudad") Long idCiudad,@PathVariable("idTipoEspecie") Long idTipoEspecie ){
+        return this.service.getByCiudad(idCiudad, idTipoEspecie );
     }
 }
