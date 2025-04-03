@@ -39,18 +39,41 @@ public class AnimalService {
     @Autowired
     private RazaRepository razaRepository;
     
-    public ListaAnimalesRs findByCliente(){
+    public ListaAnimalesRs findByCliente(String usuario){
     	
-    	PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+    	//PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
     	
         ListaAnimalesRs rs = new ListaAnimalesRs();
         rs.setEstado("OK");
         rs.setMensaje("");
         
         List<Animal> animales =  new ArrayList<>();
+
+        Long usuarioId;
+
+        try{
+            Optional<Usuario> opUs = this.usuarioRepository.findByDniOrCuit(usuario);
+            
+            if(!opUs.isPresent()){
+                rs.setEstado("ERROR");
+                rs.setMensaje("Usuario no encontrado");
+                return rs;
+            } else {
+                usuarioId = opUs.get().getId();
+
+            }
+            
+        } catch (Exception e){
+            e.printStackTrace();
+            rs.setEstado("ERROR");
+            rs.setMensaje("Ocurrio un error al buscar el usuario");
+            return rs;
+        }
         
         try{
-            animales = this.repository.findByCliente_Id(principalPawplan.getClienteId());
+            // animales = this.repository.findByCliente_Id(principalPawplan.getClienteId());
+
+            animales = this.repository.findByCliente_Id(usuarioId);
             
             if(animales == null){
                 rs.setEstado("ERROR");

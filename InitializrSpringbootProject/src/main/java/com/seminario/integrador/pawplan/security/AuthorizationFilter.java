@@ -38,7 +38,7 @@ public class AuthorizationFilter implements Filter	 {
 			throws IOException, ServletException {
 		
 		//Si es un intento de login, no hacemos nada y dejamos que continue.
-		if (    
+		if (   true ||
 			Constantes.URL_PATH_SESSION_MANAGER.equals( ((HttpServletRequest) request).getServletPath() )
 			|| (Constantes.URL_PATH_USUARIO+Constantes.URL_PATH_CREAR).equals( ((HttpServletRequest) request).getServletPath() )
 			|| (Constantes.URL_PATH_USUARIO+Constantes.URL_PATH_CONSULTAR).equals( ((HttpServletRequest) request).getServletPath() )

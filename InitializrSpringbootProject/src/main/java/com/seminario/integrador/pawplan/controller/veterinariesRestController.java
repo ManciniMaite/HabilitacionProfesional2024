@@ -24,7 +24,6 @@ public class veterinariesRestController {
     
     @GetMapping("/{idCiudad}")
     public VeterinarioVeterinariaResponse getByCiudad(@PathVariable Long idCiudad){
-        
-        return null;
+        return this.service.getByCiudad(idCiudad);
     }
 }

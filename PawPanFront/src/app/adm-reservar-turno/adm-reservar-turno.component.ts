@@ -109,8 +109,8 @@ export class AdmReservarTurnoComponent implements OnInit {
   ngOnInit(): void {
     this.authService.usuario$.subscribe(usuario => {
       console.log('getUS')
-      this.getAnimales(42382660);
-      this.getDomicilios(42382660);
+      this.getAnimales(usuario.cuil);
+      this.getDomicilios(usuario.cuil);
       // this.getAnimales(usuario.cuil);
       // this.getDomicilios(usuario.cuil);
     });
@@ -128,7 +128,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     }
   };
 
-  getAnimales(cuil: number){
+  getAnimales(cuil: string){
     this.animalService.getAnimales(cuil).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
@@ -148,18 +148,19 @@ export class AdmReservarTurnoComponent implements OnInit {
     });
   }
 
-  getDomicilios(cuil: number){
+  getDomicilios(cuil: string){
     this.domUsuario = [];
     this.domicilioService.getDoms(cuil).subscribe({
       next:(data)=> {
-          if(data.estado != "ERROR"){
-            this.domUsuario = data.domicilios;
-          } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
-            console.log(data.mensaje);
-          }
+        this.domUsuario=data;
+          // if(data.estado != "ERROR"){
+          //   this.domUsuario = data.domicilios;
+          // } else {
+          //   /**
+          //    * TODO: DIALOGO DE ERROR
+          //    */
+          //   console.log(data.mensaje);
+          // }
       }, error: (error)=>{
         /**
          * TODO: DIALOGO DE ERROR 

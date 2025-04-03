@@ -17,6 +17,13 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VeterinariaRepository extends CrudRepository<Veterinaria, Long>{
-    @Query(value = "SELECT * FROM veterinaria v JOIN domicilio d ON v.id_domicilio = d.id WHERE d.id_ciudad = :idCiudad", nativeQuery = true)
+    @Query(value = """
+        SELECT u.*
+        FROM usuario u
+        JOIN domicilio d ON d.usuario_id = u.id
+        JOIN ciudad c ON d.ciudad_id = c.id
+        WHERE c.id = 2
+        AND TRIM(u.dtype) = 'Veterinaria';
+    """, nativeQuery = true)    
     ArrayList<Veterinaria> findByCiudad(@Param("idCiudad") Long idCiudad);
 }

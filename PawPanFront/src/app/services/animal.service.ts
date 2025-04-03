@@ -25,9 +25,9 @@ export class AnimalService {
     private http: HttpClient
   ) { }
 
-  getAnimales(cuil: number):Observable<AnimalGetRs>{
-    return this.animalesData;
-    // return this.http.post<Animal[]>(this.baseURL + "/animal/get", cuil);
+  getAnimales(cuil: string):Observable<AnimalGetRs>{
+    //return this.animalesData;
+    return this.http.get<AnimalGetRs>(this.baseURL + "/animal/findByClient/"+cuil);
   }
 
 }
