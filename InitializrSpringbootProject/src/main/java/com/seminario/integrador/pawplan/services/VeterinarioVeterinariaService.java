@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
+import com.seminario.integrador.pawplan.controller.values.VeterinariaXCiudad;
 import com.seminario.integrador.pawplan.controller.values.VeterinarioVeterinariaResponse;
+import com.seminario.integrador.pawplan.controller.values.VeterinarioXciudad;
 import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
@@ -47,16 +49,16 @@ public class VeterinarioVeterinariaService {
 		
 	}
         
-        public VeterinarioVeterinariaResponse getByCiudad(Long id){
+        public VeterinarioVeterinariaResponse getByCiudad(Long idCiudad, Long idTipoEspecie){
             VeterinarioVeterinariaResponse rs = new VeterinarioVeterinariaResponse();
-            ArrayList<Veterinario> veterinarios = new ArrayList<Veterinario>();
-            ArrayList<Veterinaria> veterinarias = new ArrayList<Veterinaria>();
+            ArrayList<VeterinarioXciudad> veterinarios = new ArrayList<VeterinarioXciudad>();
+            ArrayList<VeterinariaXCiudad> veterinarias = new ArrayList<VeterinariaXCiudad>();
             try {
                 Optional<Ciudad> ciudadExistente;
-                ciudadExistente = this.serviceCiudad.findById(id);
+                ciudadExistente = this.serviceCiudad.findById(idCiudad);
                 if(ciudadExistente.isPresent()){
                     try{
-                        veterinarios = this.veterinarioRepository.findByCiudad(id);
+                        veterinarios = this.veterinarioRepository.findByCiudad(idCiudad, idTipoEspecie);
                     } catch (Exception e){
                         e.printStackTrace();
                         rs.setMensaje("Ocurrio un error al recuperar los veterinarios");
@@ -65,7 +67,7 @@ public class VeterinarioVeterinariaService {
                     }
                     rs.setVeterinariosIndependientes(veterinarios);
                     try{
-                        veterinarias = this.veterinariaRepository.findByCiudad(id);
+                        veterinarias = this.veterinariaRepository.findByCiudad(idCiudad);
                     } catch (Exception e){
                         e.printStackTrace();
                         rs.setMensaje("Ocurrio un error al recuperar las veterinarias");

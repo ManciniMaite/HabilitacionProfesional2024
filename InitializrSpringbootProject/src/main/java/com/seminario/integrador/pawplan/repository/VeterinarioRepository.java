@@ -4,8 +4,11 @@
  */
 package com.seminario.integrador.pawplan.repository;
 
+import com.seminario.integrador.pawplan.controller.values.VeterinarioXciudad;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +20,20 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>{
-    @Query(value = "SELECT * FROM veterinario v JOIN domicilio d ON v.id_domicilio = d.id WHERE d.id_ciudad = :idCiudad", nativeQuery = true)
-    ArrayList<Veterinario> findByCiudad(@Param("idCiudad") Long idCiudad);
+    @Query(value = """
+        SELECT 
+			u.id,
+			u.nombre,
+			u.apellido
+        FROM usuario u
+        JOIN veterinario_tipo_especie ve ON ve.veterinario_id = u.id
+        JOIN domicilio d ON d.usuario_id = u.id
+        JOIN ciudad c ON d.ciudad_id = c.id
+        WHERE c.id = :idCiudad
+        AND ve.tipo_especie_id = :idTipoEspecie
+        AND TRIM(u.dtype) = 'Veterinario';
+    """, nativeQuery = true)
+    ArrayList<VeterinarioXciudad> findByCiudad(@Param("idCiudad") Long idCiudad, @Param("idTipoEspecie") Long idTipoEspecie);
 }
+
+
