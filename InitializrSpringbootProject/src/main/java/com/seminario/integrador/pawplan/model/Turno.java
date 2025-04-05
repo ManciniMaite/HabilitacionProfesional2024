@@ -6,7 +6,6 @@ package com.seminario.integrador.pawplan.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,12 +31,12 @@ public class Turno {
     private Date fecha; 
     private Date hora; 
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     private ArrayList<DetalleTurno> detalleTurno;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "estado_id")
     private Estado estado;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
     @ManyToOne
@@ -46,11 +45,11 @@ public class Turno {
     @ManyToOne
     @JoinColumn(name = "veterinario_id")
     private Veterinario veterinario;
-    private Boolean esADomicilio;
+    private boolean esADomicilio;
     private String duracionEstimada;
     private String descripcion;
     private float monto;
-    private Boolean esGuardia;
+    private boolean esGuardia;
 
     public Long getId() {
         return id;
