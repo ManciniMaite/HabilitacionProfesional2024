@@ -34,11 +34,11 @@ public class Veterinario extends Usuario {
     private String fechaNac;
     @NotNull(message = "debe contener matricula")
     private int matricula;
-    private boolean esIndependiente;
-    private boolean haceGuardia;
+    private Boolean esIndependiente;
+    private Boolean haceGuardia;
     @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.ALL)
     private List<DiaHorarioAtencion> horarios;  
-    private boolean haceDomicilio;
+    private Boolean haceDomicilio;
 
     @ManyToMany
     @JoinTable(
@@ -90,27 +90,27 @@ public class Veterinario extends Usuario {
         this.matricula = matricula;
     }
 
-    public boolean isEsIndependiente() {
+    public Boolean isEsIndependiente() {
         return esIndependiente;
     }
 
-    public void setEsIndependiente(boolean esIndependiente) {
+    public void setEsIndependiente(Boolean esIndependiente) {
         this.esIndependiente = esIndependiente;
     }
 
-    public boolean isHaceGuardia() {
+    public Boolean isHaceGuardia() {
         return haceGuardia;
     }
 
-    public void setHaceGuardia(boolean haceGuardia) {
+    public void setHaceGuardia(Boolean haceGuardia) {
         this.haceGuardia = haceGuardia;
     }
 
-    public boolean isHaceDomicilio() {
+    public Boolean isHaceDomicilio() {
         return haceDomicilio;
     }
 
-    public void setHaceDomicilio(boolean heceDomicilio) {
+    public void setHaceDomicilio(Boolean heceDomicilio) {
         this.haceDomicilio = heceDomicilio;
     }
     

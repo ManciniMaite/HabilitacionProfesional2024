@@ -25,14 +25,14 @@ public class Veterinaria extends Usuario{
     private String razonSocial;
     @NotNull(message = "debe contener cuit")
     private String cuit;
-    private boolean haceGuardia;
-    private boolean aptoCirugia;
+    private Boolean haceGuardia;
+    private Boolean aptoCirugia;
     @OneToMany(cascade = CascadeType.ALL)
     @NotNull(message = "debe especificar sus horarios")
     private List<DiaHorarioAtencion> horarioAtencion;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Veterinario> veterinarios;
-    private boolean haceDomicilio;
+    private Boolean haceDomicilio;
 
 
     public String getRazonSocial() {
@@ -51,19 +51,19 @@ public class Veterinaria extends Usuario{
         this.cuit = cuit;
     }
 
-    public boolean isHaceGuardia() {
+    public Boolean isHaceGuardia() {
         return haceGuardia;
     }
 
-    public void setHaceGuardia(boolean haceGuardia) {
+    public void setHaceGuardia(Boolean haceGuardia) {
         this.haceGuardia = haceGuardia;
     }
 
-    public boolean isAptoCirugia() {
+    public Boolean isAptoCirugia() {
         return aptoCirugia;
     }
 
-    public void setAptoCirugia(boolean aptoCirugia) {
+    public void setAptoCirugia(Boolean aptoCirugia) {
         this.aptoCirugia = aptoCirugia;
     }
 
@@ -83,11 +83,11 @@ public class Veterinaria extends Usuario{
         this.veterinarios = veterinarios;
     }
 
-    public boolean isHaceDomicilio() {
+    public Boolean isHaceDomicilio() {
         return haceDomicilio;
     }
 
-    public void setHaceDomicilio(boolean heceDomicilio) {
+    public void setHaceDomicilio(Boolean heceDomicilio) {
         this.haceDomicilio = heceDomicilio;
     }
     
