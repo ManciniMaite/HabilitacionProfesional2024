@@ -1,16 +1,23 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authToken = localStorage.getItem('authToken'); // Recupera el token desde localStorage
+  const authService = inject(AuthService); // Inyectar el servicio manualmente
+  let token: string | null = null;
 
-  if (authToken) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Pawplan ${authToken}`
-      }
+  authService.usuario$.subscribe(usuario => {
+    token = usuario?.token || null; // Obtener el token del BehaviorSubject
+  });
+
+  if (token) {
+    console.log('Agregando token:', token);
+    const cloned = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
     });
+    return next(cloned);
   }
 
-  return next(req); // Continúa con la solicitud
+  console.log('No se encontró token');
+  return next(req);
 };
-

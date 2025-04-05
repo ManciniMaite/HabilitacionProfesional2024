@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CONFIG } from '../config';
 import { Observable } from 'rxjs';
 import { DomicilioGetRs } from '../model/DomicilioGetRs';
+import { Domicilio } from '../model/Domicilio';
 
 @Injectable({
   providedIn: 'root'
@@ -52,9 +53,9 @@ export class DomicilioService {
     private http: HttpClient
   ) { }
 
-  getDoms(cuil: number):Observable<DomicilioGetRs>{
-    return this.domiciliosData;
-    // return this.http.post<DomicilioGetRs>(this.baseURL + "/Usuario/domicilios/" + cuil);
+  getDoms(cuil: string):Observable<Domicilio[]>{
+    //return this.domiciliosData;
+    return this.http.get<Domicilio[]>(this.baseURL + "/domicilio/findByClient/" + cuil);
   }
 
 }

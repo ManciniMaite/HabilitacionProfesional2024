@@ -18,11 +18,23 @@ export class TurnoService {
     observer.next({
         estado: 'ok',
         mensaje: 'oke',
-        horarios: [{
+        horarios: [
+          {
             id:0,
             horaInicio: '08:00',
-            horaFin: '16:00'
-        }]
+            horaFin: '09:00'
+          },
+          {
+            id:1,
+            horaInicio: '09:00',
+            horaFin: '10:00'
+          },
+          {
+            id:3,
+            horaInicio: '10:00',
+            horaFin: '11:00'
+          },
+        ]
     });
     observer.complete(); // Finaliza el flujo de datos
   });

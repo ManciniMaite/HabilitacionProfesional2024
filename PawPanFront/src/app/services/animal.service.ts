@@ -16,7 +16,29 @@ export class AnimalService {
     observer.next({
       estado: 'ok',
       mensaje: 'oke',
-      animales: [DataAnimal,DataAnimal]
+      animales: [
+        DataAnimal,
+        {
+          esActivo: true,
+          nombre: 'Tobi',
+          fechaNac: '05/05/12',
+          peso: 4.5,
+          foto: 'Foto del animal',
+          raza: {
+              id:1,
+              nombre: 'Persa',
+              especie: {
+                  id:1,
+                  nombre: 'Gato',
+                  tipoEspecie: {
+                    id:1,
+                    nombre: 'Chico',
+                    descripcion: 'Animales pequeños'
+                  }
+              },
+          }
+      }
+      ]
     });
     observer.complete(); // Finaliza el flujo de datos
   });
@@ -25,9 +47,9 @@ export class AnimalService {
     private http: HttpClient
   ) { }
 
-  getAnimales(cuil: number):Observable<AnimalGetRs>{
-    return this.animalesData;
-    // return this.http.post<Animal[]>(this.baseURL + "/animal/get", cuil);
+  getAnimales(cuil: string):Observable<AnimalGetRs>{
+    //return this.animalesData;
+    return this.http.get<AnimalGetRs>(this.baseURL + "/animal/findByClient/"+cuil);
   }
 
 }
