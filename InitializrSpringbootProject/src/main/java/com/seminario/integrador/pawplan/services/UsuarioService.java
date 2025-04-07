@@ -243,7 +243,7 @@ public class UsuarioService {
 			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
 		}
 
-		if(!usuarioRequest.getHorario().isEmpty()){
+		/*if(!usuarioRequest.getHorario().isEmpty()){
 			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
 			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
 				DiaHorarioAtencion diaHorario = new DiaHorarioAtencion();
@@ -263,7 +263,7 @@ public class UsuarioService {
 			}
 
 			diaHorarioAtencionRepository.saveAll(diasHorarios);
-		}
+		}*/
 		
 		
 		return veterinaria;
@@ -305,7 +305,7 @@ public class UsuarioService {
 		veterinarioRepository.save(veterinario);
 
 
-		if( veterinario.isEsIndependiente() && !usuarioRequest.getHorario().isEmpty()){
+		/*if( veterinario.isEsIndependiente() && !usuarioRequest.getHorario().isEmpty()){
 			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
 			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
 				DiaHorarioAtencion diaHorario = new DiaHorarioAtencion();
@@ -331,7 +331,7 @@ public class UsuarioService {
 				this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
 			}
 		}
-
+**/
 		return veterinario;
 	}
         

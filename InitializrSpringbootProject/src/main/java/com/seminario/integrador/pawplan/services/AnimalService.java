@@ -102,7 +102,6 @@ public class AnimalService {
             nuevoAnimal.setNombre(rq.getNombre());
             nuevoAnimal.setFechaNac(rq.getFechaNac());
             nuevoAnimal.setPeso(rq.getPeso());
-            nuevoAnimal.setFoto(rq.getFoto());
             nuevoAnimal.setEsActivo(true);
             
             // Buscar la raza por id
@@ -151,7 +150,6 @@ public class AnimalService {
             }
 
             Animal animal = animalExistente.get();
-            animal.setFoto(rq.getFoto());
             animal.setNombre(rq.getNombre());
             animal.setPeso(rq.getPeso());
             animal.setFechaNac(rq.getFechaNac());

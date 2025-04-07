@@ -1,14 +1,12 @@
 package com.seminario.integrador.pawplan.controller.values;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Ciudad;
-import com.seminario.integrador.pawplan.model.TipoEspecie;
-import com.seminario.integrador.pawplan.model.DetalleTurno;
 import com.seminario.integrador.pawplan.model.Estado;
+import com.seminario.integrador.pawplan.model.TipoEspecie;
 
 public class TurnoRequest {
 
@@ -17,7 +15,6 @@ public class TurnoRequest {
 	private TipoEspecie tipoEspecie;
 	private Ciudad ciudad;
 	private Date fechaReserva; 
-	private ArrayList<DetalleTurno> detalleTurno;
 	private Estado estado;
     private Long veterinariaId;
     private Long veterinarioId;
@@ -71,14 +68,6 @@ public class TurnoRequest {
 
 	public void setFechaReserva(Date fechaReserva) {
 		this.fechaReserva = fechaReserva;
-	}
-
-	public ArrayList<DetalleTurno> getDetalleTurno() {
-		return detalleTurno;
-	}
-
-	public void setDetalleTurno(ArrayList<DetalleTurno> detalleTurno) {
-		this.detalleTurno = detalleTurno;
 	}
 
 	public Estado getEstado() {

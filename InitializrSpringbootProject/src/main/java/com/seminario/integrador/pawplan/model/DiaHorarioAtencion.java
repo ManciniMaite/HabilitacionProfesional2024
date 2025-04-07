@@ -26,8 +26,6 @@ public class DiaHorarioAtencion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String dia;
-    @OneToMany(mappedBy = "diaHorarioAtencion", cascade = CascadeType.ALL)
-    private List<Horario> horarios;
 
     private Long idUsuario;
     

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -92,6 +93,7 @@ public class TurnoService {
 		return result;
 	}
 	
+	@Transactional( )
 	public TurnoResponse reservarturno(TurnoRequest turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
@@ -109,7 +111,7 @@ public class TurnoService {
 		switch (usuario.getRole()) {
 		case PACIENTE:
 			Cliente cliente = (Cliente) usuario;
-			turnoFinal.setCliente(cliente);
+			//turnoFinal.setCliente(cliente);
 			break;
 		
 		default:
@@ -122,7 +124,7 @@ public class TurnoService {
 		turnoFinal.setEstado(estadoReservado);
 		
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
-		turnoFinal.setFecha(turnoRequest.getFechaReserva());
+		turnoFinal.setFechaHora(turnoRequest.getFechaReserva());
 		
 		if (turnoRequest.getVeterinariaId() != null) {
 			turnoFinal.setVeterinaria((veterinariaRepository.findById(turnoRequest.getVeterinariaId()).get()));
@@ -132,13 +134,9 @@ public class TurnoService {
 			turnoFinal.setVeterinario((veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get()));
 		}
 		
-		turnoFinal.setDescripcion(turnoRequest.getDescripcion());
-		turnoFinal.setDetalleTurno(turnoRequest.getDetalleTurno());
-		turnoFinal.setDuracionEstimada(turnoRequest.getDuracionEstimada());
-		turnoFinal.setEsADomicilio(turnoRequest.isEsADomicilio());
-		turnoFinal.setEsGuardia(turnoRequest.isEsGuardia());
+		turnoFinal.setDescripcionPublica(turnoRequest.getDescripcion());
 		
-		turnoFinal.setMonto(turnoRequest.getMonto());
+		turnoFinal.setEsADomicilio(turnoRequest.isEsADomicilio());
 
 		result.setTurno(turnoRepository.save(turnoFinal));
 		result.setEstadoReserva(estadoReservado);
@@ -190,7 +188,6 @@ public class TurnoService {
 		switch (usuario.getRole()) {
 		case PACIENTE:
 			Cliente cliente = (Cliente) usuario;
-			turnos = turnoRepository.findByClienteAndEstado(cliente, estadoReservado);
 
 			break;
 		case VETERINARIA:
