@@ -14,6 +14,7 @@ import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -36,10 +37,10 @@ public class AuthorizationFilter implements Filter	 {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		//Si es un intento de login, no hacemos nada y dejamos que continue.
-		if (   true ||
-			Constantes.URL_PATH_SESSION_MANAGER.equals( ((HttpServletRequest) request).getServletPath() )
+		if (HttpMethod.OPTIONS.name().equals(httpRequest.getMethod())
+			||Constantes.URL_PATH_SESSION_MANAGER.equals( ((HttpServletRequest) request).getServletPath() )
 			|| (Constantes.URL_PATH_USUARIO+Constantes.URL_PATH_CREAR).equals( ((HttpServletRequest) request).getServletPath() )
 			|| (Constantes.URL_PATH_USUARIO+Constantes.URL_PATH_CONSULTAR).equals( ((HttpServletRequest) request).getServletPath() )
 			|| /*Constantes.URL_PATH_HEARTBEAT.equals( ((HttpServletRequest) request).getServletPath() )
@@ -59,9 +60,9 @@ public class AuthorizationFilter implements Filter	 {
 		}
 		
 		//Si es una peticion comun, entonces validamos que tenga un token valido.
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		
         Enumeration<String> headerValues = httpRequest.getHeaders("Authorization");
-
+        
         if (headerValues != null) {
 	        while (headerValues.hasMoreElements()) {
 	        	String autorizacion = headerValues.nextElement();

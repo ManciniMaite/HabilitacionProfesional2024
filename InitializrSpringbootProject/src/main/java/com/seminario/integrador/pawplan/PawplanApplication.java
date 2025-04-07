@@ -1,6 +1,8 @@
 package com.seminario.integrador.pawplan;
 
 
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +19,18 @@ public class PawplanApplication {
 	}
         
         @Bean
-        public CorsFilter corsFilter() {
+        public CorsFilter corsFilter() {            
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(List.of("http://localhost:4200/","http://localhost:4200")); // frontend origin
+            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // headers permitidos
+            configuration.setAllowCredentials(true); // si usás cookies/session
+            configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+            configuration.setExposedHeaders(List.of("Authorization"));
+            configuration.setAllowCredentials(true);
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowCredentials(true);
-            config.addAllowedOrigin("http://localhost:4200"); 
-            config.addAllowedHeader("*");
-            config.addAllowedMethod("*");
-            source.registerCorsConfiguration("/**", config);
+            source.registerCorsConfiguration("/**", configuration);
             return new CorsFilter(source);
+
         }
 }
