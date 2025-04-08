@@ -25,6 +25,9 @@ import { VeterinariesService } from '../services/Veterinaries-service';
 import { TurnoService } from '../services/Turno.service';
 import { DisponibilidadRq } from '../model/DisponibilidadRq';
 import { Horario } from '../model/Horario';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
+import { D } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-adm-reservar-turno',
@@ -83,7 +86,8 @@ export class AdmReservarTurnoComponent implements OnInit {
     private animalService: AnimalService,
     private veterinariesService: VeterinariesService,
     private domicilioService: DomicilioService,
-    private turnoService: TurnoService
+    private turnoService: TurnoService,
+    private dialog: MatDialog
   ){
 
     this.mascota = this.fb.group({
@@ -134,15 +138,31 @@ export class AdmReservarTurnoComponent implements OnInit {
           if(data.estado != "ERROR"){
             this.mascotas = data.animales;
           } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                acceptText: 'Cerrar',
+                onAccept: () => {
+                  this.location.back();
+                }
+              }
+            });
             console.log(data.mensaje);
           }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "Ocurrio un error al recuperar tus mascotas",
+            acceptText: 'Cerrar',
+            onAccept: () => {
+              this.location.back();
+            }
+          }
+        });
         console.log(error);
       }
     });
@@ -152,19 +172,33 @@ export class AdmReservarTurnoComponent implements OnInit {
     this.domUsuario = [];
     this.domicilioService.getDoms(cuil).subscribe({
       next:(data)=> {
-        this.domUsuario=data;
-          // if(data.estado != "ERROR"){
-          //   this.domUsuario = data.domicilios;
-          // } else {
-          //   /**
-          //    * TODO: DIALOGO DE ERROR
-          //    */
-          //   console.log(data.mensaje);
-          // }
+          if(data){
+            this.domUsuario = data;
+          } else {
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: "Ocurrio un error al recuperar tus domicilios",
+                acceptText: 'Cerrar',
+                onAccept: () => {
+                  this.location.back();
+                }
+              }
+            });
+          }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "Ocurrio un error al recuperar tus domicilios",
+            acceptText: 'Cerrar',
+            onAccept: () => {
+              this.location.back();
+            }
+          }
+        });
         console.log(error);
       }
     });
@@ -194,15 +228,31 @@ export class AdmReservarTurnoComponent implements OnInit {
             }
             
           } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                acceptText: 'Cerrar',
+                onAccept: () => {
+                  this.location.back();
+                }
+              }
+            });
             console.log(data.mensaje);
           }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "Ocurrio un error al recuperar los veterinarios de la Zona",
+            acceptText: 'Cerrar',
+            onAccept: () => {
+              this.location.back();
+            }
+          }
+        });
         console.log(error);
       }
     });
@@ -231,15 +281,24 @@ export class AdmReservarTurnoComponent implements OnInit {
             this.horarios = data.horarios;
             console.log('Horarios: ',this.horarios)
           } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
-            console.log(data.mensaje);
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar'
+              }
+            });
           }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: 'No fue posible recuperar los horarios',
+            cancelText: 'Cerrar'
+          }
+        });
         console.log(error);
       }
     });

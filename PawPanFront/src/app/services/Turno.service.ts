@@ -49,8 +49,8 @@ export class TurnoService {
   // }
 
   disponibilidad(rq: DisponibilidadRq):Observable<DisponibilidadRs>{
-    return this.horariosData;
-    // return this.http.post<DisponibilidadRs>(this.baseURL + "/Turno/Consultar", rq);
+    //return this.horariosData;
+    return this.http.post<DisponibilidadRs>(this.baseURL + "/Turno/Consultar", rq);
   }
 
 }

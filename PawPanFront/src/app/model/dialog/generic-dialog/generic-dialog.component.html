@@ -1,0 +1,14 @@
+<div style="text-align: center; padding: 20px;">
+    <mat-icon  
+        [style.color]="data.type === 'error' ? 'red' : 'green'">
+        {{ data.type === 'error' ? 'error_outline' : 'info' }}
+    </mat-icon>
+    
+    <h2 *ngIf="data.title">{{ data.title }}</h2>
+    <p>{{ data.body }}</p>
+
+    <div style="margin-top: 20px;">
+      <button mat-button color="primary" (click)="onCancel()" *ngIf="data.cancelText">{{ data.cancelText }}</button>
+      <button mat-button color="accent" (click)="onAccept()" *ngIf="data.acceptText">{{ data.acceptText }}</button>
+    </div>
+  </div>
