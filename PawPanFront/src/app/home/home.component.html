@@ -6,7 +6,7 @@
             </mat-card-title>
             <mat-card-content class="cardContent">
                 @for (item of menuItems; track $index) {
-                    @if (item.id != 0) {
+                    @if (item.id != 0 && this.esRol(item)) {
                         <button mat-flat-button class="button" [color]="item.tipo" (click)="navegar(item)">
                             <div style="display: flex; align-items: center;">
                                 <span style="margin-right: 15px;">{{item.nombre}}</span>

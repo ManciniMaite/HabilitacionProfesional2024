@@ -5,4 +5,5 @@ export class MenuItems {
     path: string;
     hidden:boolean;
     tipo: string;
+    role: string[];
 }
