@@ -7,7 +7,7 @@ export const menuItems: MenuItems[]=[
     {id:3, nombre: 'Ver Mis Mascotas',          icono:'../assets/iconos-menu-lateral/pet_supplies.svg',     path: 'mascota/1',              hidden:false, tipo: 'accent', role:['PACIENTE']},
     {id:4, nombre: 'Turnos a confirmar',        icono:'../assets/iconos-menu-lateral/calendar_clock.svg',   path: 'adm-turnos-perdientes',                   hidden:false, tipo: 'accent', role:['VETERINARIO','VETERINARIA']},
     {id:5, nombre: 'Administar horarios',       icono:'../assets/iconos-menu-lateral/calendar_clock.svg',   path: '',              hidden:false, tipo: 'accent', role:['VETERINARIO','VETERINARIA']}, //OJOO solo si es Independiente
-    {id:6, nombre: 'Administrar veterinarios',  icono:'../assets/iconos-menu-lateral/adm-veterinarios.svg', path: 'adm-veterinarios',             hidden:false, tipo: 'accent', role:['VETERINARIA']},
+    {id:6, nombre: 'Administrar veterinarios',  icono:'../assets/iconos-menu-lateral/adm-vaterinarios.svg', path: 'adm-veterinarios',             hidden:false, tipo: 'accent', role:['VETERINARIA']},
     {id:7, nombre: 'Mis domicilios',            icono:'../assets/iconos-menu-lateral/home.svg',             path: '',             hidden:false, tipo: 'accent', role:['PACIENTE']},
     {id:8, nombre: 'Emergencia',                icono:'../assets/iconos-menu-lateral/e911_emergency.svg',   path: 'emergencia',             hidden:false, tipo: 'warn',   role:['PACIENTE']},
   ]

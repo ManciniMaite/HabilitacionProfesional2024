@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -33,12 +34,16 @@ public class Veterinario extends Usuario {
     private String dni;
     private String fechaNac;
     @NotNull(message = "debe contener matricula")
-    private int matricula;
+    private String matricula;
     private boolean esIndependiente;
     private boolean haceGuardia;
     @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.ALL)
     private List<DiaHorarioAtencion> horarios;  
     private boolean haceDomicilio;
+
+    @ManyToOne
+    @JoinColumn(name = "veterinaria_id")
+    private Veterinaria veterinaria;
 
     @ManyToMany
     @JoinTable(
@@ -80,14 +85,6 @@ public class Veterinario extends Usuario {
 
     public void setFechaNac(String fechaNac) {
         this.fechaNac = fechaNac;
-    }
-
-    public int getMatricula() {
-        return matricula;
-    }
-
-    public void setMatricula(int matricula) {
-        this.matricula = matricula;
     }
 
     public boolean isEsIndependiente() {

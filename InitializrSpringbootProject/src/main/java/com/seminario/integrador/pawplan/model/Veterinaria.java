@@ -30,8 +30,6 @@ public class Veterinaria extends Usuario{
     @OneToMany(cascade = CascadeType.ALL)
     @NotNull(message = "debe especificar sus horarios")
     private List<DiaHorarioAtencion> horarioAtencion;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Veterinario> veterinarios;
     private boolean haceDomicilio;
 
 
@@ -73,14 +71,6 @@ public class Veterinaria extends Usuario{
 
     public void setHorarioAtencion(List<DiaHorarioAtencion> horarioAtencion) {
         this.horarioAtencion = horarioAtencion;
-    }
-
-    public List<Veterinario> getVeterinarios() {
-        return veterinarios;
-    }
-
-    public void setVeterinarios(List<Veterinario> veterinarios) {
-        this.veterinarios = veterinarios;
     }
 
     public boolean isHaceDomicilio() {

@@ -9,6 +9,8 @@ import { Horario } from '../model/Horario';
 import { DiaHorarioAtencion } from '../model/DiaHorarioAtencion';
 import { Response } from '../model/Response';
 import { ValidarMatriculaRq } from '../model/validarMatriculaRq';
+import { ProfesionalesPorVeterinariaRs } from '../model/ProfesionalesPorVeterinariaRs';
+import { Usuario } from '../model/Usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +35,7 @@ export class VeterinariesService {
   ) { }
 
   crearDiaHorarioAtencionCorrido(dia:string, horaInicio:string, horaFin:string): DiaHorarioAtencion{
-    console.log('horas: ', horaFin, horaInicio)
+    //console.log('horas: ', horaFin, horaInicio)
     let diaHorarioAtencion: DiaHorarioAtencion = new DiaHorarioAtencion();
     let horarios: Horario[] = [];
     diaHorarioAtencion.dia = dia;
@@ -43,7 +45,7 @@ export class VeterinariesService {
   }
 
   crearDiaHorarioAtencionCortado(dia:string, horaInicio:string, horaFin:string, horaInicio2:string, horaFin2:string): DiaHorarioAtencion{
-    console.log('horas: ', horaFin, horaInicio, horaFin2, horaInicio2)
+    //console.log('horas: ', horaFin, horaInicio, horaFin2, horaInicio2)
     let diaHorarioAtencion: DiaHorarioAtencion = new DiaHorarioAtencion();
     let horarios: Horario[] = [];
     diaHorarioAtencion.dia = dia;
@@ -57,7 +59,7 @@ export class VeterinariesService {
     let horario:Horario = new Horario();
     horario.horaFin=horaFin
     horario.horaInicio=horaInicio
-    console.log('horario: ', horario)
+    //console.log('horario: ', horario)
     return horario;
   }
 
@@ -68,6 +70,22 @@ export class VeterinariesService {
 
   validarMatricula(rq: ValidarMatriculaRq): Observable<Response>{
     return  this.http.post<Response>(this.baseURL+"/validarMatricula", rq);
+  }
+
+  getProfesionalesPorVeterinaria():Observable<ProfesionalesPorVeterinariaRs>{
+    return this.http.get<ProfesionalesPorVeterinariaRs>(this.baseURL+"/veterinaries/getVeterinariosPorVeterinaria");
+  }
+
+  quitarProfesional(idProfesional: number):Observable<Response>{
+    return this.http.delete<Response>(this.baseURL+"/veterinaries/quitarProfesional/"+idProfesional);
+  }
+
+  agregarProfesional(idProfesional: number):Observable<Response>{
+    return this.http.post<Response>(this.baseURL+"/veterinaries/agregarProfesional/"+idProfesional,{});
+  }
+
+  buscarPorDni(dni: string):Observable<any>{
+    return this.http.get<any>(this.baseURL+"/veterinaries/"+dni);
   }
 
 }

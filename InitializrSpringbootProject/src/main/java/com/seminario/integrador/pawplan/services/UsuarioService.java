@@ -229,7 +229,7 @@ public class UsuarioService {
 		veterinaria.setCuit(usuarioRequest.getCuit());
 		veterinaria.setAptoCirugia(usuarioRequest.isAptoCirugia());
 		veterinaria.setHorarioAtencion(usuarioRequest.getHorario());
-		veterinaria.setVeterinarios(usuarioRequest.getVeterinarios());
+		//veterinaria.setVeterinarios(usuarioRequest.getVeterinarios());
 		
 		if(usuarioRequest.isLocalFisico()){
 			veterinaria.setHaceDomicilio(false);

@@ -2,7 +2,6 @@ package com.seminario.integrador.pawplan.controller.values;
 
 import java.util.ArrayList;
 
-import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.DiaHorarioAtencion;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.security.Role;
@@ -42,7 +41,7 @@ public class UsuarioRequest {
 	private ArrayList<Long> tipoEspeciesIds;
 
 //VETERINARIO
-    private int matricula;
+    private String matricula;
     private boolean esIndependiente;
     
     
@@ -134,12 +133,6 @@ public class UsuarioRequest {
 	}
 	public void setFechaNac(String fechaNac) {
 		this.fechaNac = fechaNac;
-	}
-	public int getMatricula() {
-		return matricula;
-	}
-	public void setMatricula(int matricula) {
-		this.matricula = matricula;
 	}
 	public boolean isEsIndependiente() {
 		return esIndependiente;
