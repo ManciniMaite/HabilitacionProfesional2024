@@ -28,6 +28,8 @@ import { Horario } from '../model/Horario';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 import { D } from '@angular/cdk/keycodes';
+import { VeterinarioXciudad } from '../model/veterinarioXciudad';
+import { VeterinariaXciudad } from '../model/veterinariaXciudad';
 
 @Component({
   selector: 'app-adm-reservar-turno',
@@ -64,15 +66,11 @@ export class AdmReservarTurnoComponent implements OnInit {
 
   mascotas: Animal[] = [];
 
-  veterinarias: Veterinaria[];
+  veterinarias: VeterinariaXciudad[];
 
   empleadosVete: Veterinario[];
 
-  veterinarios: Veterinario[];
-
-  veterinariosLista: {nombre: string, dniCuil: string, tipo: string}[] = [];
-
-  veterinariaSelected:{nombre: string, dniCuil: string, tipo: string};
+  veterinarios: VeterinarioXciudad[];
 
   horarios: Horario[] = [];
 
@@ -101,7 +99,9 @@ export class AdmReservarTurnoComponent implements OnInit {
 
     this.veterinaries = this.fb.group({
       vetes:               new FormControl('', Validators.required),
-      empleadoVete:             new FormControl('')
+      veterinario:         new FormControl('', Validators.required),
+      veterinariaSeleccionada: new FormControl()
+      
     });
 
     this.turnero = this.fb.group({
@@ -119,18 +119,6 @@ export class AdmReservarTurnoComponent implements OnInit {
       // this.getDomicilios(usuario.cuil);
     });
   }
-
-  veteMetod(vete:{nombre: string, dniCuil: string, tipo: string}){
-    this.empleadosVete = [];
-    this.veterinariaSelected = vete;
-    if (vete.tipo == 'veterinaria'){
-      for (const veterinaria of this.veterinarias) {
-        if (veterinaria.cuit == vete.dniCuil) {
-          this.empleadosVete = veterinaria.veterinarios;
-        };
-      };
-    }
-  };
 
   getAnimales(cuil: string){
     this.animalService.getAnimales(cuil).subscribe({
@@ -205,28 +193,11 @@ export class AdmReservarTurnoComponent implements OnInit {
   }
 
   getVeterinaries(idCiudad: number){
-    this.veterinariosLista = [];
     this.veterinariesService.getAll(idCiudad,this.mascota.get("nombreMascota")?.value.id).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
-            this.veterinarias = data.veterinarias;
-            for (const vetes of this.veterinarias) {
-              this.veterinariosLista.push({
-                nombre: vetes.razonSocial,
-                dniCuil: vetes.cuit,
-                tipo: 'veterinaria'
-              });
-            }
-
             this.veterinarios = data.veterinariosIndependientes;
-            for (const vetes of this.veterinarios) {
-              this.veterinariosLista.push({
-                nombre: vetes.nombre + ' ' + vetes.apellido,
-                dniCuil: vetes.dni,
-                tipo: 'veterinario'
-              });
-            }
-            
+            this.veterinarias = data.veterinarias
           } else {
             this.dialog.open(GenericDialogComponent, {
               data: {
@@ -273,7 +244,7 @@ export class AdmReservarTurnoComponent implements OnInit {
   getHorariosDisponibles(){
     let rq: DisponibilidadRq = new DisponibilidadRq();
     rq.fecha = this.obtenerFechaFormateada();
-    rq.dniCuil = parseInt(this.veterinariaSelected.dniCuil);
+    rq.idVeterinario = this.veterinaries.get('veterinario')?.value;
     console.log("Require de disponibilidad: ",rq);
     this.turnoService.disponibilidad(rq).subscribe({
       next:(data)=> {
@@ -302,6 +273,14 @@ export class AdmReservarTurnoComponent implements OnInit {
         console.log(error);
       }
     });
+  }
+
+  getVeterinariosDeVeterinaria(id: number): VeterinarioXciudad[] {
+    const veterinaria = this.veterinarias?.find(v => v.id === id);
+    if (veterinaria && Array.isArray(veterinaria.veterinarios)) {
+      return veterinaria.veterinarios;
+    }
+    return [];
   }
 
   // agregarAnimal(){

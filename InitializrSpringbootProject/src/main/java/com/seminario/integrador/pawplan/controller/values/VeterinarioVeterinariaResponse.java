@@ -10,5 +10,5 @@ import java.util.ArrayList;
 public class VeterinarioVeterinariaResponse extends Response {
 
     private ArrayList<VeterinarioXciudad> veterinariosIndependientes;
-    private ArrayList<VeterinariaXCiudad> veterinarias;
+    private ArrayList<VeterinariaXCiudadImpl> veterinarias;
 }

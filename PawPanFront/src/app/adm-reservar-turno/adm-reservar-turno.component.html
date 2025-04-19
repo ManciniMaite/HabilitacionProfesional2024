@@ -67,22 +67,22 @@
                             </form>
                         </mat-step>
 
-                        <mat-step [stepControl]="veterinaries">
+                        <!-- <mat-step [stepControl]="veterinaries">
                             <form [formGroup]="veterinaries">
                                 <ng-template matStepLabel>Veterinario/as</ng-template>
                                 <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: baseline;">
-                                        <mat-label>Selecciona una veterinaria/veterinario</mat-label>
+                                        <mat-label>Selecciona un Profesional</mat-label>
                                         <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                            @for (vete of veterinariosLista; track $index) {
-                                                <mat-radio-button value="{{vete.tipo}}" (click)="veteMetod(vete)">{{vete.nombre}}</mat-radio-button>
+                                            @for (vete of veterinarios; track $index) {
+                                                <mat-radio-button>{{vete.nombre}}</mat-radio-button>
                                             }
                                         </mat-radio-group>
                                         @if (veterinaries.value.vetes == 'veterinaria') {
                                             <mat-label>Tenes preferencia por algun veterinario?</mat-label>
                                             <mat-radio-group formControlName="empleadoVete" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                                @for (empleado of empleadosVete; track $index) {
-                                                    <mat-radio-button value="{{empleado.dni}}">{{empleado.nombre + ' ' + empleado.apellido}}</mat-radio-button>
+                                                @for (empleado of veterinarias.veterinarios; track $index) {
+                                                    <mat-radio-button [value]="empleado.id">{{empleado.nombre + ' ' + empleado.apellido}}</mat-radio-button>
                                                 }
                                             </mat-radio-group>
                                         }
@@ -94,7 +94,61 @@
                                     </div>
                                 </div>
                             </form>
-                        </mat-step>
+                        </mat-step> -->
+
+
+                        <mat-step [stepControl]="veterinaries">
+                            <form [formGroup]="veterinaries">
+                              <ng-template matStepLabel>Veterinario/as</ng-template>
+                              <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                          
+                                <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: flex-start;">
+                                  <mat-label>Seleccioná una opción</mat-label>
+                                  <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                    <mat-radio-button value="independiente">Veterinario/a Independiente</mat-radio-button>
+                                    <mat-radio-button value="veterinaria">Veterinaria</mat-radio-button>
+                                  </mat-radio-group>
+                                </div>
+                          
+                                <ng-container *ngIf="veterinaries.value.vetes === 'independiente'">
+                                  <mat-label style="margin-top: 15px;">Seleccioná un profesional</mat-label>
+                                  <span *ngIf="veterinarios.length===0"> Lo sentimos, no hay veterinarios disponibles</span>
+                                  <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                    <mat-radio-button *ngFor="let vete of veterinarios" [value]="vete.id">
+                                      {{ vete.nombre }} {{ vete.apellido }}
+                                    </mat-radio-button>
+                                  </mat-radio-group>
+                                </ng-container>
+                          
+                                <div *ngIf="veterinaries.value.vetes === 'veterinaria'">
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <mat-label style="margin-top: 15px;">Seleccioná una veterinaria</mat-label>
+                                        <mat-select formControlName="veterinariaSeleccionada">
+                                            <mat-option *ngFor="let vet of veterinarias" [value]="vet.id">
+                                            {{ vet.razonSocial }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                  
+                                  <div>
+                                    <mat-label style="margin-top: 15px;">Selecciona un profesional de la Veterinaria</mat-label>
+                                    <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                      <mat-radio-button *ngFor="let empleado of  getVeterinariosDeVeterinaria(veterinaries.value.veterinariaSeleccionada)" [value]="empleado.id">
+                                        {{ empleado.nombre }} {{ empleado.apellido }}
+                                      </mat-radio-button>
+                                    </mat-radio-group>
+                                  </div>
+                                </div>
+                          
+                                <div style="display: flex; flex-direction: row; align-self: flex-end; margin-top: 20px;">
+                                  <button mat-button matStepperPrevious>Anterior</button>
+                                  <button mat-button matStepperNext>Siguiente</button>
+                                </div>
+                          
+                              </div>
+                            </form>
+                          </mat-step>
+                          
 
                         <mat-step [stepControl]="turnero">
                             <form [formGroup]="turnero">

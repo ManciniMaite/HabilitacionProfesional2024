@@ -20,15 +20,15 @@ export class VeterinariesService {
   baseURL = CONFIG.urlBackend;
 
   //Datos locales
-  VeterinariesData = new Observable<VeterinariesGetRs>((observer) => {
-    observer.next({
-      estado: 'ok',
-      mensaje: 'oke',
-      veterinariosIndependientes: veterinarioMock,
-      veterinarias: veterinariaMock,
-    });
-    observer.complete(); // Finaliza el flujo de datos
-  });
+  // VeterinariesData = new Observable<VeterinariesGetRs>((observer) => {
+  //   observer.next({
+  //     estado: 'ok',
+  //     mensaje: 'oke',
+  //     veterinariosIndependientes: veterinarioMock,
+  //     veterinarias: veterinariaMock,
+  //   });
+  //   observer.complete(); // Finaliza el flujo de datos
+  // });
   
   constructor(
     private http: HttpClient

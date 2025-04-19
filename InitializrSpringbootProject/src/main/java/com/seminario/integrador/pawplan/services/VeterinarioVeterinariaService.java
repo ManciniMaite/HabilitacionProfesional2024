@@ -8,6 +8,7 @@ import com.seminario.integrador.pawplan.controller.values.ProfesionalesPorVeteri
 import com.seminario.integrador.pawplan.controller.values.Response;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.VeterinariaXCiudad;
+import com.seminario.integrador.pawplan.controller.values.VeterinariaXCiudadImpl;
 import com.seminario.integrador.pawplan.controller.values.VeterinarioVeterinariaResponse;
 import com.seminario.integrador.pawplan.controller.values.VeterinarioXciudad;
 import com.seminario.integrador.pawplan.model.Ciudad;
@@ -61,45 +62,60 @@ public class VeterinarioVeterinariaService {
 	}
         
     public VeterinarioVeterinariaResponse getByCiudad(Long idCiudad, Long idTipoEspecie){
-        VeterinarioVeterinariaResponse rs = new VeterinarioVeterinariaResponse();
-        ArrayList<VeterinarioXciudad> veterinarios = new ArrayList<VeterinarioXciudad>();
-        ArrayList<VeterinariaXCiudad> veterinarias = new ArrayList<VeterinariaXCiudad>();
-        try {
-            Optional<Ciudad> ciudadExistente;
-            ciudadExistente = this.serviceCiudad.findById(idCiudad);
-            if(ciudadExistente.isPresent()){
-                try{
-                    veterinarios = this.veterinarioRepository.findByCiudad(idCiudad, idTipoEspecie);
-                } catch (Exception e){
-                    e.printStackTrace();
-                    rs.setMensaje("Ocurrio un error al recuperar los veterinarios");
-                    rs.setEstado("ERROR");
-                    return rs;
-                }
-                rs.setVeterinariosIndependientes(veterinarios);
-                try{
-                    veterinarias = this.veterinariaRepository.findByCiudad(idCiudad);
-                } catch (Exception e){
-                    e.printStackTrace();
-                    rs.setMensaje("Ocurrio un error al recuperar las veterinarias");
-                    rs.setEstado("ERROR");
-                    return rs;
-                }
-                rs.setVeterinarias(veterinarias);
-            } else {
-                rs.setMensaje("No fue posible recuperar la ciudad indicada");
-                rs.setEstado("ERROR");
-                return rs;
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            rs.setMensaje("Ocurrio un error al recuperar la ciudad");
+    VeterinarioVeterinariaResponse rs = new VeterinarioVeterinariaResponse();
+    ArrayList<VeterinarioXciudad> veterinariosIndependientes = new ArrayList<>();
+    ArrayList<VeterinariaXCiudadImpl> veterinariasConVeterinarios = new ArrayList<>();
+
+    try {
+        Optional<Ciudad> ciudadExistente = this.serviceCiudad.findById(idCiudad);
+        if (ciudadExistente.isEmpty()) {
+            rs.setMensaje("No fue posible recuperar la ciudad indicada");
             rs.setEstado("ERROR");
             return rs;
         }
-        rs.setEstado("OK");
+
+        try {
+            veterinariosIndependientes = this.veterinarioRepository.findByCiudad(idCiudad, idTipoEspecie);
+        } catch (Exception e) {
+            e.printStackTrace();
+            rs.setMensaje("Ocurrió un error al recuperar los veterinarios");
+            rs.setEstado("ERROR");
+            return rs;
+        }
+        rs.setVeterinariosIndependientes(veterinariosIndependientes);
+
+        try {
+            ArrayList<VeterinariaXCiudad> veterinarias = this.veterinariaRepository.findByCiudad(idCiudad);
+
+            for (VeterinariaXCiudad veterinaria : veterinarias) {
+                List<VeterinarioXciudad> veterinariosDeVeterinaria = this.veterinarioRepository.findByVeterinariaAndTipoEspecie(veterinaria.getId(), idTipoEspecie);
+
+                VeterinariaXCiudadImpl veterinariaConVeterinarios = new VeterinariaXCiudadImpl(veterinaria.getId(), veterinaria.getRazonSocial());
+                veterinariaConVeterinarios.setVeterinarios(veterinariosDeVeterinaria);
+
+                veterinariasConVeterinarios.add(veterinariaConVeterinarios);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            rs.setMensaje("Ocurrió un error al recuperar las veterinarias");
+            rs.setEstado("ERROR");
+            return rs;
+        }
+
+        rs.setVeterinarias(veterinariasConVeterinarios);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        rs.setMensaje("Ocurrió un error al recuperar la ciudad");
+        rs.setEstado("ERROR");
         return rs;
     }
+
+    rs.setEstado("OK");
+    return rs;
+}
+
 
     public ProfesionalesPorVeterinariaRs getProfesionales(){
         ProfesionalesPorVeterinariaRs rs = new ProfesionalesPorVeterinariaRs();

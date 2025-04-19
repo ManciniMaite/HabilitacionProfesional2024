@@ -32,27 +32,26 @@ public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>
         JOIN ciudad c ON d.ciudad_id = c.id
         WHERE c.id = :idCiudad
         AND ve.tipo_especie_id = :idTipoEspecie
+        AND u.es_independiente = true
         AND TRIM(u.dtype) = 'Veterinario';
     """, nativeQuery = true)
     ArrayList<VeterinarioXciudad> findByCiudad(@Param("idCiudad") Long idCiudad, @Param("idTipoEspecie") Long idTipoEspecie);
 
-    // @Query("SELECT v.idUsuario as id, v.nombre as nombre, v.apellido as apellido, v.matricula as matricula " +
-    //    "FROM Veterinaria vet JOIN vet.veterinarios v WHERE vet.idUsuario = :idVeterinaria")
-
-    //    @Query(value = """
-    //     SELECT 
-	// 		u.id,
-	// 		u.nombre,
-	// 		u.apellido,
-    //         u.matricula
-    //     FROM Veterinaria vet JOIN vet.veterinarios v 
-    //     WHERE vet.idUsuario = :idVeterinaria
-    //     AND TRIM(u.dtype) = 'Veterinario';
-    // """, nativeQuery = true)   
-    // List<ProfesionalPorVeterinaria> findVeterinariosByVeterinariaId(@Param("idVeterinaria") Long idVeterinaria);
-
-
     List<ProfesionalPorVeterinaria> findByVeterinariaId(@Param("idVeterinaria") Long idVeterinaria);
+
+    @Query(value = """
+        SELECT 
+            u.id,
+            u.nombre,
+            u.apellido
+        FROM usuario u
+        JOIN veterinario_tipo_especie ve ON ve.veterinario_id = u.id
+        WHERE u.veterinaria_id = :idVeterinaria
+        AND ve.tipo_especie_id = :idTipoEspecie
+        AND TRIM(u.dtype) = 'Veterinario';
+    """, nativeQuery = true)
+    ArrayList<VeterinarioXciudad> findByVeterinariaAndTipoEspecie(@Param("idVeterinaria") Long idVeterinaria, @Param("idTipoEspecie") Long idTipoEspecie);
+
 }
 
 
