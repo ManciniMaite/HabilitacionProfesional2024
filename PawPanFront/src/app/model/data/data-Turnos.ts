@@ -16,6 +16,7 @@ export const Turnos: Turno[]=[
             cantidad: 1,
             descripcion: 'vacunacion para la mascota',
             animal: {
+                id:5,
                 esActivo: true,
                 nombre: 'Agatha',
                 fechaNac: '05/05/12',
@@ -46,6 +47,7 @@ export const Turnos: Turno[]=[
             apellido: 'Perez',
             dni: '43568974',
             animales: [{
+                id:13,
                 esActivo: true,
                 nombre: 'Agatha',
                 fechaNac: '05/05/12',

@@ -30,11 +30,11 @@ public class Animal {
     private String nombre;
     private Date fechaNac;
     private float peso;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "raza_id")
     private Raza raza;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
