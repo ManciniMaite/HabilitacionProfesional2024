@@ -47,9 +47,6 @@ public class TurnoService {
 	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
-	private ClienteRepository clienteRepository;
-
-	@Autowired
 	private VeterinarioRepository veterinarioRepository;
 
 	@Autowired
@@ -134,7 +131,7 @@ public class TurnoService {
 			turnoFinal.setVeterinario((veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get()));
 		}
 		
-		turnoFinal.setDescripcionPublica(turnoRequest.getDescripcion());
+		turnoFinal.setDescripcionPublica(turnoRequest.getDescripcionPublica());
 		
 		turnoFinal.setEsADomicilio(turnoRequest.isEsADomicilio());
 

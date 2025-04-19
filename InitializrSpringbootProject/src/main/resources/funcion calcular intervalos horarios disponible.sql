@@ -1,6 +1,8 @@
+DROP FUNCTION IF EXISTS public.calcular_turnos_disponibles;
+
 CREATE OR REPLACE FUNCTION public.calcular_turnos_disponibles(
-    p_usuario_id bigint,
-    p_dia date)
+	p_usuario_id bigint,
+	p_dia date)
     RETURNS jsonb
     LANGUAGE 'plpgsql'
     COST 100
@@ -37,10 +39,10 @@ BEGIN
     FOR hora_inicio, hora_fin IN
         SELECT h.hora_inicio, h.hora_fin
         FROM Dia_Horario_Atencion d
-        JOIN Usuario u ON u.id = p_usuario_id
-        JOIN Horario h ON h.id = d.horario_id
+        JOIN Usuario u ON u.id = d.id_usuario
+        JOIN Horario h ON h.dia_horario_atencion_id = d.id
         WHERE u.id = p_usuario_id
-        AND d.dia = (SELECT CASE TO_CHAR(p_dia, 'D')
+        AND upper(d.dia) = (SELECT CASE TO_CHAR(p_dia, 'D')
                              WHEN '1' THEN 'DOMINGO'
                              WHEN '2' THEN 'LUNES'
                              WHEN '3' THEN 'MARTES'
@@ -98,8 +100,8 @@ END IF;
 			    FROM Turno t 
 			    INNER JOIN estado e ON e.id = t.estado_id 
 			    WHERE (t.veterinario_id = p_usuario_id OR t.veterinaria_id = p_usuario_id)
-			    AND t.fecha::DATE = p_dia
-			    AND (t.fecha, t.fecha + (t.duracion_estimada || ' minutes')::INTERVAL) 
+			    AND t.fecha_hora::DATE = p_dia
+			    AND (t.fecha_hora, t.fecha_hora + (duracion_minutos || ' minutes')::INTERVAL) 
 			        OVERLAPS 
 			        (p_dia + intervalo_actual, p_dia + intervalo_actual + duracion_predet)
 			    AND e.nombre NOT IN ('CANCELADO')

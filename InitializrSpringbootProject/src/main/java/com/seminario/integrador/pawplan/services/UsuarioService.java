@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.seminario.integrador.pawplan.controller.values.AnimalRq;
 import com.seminario.integrador.pawplan.controller.values.UsuarioRequest;
@@ -84,6 +86,7 @@ public class UsuarioService {
 		return usuario;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public UsuarioResponse<?> CrearUsuario(UsuarioRequest usuarioRequest) {
 
 		UsuarioResponse<Usuario> rs = new UsuarioResponse<Usuario>();
@@ -133,6 +136,7 @@ public class UsuarioService {
 		return rs;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public UsuarioResponse<?> modificarUsuario(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
 		
 		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
@@ -192,7 +196,7 @@ public class UsuarioService {
 	
 	
 	
-	
+	@Transactional(propagation = Propagation.REQUIRED)
 	private Cliente crearModificarCliente(Cliente cliente, UsuarioRequest usuarioRequest) {
 		
 		cliente.setApellido(usuarioRequest.getApellido());
@@ -203,9 +207,9 @@ public class UsuarioService {
 		cliente.setCorreo(usuarioRequest.getCorreo());
 		cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
-		clienteRepository.save(cliente);
+		cliente = clienteRepository.save(cliente);
 
-		if(!usuarioRequest.getAnimales().isEmpty()){
+		if(usuarioRequest.getAnimales()!=null){
 			for(AnimalRq a : usuarioRequest.getAnimales()){
 				a.setUsuarioId(cliente.getId());
 				this.animalService.crearAnimal(a);
@@ -219,6 +223,7 @@ public class UsuarioService {
 		return cliente;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	private Veterinaria crearModificarVeterinaria(Veterinaria veterinaria, UsuarioRequest usuarioRequest) {
 
 		veterinaria.setTelefono(usuarioRequest.getTelefono());
@@ -227,9 +232,7 @@ public class UsuarioService {
 		veterinaria.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
 		veterinaria.setCuit(usuarioRequest.getCuit());
-		veterinaria.setAptoCirugia(usuarioRequest.isAptoCirugia());
 		veterinaria.setHorarioAtencion(usuarioRequest.getHorario());
-		//veterinaria.setVeterinarios(usuarioRequest.getVeterinarios());
 		
 		if(usuarioRequest.isLocalFisico()){
 			veterinaria.setHaceDomicilio(false);
@@ -237,13 +240,13 @@ public class UsuarioService {
 			veterinaria.setHaceDomicilio(true);
 		}
 
-		veterinariaRepository.save(veterinaria);
-
+		veterinaria = veterinariaRepository.save(veterinaria);
+		
 		if(usuarioRequest.getDomicilio() != null){
 			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
 		}
 
-		/*if(!usuarioRequest.getHorario().isEmpty()){
+		if(!usuarioRequest.getHorario().isEmpty()){
 			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
 			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
 				DiaHorarioAtencion diaHorario = new DiaHorarioAtencion();
@@ -262,13 +265,15 @@ public class UsuarioService {
 				diasHorarios.add(diaHorario);
 			}
 
-			diaHorarioAtencionRepository.saveAll(diasHorarios);
-		}*/
+			veterinaria.setHorarioAtencion((List<DiaHorarioAtencion>) diaHorarioAtencionRepository.saveAll(diasHorarios));
+		}
 		
 		
+
 		return veterinaria;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	private Veterinario crearModificarVeterinario(Veterinario veterinario, UsuarioRequest usuarioRequest) {
 
 		veterinario.setApellido(usuarioRequest.getApellido());
@@ -289,8 +294,7 @@ public class UsuarioService {
 			veterinario.setHaceDomicilio(false);
 			veterinario.setHaceGuardia(false);
 		}
-
-
+		
 		ArrayList<TipoEspecie> alte = new ArrayList<TipoEspecie>();
 		for(Long id : usuarioRequest.getTipoEspeciesIds()){
 			Optional<TipoEspecie> te = this.tipoEspecieRepository.findById(id);
@@ -302,10 +306,10 @@ public class UsuarioService {
 		}
 		veterinario.setTiposEspecie(alte);
 
-		veterinarioRepository.save(veterinario);
+		veterinario = veterinarioRepository.save(veterinario);
 
 
-		/*if( veterinario.isEsIndependiente() && !usuarioRequest.getHorario().isEmpty()){
+		if( veterinario.isEsIndependiente() && !usuarioRequest.getHorario().isEmpty()){
 			List<DiaHorarioAtencion> diasHorarios = new ArrayList<>();
 			for (DiaHorarioAtencion diaReq : usuarioRequest.getHorario()) {
 				DiaHorarioAtencion diaHorario = new DiaHorarioAtencion();
@@ -331,7 +335,7 @@ public class UsuarioService {
 				this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
 			}
 		}
-**/
+
 		return veterinario;
 	}
         

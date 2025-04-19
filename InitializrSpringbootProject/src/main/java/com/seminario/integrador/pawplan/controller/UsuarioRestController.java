@@ -14,6 +14,8 @@ import com.seminario.integrador.pawplan.services.UsuarioService;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(Constantes.URL_PATH_USUARIO)
 public class UsuarioRestController {
     
+	Logger logger = LoggerFactory.getLogger(UsuarioRestController.class);
+	
     @Autowired(required = true)
     private UsuarioService usuarioService;
 
@@ -46,6 +50,7 @@ public class UsuarioRestController {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
 			result.setMensaje("Ocurrio un error al obtener todos los usuarios - 01. " + e.getMessage());
+			logger.error("ERROR AL CONSULTAR USUARIOS",e);
 		}
     	
     	return result;
@@ -62,6 +67,7 @@ public class UsuarioRestController {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
 			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+			logger.error("ERROR AL crear USUARIOS",e);
 		}
     	
     	return result;
@@ -79,6 +85,7 @@ public class UsuarioRestController {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
 			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+			logger.error("ERROR AL modificar USUARIOS",e);
 		}
     	
     	return result;
@@ -95,6 +102,7 @@ public class UsuarioRestController {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
 			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+			logger.error("ERROR AL eliminsar USUARIOS",e);
 		}
     	
     	return result;

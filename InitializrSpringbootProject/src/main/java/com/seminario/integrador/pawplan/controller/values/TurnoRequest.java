@@ -8,6 +8,9 @@ import com.seminario.integrador.pawplan.model.Ciudad;
 import com.seminario.integrador.pawplan.model.Estado;
 import com.seminario.integrador.pawplan.model.TipoEspecie;
 
+import lombok.Data;
+
+@Data
 public class TurnoRequest {
 
 	private Date fechaConsulta;
@@ -19,129 +22,12 @@ public class TurnoRequest {
     private Long veterinariaId;
     private Long veterinarioId;
     private boolean esADomicilio;
-    private String duracionEstimada;
-    private String descripcion;
-    private float monto;
+    private String descripcionPrivada;
+    private String descripcionPublica;
     private boolean esGuardia;
     private List<Animal> animales;
 	
     private Long turnoId;
 	
-	
-	
-	
-	public Long getTurnoId() {
-		return turnoId;
-	}
-
-	public void setTurnoId(Long turnoId) {
-		this.turnoId = turnoId;
-	}
-
-	public Date getFechaConsulta() {
-		return fechaConsulta;
-	}
-
-	public void setFechaConsulta(Date fechaConsulta) {
-		this.fechaConsulta = fechaConsulta;
-	}
-
-	public TipoEspecie getTipoEspecie() {
-		return tipoEspecie;
-	}
-
-	public void setTipoEspecie(TipoEspecie tipoEspecie) {
-		this.tipoEspecie = tipoEspecie;
-	}
-
-	public Ciudad getCiudad() {
-		return ciudad;
-	}
-
-	public void setCiudad(Ciudad ciudad) {
-		this.ciudad = ciudad;
-	}
-
-	public Date getFechaReserva() {
-		return fechaReserva;
-	}
-
-	public void setFechaReserva(Date fechaReserva) {
-		this.fechaReserva = fechaReserva;
-	}
-
-	public Estado getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
-
-	
-
-	public Long getVeterinariaId() {
-		return veterinariaId;
-	}
-
-	public void setVeterinariaId(Long veterinariaId) {
-		this.veterinariaId = veterinariaId;
-	}
-
-	public Long getVeterinarioId() {
-		return veterinarioId;
-	}
-
-	public void setVeterinarioId(Long veterinarioId) {
-		this.veterinarioId = veterinarioId;
-	}
-
-	public boolean isEsADomicilio() {
-		return esADomicilio;
-	}
-
-	public void setEsADomicilio(boolean esADomicilio) {
-		this.esADomicilio = esADomicilio;
-	}
-
-	public String getDuracionEstimada() {
-		return duracionEstimada;
-	}
-
-	public void setDuracionEstimada(String duracionEstimada) {
-		this.duracionEstimada = duracionEstimada;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public float getMonto() {
-		return monto;
-	}
-
-	public void setMonto(float monto) {
-		this.monto = monto;
-	}
-
-	public boolean isEsGuardia() {
-		return esGuardia;
-	}
-
-	public void setEsGuardia(boolean esGuardia) {
-		this.esGuardia = esGuardia;
-	}
-
-	public List<Animal> getAnimales() {
-		return animales;
-	}
-
-	public void setAnimales(List<Animal> animales) {
-		this.animales = animales;
-	}
 	
 }
