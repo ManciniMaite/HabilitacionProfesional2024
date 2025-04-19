@@ -1,6 +1,7 @@
 import { Animal } from "../Animal";
 
 export const DataAnimal: Animal = {
+    id:3,
     esActivo: true,
     nombre: 'Agatha',
     fechaNac: '05/05/12',

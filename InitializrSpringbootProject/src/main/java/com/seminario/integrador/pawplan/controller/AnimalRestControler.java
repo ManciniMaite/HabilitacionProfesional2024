@@ -39,17 +39,17 @@ public class AnimalRestControler {
         return this.service.findByCliente(usuario);
     }
     
-    @PostMapping("crear")
+    @PostMapping("/crear")
     public AnimalRs crearAnimal(@RequestBody AnimalRq rq){
         return this.service.crearAnimal(rq);
     }
     
-    @PutMapping("update")
+    @PutMapping("/update")
     public AnimalRs actualizarAnimal(@RequestBody AnimalRq rq){
         return this.service.updateAnimal(rq);
     }
     
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public Response delete(@PathVariable("id") Long id){
         return this.service.delete(id);
     }

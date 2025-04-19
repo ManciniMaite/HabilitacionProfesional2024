@@ -115,7 +115,14 @@ public class AnimalService {
             }
             
             // Buscar el cliente por id
-            Optional<Usuario> usOptional = usuarioRepository.findById(rq.getUsuarioId());
+            Long idUsuario = 0l;
+            if(rq.getUsuarioId()!=null && rq.getUsuarioId()!= 0){
+                idUsuario=rq.getUsuarioId();
+            } else{
+                PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+                idUsuario=principalPawplan.getClienteId();
+            }
+            Optional<Usuario> usOptional = usuarioRepository.findById(idUsuario);
             if(usOptional.isPresent()) {
                 nuevoAnimal.setCliente((Cliente) usOptional.get());
             } else {
@@ -174,14 +181,12 @@ public class AnimalService {
                 rs.setMensaje("No fue posible recuperar el animal con ID: " + id);
                 return rs;
             }
-
-            Animal animal = animalExistente.get();
-            animal.setEsActivo(false);
-            repository.save(animal);
-
+    
+            repository.deleteById(id);
+    
             rs.setEstado("OK");
             rs.setMensaje("Registro eliminado con éxito");
-
+    
         } catch (Exception e) {
             e.printStackTrace();
             rs.setEstado("ERROR");
@@ -189,4 +194,5 @@ public class AnimalService {
         }
         return rs;
     }
+    
 }

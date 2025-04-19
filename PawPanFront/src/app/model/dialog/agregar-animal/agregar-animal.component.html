@@ -1,0 +1,43 @@
+<form [formGroup]="mascota">
+    <mat-card-title style="margin:15px">Agregar mascotas</mat-card-title>
+    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <mat-label>Especie</mat-label>
+            <mat-select formControlName="especie" required>
+                <mat-option value="">Seleccione una especie...</mat-option>
+                @for (item of this.especies; track $index) {
+                    <mat-option [value]="item" (click)="getRazas(item.id)">{{item.nombre}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <!-- raza va a depender de la seleccion en la especia, el campo deberia mostrarse una vez seleccionado dicho valor -->
+        @if(this.mascota.get('especie')?.value){
+            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                <mat-label>Raza</mat-label>
+                <mat-select formControlName="raza" required>
+                    <mat-option value="">Seleccione una raza...</mat-option>
+                    @for (item of this.razas; track $index) {
+                        <mat-option [value]="item">{{item.nombre}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        }
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <mat-label>Fecha de Nacimiento</mat-label>
+            <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <input matInput placeholder="Peso en kg" formControlName="peso" required>
+        </mat-form-field>
+    </div>
+
+    <mat-card-actions style="display: flex; justify-content: end;">
+        <button mat-raised-button style="margin-right: 10px;" (click)="close()">Cancelar</button>
+        <button mat-flat-button (click)="onSave()">Agregar</button>
+    </mat-card-actions>
+</form>
