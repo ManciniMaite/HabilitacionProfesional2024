@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import {MatListModule} from '@angular/material/list';
@@ -11,6 +11,8 @@ import { MenuItems } from './model/MenuItems';
 import { menuItems } from './model/data/data-MenuItems';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +22,7 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnDestroy, OnInit{
+  static app: AppComponent;
   mobileQuery: MediaQueryList;
   
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
@@ -41,7 +44,10 @@ export class AppComponent implements OnDestroy, OnInit{
 
   private _mobileQueryListener: () => void;
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    public dialog: MatDialog
+  ) {
     const changeDetectorRef = inject(ChangeDetectorRef);
     const media = inject(MediaMatcher);
 
@@ -55,6 +61,7 @@ export class AppComponent implements OnDestroy, OnInit{
   }
 
   ngOnInit(): void {
+    AppComponent.app = this;
     this.authService.usuario$.subscribe(usuario => {
       this.tieneSesion = usuario? true : false;
       this.role = usuario?.rol;
@@ -64,6 +71,50 @@ export class AppComponent implements OnDestroy, OnInit{
   esRol(item: MenuItems): boolean{
     return item.role.includes(this.role);
   }
+
+  public static onAlerta(data: any){
+    const dejarSeguirRef = AppComponent.app.dialog.open(ModalDialog, {
+      minWidth: data.minWidth,
+      minHeight: data.minHeight,
+      width: 'auto',
+      height: 'auto',
+      data: data,
+      panelClass: 'dialog-container'
+    });
+    dejarSeguirRef.afterClosed().subscribe(result => {
+      //this.ngOnInit();
+    });
+    return dejarSeguirRef;
+	}
   
   shouldRun = true;
+}
+
+@Component({
+	selector: 'modal',
+  standalone: true,
+  imports: [
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
+	templateUrl: './confirmacion.html',
+	styleUrls: ['../styles.scss']
+})
+export class ModalDialog { 
+	
+	constructor(
+	    public dialogRef: MatDialogRef<ModalDialog>,
+	    	@Inject(MAT_DIALOG_DATA) public data: any) {
+	}
+
+	onNoClick(): void {
+		this.data.onNoClick();
+		this.dialogRef.close();
+	}
+	onAceptClick(){
+		this.dialogRef.close();
+		this.data.onAceptar();
+	}
 }

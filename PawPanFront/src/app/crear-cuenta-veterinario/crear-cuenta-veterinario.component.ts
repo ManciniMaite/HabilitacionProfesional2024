@@ -31,6 +31,8 @@ import { UsuarioService } from '../services/usuario.service';
 import { DomicilioRq } from '../model/DomicilioRq';
 import { CiudadService } from '../services/ciudad.service';
 import { Ciudad } from '../model/Ciudad';
+import { AppComponent } from '../app.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-cuenta-veterinario',
@@ -96,7 +98,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     private ciudadesService: CiudadService,
     private usuariosService: UsuarioService,
     private tipoEspecieService: TipoEspecieService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router
   ){
     this.datosPersonales = this.fb.group({
       nombre:     new FormControl('', Validators.required),
@@ -165,7 +168,16 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     let rq: UsuarioRequest = this.getObject();
     this.usuariosService.crearCuenta(rq).subscribe({
       next: (value) => {
-          console.log(value);
+        if (value.estado == 'OK'){
+          AppComponent.onAlerta({
+            titulo: 'Cuenta creada exitosamente',
+            mensaje: 'Ahora debes iniciar sesión con tus datos.',
+            textoAceptar: 'Aceptar',
+            onAceptar: () => {
+              this.router.navigate(['iniciar-sesion']);
+            }
+          });
+        }
       }, error:(err) => {
           console.log(err);
       },
