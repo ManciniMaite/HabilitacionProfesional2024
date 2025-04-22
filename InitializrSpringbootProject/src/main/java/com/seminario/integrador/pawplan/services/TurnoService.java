@@ -168,6 +168,26 @@ public class TurnoService {
 		
 		turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
 
+		//se puede guardar el turno??
+		// busco estados
+		List<String> estados = new ArrayList<>();
+		estados.add(EnumEstados.RESERVADO.getNombre());
+		estados.add(EnumEstados.ACEPTADO.getNombre());
+		estados.add(EnumEstados.ATENDIDO.getNombre());
+		//busco los turnos
+		List<Turno> turnosObtenidos = turnoRepository.buscarTurnosPorVeterinariaVeterinarioYFechaYEstado(
+				turnoFinal.getVeterinario(),
+				turnoFinal.getVeterinaria(),
+				turnoFinal.getFechaHora(),
+				estados
+				);
+
+		if(!turnosObtenidos.isEmpty()) {
+			result.setEstado(EnumEstadosGenerales.ERROR.getEstado());
+			result.setMensaje("Turno ya registrado");
+			return result;
+		}
+		
 		try{
 			turnoRepository.save(turnoFinal);
 		} catch(Exception e){
@@ -176,10 +196,9 @@ public class TurnoService {
 			result.setMensaje("Ocurrio un error al guardar el turno");
 			return result;
 		}
+		
 		//result.setTurno();
 		result.setEstadoReserva(estadoReservado);
-		
-		
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Reservar turno ok.");
