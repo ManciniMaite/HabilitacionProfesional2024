@@ -352,7 +352,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     let req: ReservarTurnoRq = new ReservarTurnoRq();
     
     req.esDomicilio=this.domicilio.get('esADomicilio')?.value?true:false;
-    req.fecha=fechaFormateada+" "+this.turnero.get('hora')?.value.horaInicio;
+    req.fecha=fechaFormateada+"T"+this.turnero.get('hora')?.value.horaInicio;
     req.animalId=this.mascota.get('nombreMascota')?.value.id;
     req.veterinarioId=this.veterinaries.get('veterinario')?.value;
     req.veterinariaId = this.idVeterinaria;
