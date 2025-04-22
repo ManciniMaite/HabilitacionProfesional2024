@@ -110,7 +110,7 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     }, { validators: validacionContraseniasIguales });
 
     this.matricula = this.fb.group({
-      numeroMatricula: new FormControl('')
+      numeroMatricula: new FormControl('',Validators.required)
     });
 
     this.formaTrabajo = this.fb.group({
@@ -415,7 +415,7 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
   
     if(this.formaTrabajo.get('independiente')?.value == 'true'){
       rq.esIndependiente=true;
-      rq.haceGuardia = this.formaTrabajo.get('haceGuardia')?.value
+      rq.haceGuardia = this.formaTrabajo.get('haceGuardia')?.value == "SI"? true:false
       rq.haceDomicilio = true //si trabaja de forma independiente asumimos que hace domicilio
       rq.horario = this.diasHorarios; 
     } else{
