@@ -104,7 +104,7 @@ public class TurnoService {
 	}
 	
 	@Transactional( )
-	public TurnoResponse reservarTurno(TurnoRequest turnoRequest) {
+	public TurnoResponse reservarTurno(ReservarTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
