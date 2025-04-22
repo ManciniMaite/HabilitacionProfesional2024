@@ -1,5 +1,11 @@
 package com.seminario.integrador.pawplan.services;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +18,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
+import com.seminario.integrador.pawplan.controller.values.ReservarTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
 import com.seminario.integrador.pawplan.controller.values.TurnosResponse;
@@ -61,7 +69,7 @@ public class TurnoService {
 	@Autowired
 	private IAuthenticationFacade authenticationFacade;
 	
-	public TurnoResponse getTurnosDisponibles(TurnoRequest turnoRequest) throws JsonMappingException, JsonProcessingException{
+	public TurnoResponse getTurnosDisponibles(DisponibilidadRq turnoRequest) throws JsonMappingException, JsonProcessingException{
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -72,9 +80,7 @@ public class TurnoService {
 		}
 		
 		long vetId = 0;
-		if (turnoRequest.getVeterinariaId() != null) {
-			vetId = turnoRequest.getVeterinariaId();
-		} else if (turnoRequest.getVeterinarioId() != null) {
+		if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
 			vetId = turnoRequest.getVeterinarioId();
 		} else {
 			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10001.getCodigo()));
@@ -86,7 +92,9 @@ public class TurnoService {
 		//int tiempo = 10;
 		//if (turnoRequest.get)
 		ObjectMapper mapper = Constantes.getObjectMapper();
+		System.out.println( "Id vet: " + vetId + " FECHA: " + turnoRequest.getFecha());
 		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFecha());
+		System.out.println("DISPONIBILIDAD: " + disponibilidad);
 		ArrayList<Horario> horarios_disponibles = mapper.readValue(disponibilidad, mapper.getTypeFactory().constructCollectionType(List.class, Horario.class));
 		result.setHorariosDisponibles(horarios_disponibles);
 		
@@ -97,11 +105,12 @@ public class TurnoService {
 	}
 	
 	@Transactional( )
-	public TurnoResponse reservarturno(TurnoRequest turnoRequest) {
+	public TurnoResponse reservarturno(ReservarTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
 		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			System.out.println("session expirada");
 			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
 			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
 			return result;
@@ -127,13 +136,25 @@ public class TurnoService {
 		turnoFinal.setEstado(estadoReservado);
 		
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
-		turnoFinal.setFechaHora(turnoRequest.getFecha());
+		System.out.println("FECHA RESERVAR: " + turnoRequest.getFecha());
 		
-		if (turnoRequest.getVeterinariaId() != null) {
+
+        Instant instantFecha = Instant.parse(turnoRequest.getFecha());
+        ZonedDateTime zdtFecha = instantFecha.atZone(ZoneId.systemDefault());
+        LocalDate fechaLocal = zdtFecha.toLocalDate();
+
+        LocalTime hora = LocalTime.parse(turnoRequest.getHora()); 
+
+        LocalDateTime fechaHoraLocal = LocalDateTime.of(fechaLocal, hora);
+        ZonedDateTime zdtFinal = fechaHoraLocal.atZone(ZoneId.systemDefault());
+
+		turnoFinal.setFechaHora( Date.from(zdtFinal.toInstant()));
+		
+		if (turnoRequest.getVeterinariaId() != null && turnoRequest.getVeterinariaId() != 0) {
 			turnoFinal.setVeterinaria((veterinariaRepository.findById(turnoRequest.getVeterinariaId()).get()));
 		}
 		
-		if (turnoRequest.getVeterinarioId() != null) {
+		if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
 			turnoFinal.setVeterinario((veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get()));
 		}
 		Animal animal = animalRepository.findById(turnoRequest.getAnimalId()).get();
@@ -144,11 +165,19 @@ public class TurnoService {
 		}
 		turnoFinal.setAnimal(animal);
 		
-		turnoFinal.setDescripcionPublica(turnoRequest.getDescripcionPublica());
+		//turnoFinal.setDescripcionPublica(turnoRequest.getDescripcionPublica());
 		
 		turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
 
-		//result.setTurno(turnoRepository.save(turnoFinal));
+		try{
+			turnoRepository.save(turnoFinal);
+		} catch(Exception e){
+			e.printStackTrace();
+			result.setEstado(EnumEstadosGenerales.ERROR.getEstado());
+			result.setMensaje("Ocurrio un error al guardar el turno");
+			return result;
+		}
+		//result.setTurno();
 		result.setEstadoReserva(estadoReservado);
 		
 		

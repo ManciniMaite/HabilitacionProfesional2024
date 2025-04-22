@@ -248,7 +248,8 @@ export class AdmReservarTurnoComponent implements OnInit {
 
   getHorariosDisponibles(){
     let rq: DisponibilidadRq = new DisponibilidadRq();
-    rq.fecha = this.obtenerFechaFormateada();
+    //rq.fecha = this.obtenerFechaFormateada();
+    rq.fecha = this.turnero.get('fecha')?.value;
     rq.veterinarioId = this.veterinaries.get('veterinario')?.value;
     rq.veterinariaId = this.idVeterinaria;
     console.log("Require de disponibilidad: ",rq);
@@ -342,21 +343,26 @@ export class AdmReservarTurnoComponent implements OnInit {
     
   }
 
-  getObject(): ReservarTurnoRq{
-    const fecha: Date = this.turnero.get('fecha')?.value;
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-    const anio = fecha.getFullYear();
-    const fechaFormateada = `${anio}-${mes}-${dia}`;
-
+  getObject(): ReservarTurnoRq {
+    //const fecha: Date = this.turnero.get('fecha')?.value;
+    // const horaCompleta: string = this.turnero.get('hora')?.value.horaInicio;
+  
+    // const [horas, minutos, segundos] = horaCompleta.split(':').map(Number);
+  
+    // fecha.setHours(horas);
+    // fecha.setMinutes(minutos);
+    // fecha.setSeconds(segundos);
+    // fecha.setMilliseconds(0);
+  
     let req: ReservarTurnoRq = new ReservarTurnoRq();
-    
-    req.esDomicilio=this.domicilio.get('esADomicilio')?.value?true:false;
-    req.fecha=fechaFormateada+"T"+this.turnero.get('hora')?.value.horaInicio;
-    req.animalId=this.mascota.get('nombreMascota')?.value.id;
-    req.veterinarioId=this.veterinaries.get('veterinario')?.value;
+  
+    req.esDomicilio = this.domicilio.get('esADomicilio')?.value ? true : false;
+    req.fecha =  this.turnero.get('fecha')?.value;;
+    req.hora = this.turnero.get('hora')?.value.horaInicio
+    req.animalId = this.mascota.get('nombreMascota')?.value.id;
+    req.veterinarioId = this.veterinaries.get('veterinario')?.value;
     req.veterinariaId = this.idVeterinaria;
-
+  
     return req;
   }
 

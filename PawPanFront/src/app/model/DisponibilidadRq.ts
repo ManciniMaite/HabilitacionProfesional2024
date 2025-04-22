@@ -1,5 +1,5 @@
 export class DisponibilidadRq {
-    fecha: string;
+    fecha: Date;
     veterinariaId: number;
     veterinarioId: number;
 }
