@@ -18,6 +18,7 @@ import com.seminario.integrador.pawplan.controller.values.TurnosResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.enums.EnumEstados;
 import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
+import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Cliente;
 import com.seminario.integrador.pawplan.model.Estado;
 import com.seminario.integrador.pawplan.model.Horario;
@@ -25,6 +26,7 @@ import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
+import com.seminario.integrador.pawplan.repository.AnimalRepository;
 import com.seminario.integrador.pawplan.repository.ClienteRepository;
 import com.seminario.integrador.pawplan.repository.EstadoRepository;
 import com.seminario.integrador.pawplan.repository.TurnoRepository;
@@ -32,6 +34,7 @@ import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.repository.VeterinariaRepository;
 import com.seminario.integrador.pawplan.repository.VeterinarioRepository;
 import com.seminario.integrador.pawplan.security.PrincipalPawplan;
+import com.seminario.integrador.pawplan.security.Role;
 import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
 @Service
@@ -51,6 +54,9 @@ public class TurnoService {
 
 	@Autowired
 	private VeterinariaRepository veterinariaRepository;
+	
+	@Autowired
+	private AnimalRepository animalRepository;
 	
 	@Autowired
 	private IAuthenticationFacade authenticationFacade;
@@ -80,7 +86,7 @@ public class TurnoService {
 		//int tiempo = 10;
 		//if (turnoRequest.get)
 		ObjectMapper mapper = Constantes.getObjectMapper();
-		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFechaConsulta());
+		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFecha());
 		ArrayList<Horario> horarios_disponibles = mapper.readValue(disponibilidad, mapper.getTypeFactory().constructCollectionType(List.class, Horario.class));
 		result.setHorariosDisponibles(horarios_disponibles);
 		
@@ -121,7 +127,7 @@ public class TurnoService {
 		turnoFinal.setEstado(estadoReservado);
 		
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
-		turnoFinal.setFechaHora(turnoRequest.getFechaReserva());
+		turnoFinal.setFechaHora(turnoRequest.getFecha());
 		
 		if (turnoRequest.getVeterinariaId() != null) {
 			turnoFinal.setVeterinaria((veterinariaRepository.findById(turnoRequest.getVeterinariaId()).get()));
@@ -130,13 +136,21 @@ public class TurnoService {
 		if (turnoRequest.getVeterinarioId() != null) {
 			turnoFinal.setVeterinario((veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get()));
 		}
+		Animal animal = animalRepository.findById(turnoRequest.getAnimalId()).get();
+		if (animal == null ){
+			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getCodigo()));
+			result.setMensaje(EnumEstadosGenerales.ERROR_10002.getMensaje());
+			return result;
+		}
+		turnoFinal.setAnimal(animal);
 		
 		turnoFinal.setDescripcionPublica(turnoRequest.getDescripcionPublica());
 		
-		turnoFinal.setEsADomicilio(turnoRequest.isEsADomicilio());
+		turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
 
-		result.setTurno(turnoRepository.save(turnoFinal));
+		//result.setTurno(turnoRepository.save(turnoFinal));
 		result.setEstadoReserva(estadoReservado);
+		
 		
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
@@ -145,7 +159,7 @@ public class TurnoService {
 		//return null;
 	}
 	
-	public TurnoResponse reservarCancelar(TurnoRequest turnoRequest) {
+	public TurnoResponse cancelarTurno(TurnoRequest turnoRequest) {
 		
 		TurnoResponse result = new TurnoResponse();
 		
@@ -209,4 +223,116 @@ public class TurnoService {
 		return result;
 	}
 	
+	
+	public TurnosResponse confirmarTurno(TurnoRequest turnoRequest) {
+		TurnosResponse result = new TurnosResponse();
+		
+		PrincipalPawplan session = authenticationFacade.getPrincipal();
+		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+			return result;
+		}
+		
+		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
+		if (usuario.getRole() == Role.PACIENTE) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+		}
+		
+		Estado estadoAceptado = estadoRepository.findByNombre(EnumEstados.ACEPTADO.getNombre()).get(0);
+		
+		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		
+		turno.setEstado(estadoAceptado);
+		
+		turnoRepository.save(turno);
+		
+		//mail
+		
+		List<Turno> turnos = new ArrayList<Turno>();
+		turnos.add(turno);
+		
+		result.setTurnos(turnos);
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Turno ACEPTADO ok.");
+		
+		
+		return result;
+	}
+	
+	public TurnosResponse rechazarTurno(TurnoRequest turnoRequest) {
+		TurnosResponse result = new TurnosResponse();
+		
+		PrincipalPawplan session = authenticationFacade.getPrincipal();
+		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+			return result;
+		}
+		
+		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
+		if (usuario.getRole() == Role.PACIENTE) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+		}
+		
+		Estado estadoRechazado = estadoRepository.findByNombre(EnumEstados.RECHAZADO.getNombre()).get(0);
+		
+		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		
+		turno.setEstado(estadoRechazado);
+		
+		turnoRepository.save(turno);
+		
+		//mail
+		
+		List<Turno> turnos = new ArrayList<Turno>();
+		turnos.add(turno);
+		
+		result.setTurnos(turnos);
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Turno RECHAZADO ok.");
+		
+		
+		return result;
+	}
+	
+	
+	public TurnosResponse aceptarTurno(TurnoRequest turnoRequest) {
+		TurnosResponse result = new TurnosResponse();
+		
+		PrincipalPawplan session = authenticationFacade.getPrincipal();
+		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+			return result;
+		}
+		
+		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
+		if (usuario.getRole() == Role.PACIENTE) {
+			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+		}
+		
+		Estado estadoRechazado = estadoRepository.findByNombre(EnumEstados.RECHAZADO.getNombre()).get(0);
+		
+		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		
+		turno.setEstado(estadoRechazado);
+		
+		turnoRepository.save(turno);
+		
+		//mail
+		
+		List<Turno> turnos = new ArrayList<Turno>();
+		turnos.add(turno);
+		
+		result.setTurnos(turnos);
+		result.setEstado(EnumEstadosGenerales.OK.getEstado());
+		result.setMensaje("Turno RECHAZADO ok.");
+		
+		
+		return result;
+	}
 }
