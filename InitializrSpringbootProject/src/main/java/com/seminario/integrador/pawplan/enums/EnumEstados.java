@@ -2,8 +2,10 @@ package com.seminario.integrador.pawplan.enums;
 
 public enum EnumEstados {
 
-	CANCELADO("CANCELADO"),
 	RESERVADO("RESERVADO"),
+	CANCELADO("CANCELADO"),
+	ACEPTADO("ACEPTADO"),
+	RECHAZADO("RECHAZADO"),
 	ATENDIDO("ATENDIDO");
 
     private final String nombre;

@@ -30,10 +30,6 @@ public class TurnoController {
 
 	@RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.POST)
     public TurnoResponse consultarTurnosDisponible(@RequestBody TurnoRequest request) throws JsonMappingException, JsonProcessingException, ParseException {
-		request.setVeterinarioId(15L);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		Date fecha = sdf.parse("21-04-2025");
-		request.setFechaConsulta(fecha);
 		return turnoService.getTurnosDisponibles(request);
 	}
 	
