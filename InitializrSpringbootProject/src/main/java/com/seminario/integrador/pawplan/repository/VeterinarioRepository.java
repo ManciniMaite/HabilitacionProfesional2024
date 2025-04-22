@@ -32,10 +32,11 @@ public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>
         JOIN ciudad c ON d.ciudad_id = c.id
         WHERE c.id = :idCiudad
         AND ve.tipo_especie_id = :idTipoEspecie
+        AND u.hace_domicilio = :domicilio
         AND u.es_independiente = true
         AND TRIM(u.dtype) = 'Veterinario';
     """, nativeQuery = true)
-    ArrayList<VeterinarioXciudad> findByCiudad(@Param("idCiudad") Long idCiudad, @Param("idTipoEspecie") Long idTipoEspecie);
+    ArrayList<VeterinarioXciudad> findByCiudad(@Param("idCiudad") Long idCiudad, @Param("idTipoEspecie") Long idTipoEspecie, @Param("domicilio") boolean domicilio);
 
     List<ProfesionalPorVeterinaria> findByVeterinariaId(@Param("idVeterinaria") Long idVeterinaria);
 

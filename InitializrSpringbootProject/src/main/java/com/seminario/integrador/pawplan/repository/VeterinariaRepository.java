@@ -25,8 +25,9 @@ public interface VeterinariaRepository extends CrudRepository<Veterinaria, Long>
         JOIN domicilio d ON d.usuario_id = u.id
         JOIN ciudad c ON d.ciudad_id = c.id
         WHERE c.id = :idCiudad
+        AND u.hace_domicilio = :domicilio
         AND TRIM(u.dtype) = 'Veterinaria';
     """, nativeQuery = true)    
-    ArrayList<VeterinariaXCiudad> findByCiudad(@Param("idCiudad") Long idCiudad);
+    ArrayList<VeterinariaXCiudad> findByCiudad(@Param("idCiudad") Long idCiudad, @Param("domicilio") boolean domicilio);
 }
 

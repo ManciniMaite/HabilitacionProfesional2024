@@ -1,7 +1,7 @@
 <div class="form">
     <div class="container">
         <mat-card style="width: 90%; height: fit-content;">
-            @if(!usCreado){
+            @if(!turnoReservado){
                 <div class="titleContainer">
                     <button mat-icon-button (click)="volver()" color="primary" style="background-color: lightblue;">
                         <mat-icon>arrow_back</mat-icon>
@@ -38,9 +38,9 @@
                                 <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
                                         <mat-label>Quiere ser atendido en su domicilio?</mat-label>
-                                        <mat-radio-group formControlName="aDomicilio" style="margin-left: 20px;">
-                                            <mat-radio-button value="true">SI</mat-radio-button>
-                                            <mat-radio-button value="false" (click)="getVeterinaries(domUsuario[0].ciudad.id)">NO</mat-radio-button>
+                                        <mat-radio-group formControlName="esADomicilio" style="margin-left: 20px;">
+                                            <mat-radio-button [value]="'SI'">SI</mat-radio-button>
+                                            <mat-radio-button [value]="'NO'" (click)="getVeterinaries(domUsuario[0].ciudad.id)">NO</mat-radio-button>
                                             <!--
                                             si el turno no es a domicilio, por el momento se envia el id de la primera ciudad del usuario.
                                             hasta que se refactorice para la seleccion de una de sus ciudades
@@ -48,7 +48,7 @@
                                             -->
                                         </mat-radio-group>
                                     </div>
-                                    @if (domicilio.value.aDomicilio == 'true') {
+                                    @if (domicilio.value.esADomicilio === 'SI') {
                                         <div style="margin-top: 15px;">
                                             <mat-label>Por Favor seleccione un domicilio:</mat-label>
                                             <mat-radio-group formControlName="domicilioUsuario" style="margin-left: 20px; display: flex; flex-direction: column;">
@@ -67,35 +67,6 @@
                             </form>
                         </mat-step>
 
-                        <!-- <mat-step [stepControl]="veterinaries">
-                            <form [formGroup]="veterinaries">
-                                <ng-template matStepLabel>Veterinario/as</ng-template>
-                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: baseline;">
-                                        <mat-label>Selecciona un Profesional</mat-label>
-                                        <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                            @for (vete of veterinarios; track $index) {
-                                                <mat-radio-button>{{vete.nombre}}</mat-radio-button>
-                                            }
-                                        </mat-radio-group>
-                                        @if (veterinaries.value.vetes == 'veterinaria') {
-                                            <mat-label>Tenes preferencia por algun veterinario?</mat-label>
-                                            <mat-radio-group formControlName="empleadoVete" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                                @for (empleado of veterinarias.veterinarios; track $index) {
-                                                    <mat-radio-button [value]="empleado.id">{{empleado.nombre + ' ' + empleado.apellido}}</mat-radio-button>
-                                                }
-                                            </mat-radio-group>
-                                        }
-                                    </div>
-
-                                    <div style="display: flex; flex-direction: row; align-self: flex-end;">
-                                        <button mat-button matStepperPrevious>Anterior</button>
-                                        <button mat-button matStepperNext>Siguiente</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </mat-step> -->
-
 
                         <mat-step [stepControl]="veterinaries">
                             <form [formGroup]="veterinaries">
@@ -105,8 +76,8 @@
                                 <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: flex-start;">
                                   <mat-label>Seleccioná una opción</mat-label>
                                   <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                    <mat-radio-button value="independiente">Veterinario/a Independiente</mat-radio-button>
-                                    <mat-radio-button value="veterinaria">Veterinaria</mat-radio-button>
+                                    <mat-radio-button value="independiente" (change)="limpiarCamposVeterinaries()">Veterinario/a Independiente</mat-radio-button>
+                                    <mat-radio-button value="veterinaria" (change)="limpiarCamposVeterinaries()">Veterinaria</mat-radio-button>
                                   </mat-radio-group>
                                 </div>
                           
@@ -169,7 +140,7 @@
                                         <mat-label>Seleccioná un Horario</mat-label>
                                         <mat-radio-group formControlName="hora" style="margin-left: 20px; display: flex; flex-direction: column;">
                                             @for (item of horarios; track $index) {
-                                                <mat-radio-button value="{{item}}">{{item.horaInicio + ' - ' + item.horaFin}}</mat-radio-button>
+                                                <mat-radio-button [value]="item">{{item.horaInicio}}</mat-radio-button>
                                             }
                                         </mat-radio-group>
                                     </div>
@@ -177,17 +148,17 @@
 
                                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                     <button mat-button matStepperPrevious>Anterior</button>
-                                    <button mat-button>Confirmar</button>
+                                    <button mat-button (click)="onDialogConfirmarTurno()">Confirmar</button>
                                 </div>
                             </form>
                         </mat-step>
                     </mat-horizontal-stepper>
                 </mat-card-content>
         }
-        @if(usCreado){
+        @if(turnoReservado){
             <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-content: center; margin-top: 20px;">
-                <mat-card-title style="display: flex; justify-content: center;">Usuario creado con éxito</mat-card-title>
-                <mat-card-content style="display: flex; justify-content: center;">El usuario fue creado exitosamente. Ya podes iniciar sesion con tu correo y contraseña <a routerLink="/iniciar-sesion" style="margin-left: 5px;">ingresando acá</a>.</mat-card-content>
+                <mat-card-title style="display: flex; justify-content: center;">Turno reservado con éxito</mat-card-title>
+                <mat-card-content style="display: flex; justify-content: center;">El turno fue reservado, podrá visualizarlo desde <a routerLink="/adm-turnos-reservados" style="margin-left: 5px;">Mis turnos reservados</a>.</mat-card-content>
             </div>
         }
         </mat-card>

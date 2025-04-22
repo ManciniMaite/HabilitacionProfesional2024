@@ -1,10 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONFIG } from '../config';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { VeterinariesGetRs } from '../model/VeterinariesGetRs';
 import { DisponibilidadRq } from '../model/DisponibilidadRq';
 import { DisponibilidadRs } from '../model/DisponibilidadRs';
+import { DisponibilidadTurnoRs } from '../model/DisponibilidadTurnoRs';
+import { DATA_DISPONIBILIDAD_TURNO } from '../model/data/data-disponibilidadTurnoRs';
+import { ReservarTurnoRq } from '../model/TurnoRq';
+import { Response } from '../model/Response';
 
 @Injectable({
   providedIn: 'root'
@@ -48,9 +52,13 @@ export class TurnoService {
   //   return this.http.post<VeterinariesGetRs>(this.baseURL + "/Turno/Reservar" + idCiudad);
   // }
 
-  disponibilidad(rq: DisponibilidadRq):Observable<DisponibilidadRs>{
-    //return this.horariosData;
-    return this.http.post<DisponibilidadRs>(this.baseURL + "/Turno/Consultar", rq);
+  disponibilidad(rq: DisponibilidadRq):Observable<DisponibilidadTurnoRs>{
+    //return of(DATA_DISPONIBILIDAD_TURNO);
+    return this.http.post<DisponibilidadTurnoRs>(this.baseURL + "/Turno/Consultar", rq);
+  }
+
+  reservar(rq: ReservarTurnoRq): Observable<Response>{
+    return this.http.post<Response>(this.baseURL+"/Turno/Reservar", rq);
   }
 
 }

@@ -61,7 +61,7 @@ public class VeterinarioVeterinariaService {
 		
 	}
         
-    public VeterinarioVeterinariaResponse getByCiudad(Long idCiudad, Long idTipoEspecie){
+    public VeterinarioVeterinariaResponse getByCiudad(Long idCiudad, Long idTipoEspecie, boolean domicilio){
     VeterinarioVeterinariaResponse rs = new VeterinarioVeterinariaResponse();
     ArrayList<VeterinarioXciudad> veterinariosIndependientes = new ArrayList<>();
     ArrayList<VeterinariaXCiudadImpl> veterinariasConVeterinarios = new ArrayList<>();
@@ -75,7 +75,7 @@ public class VeterinarioVeterinariaService {
         }
 
         try {
-            veterinariosIndependientes = this.veterinarioRepository.findByCiudad(idCiudad, idTipoEspecie);
+            veterinariosIndependientes = this.veterinarioRepository.findByCiudad(idCiudad, idTipoEspecie, domicilio);
         } catch (Exception e) {
             e.printStackTrace();
             rs.setMensaje("Ocurrió un error al recuperar los veterinarios");
@@ -85,7 +85,7 @@ public class VeterinarioVeterinariaService {
         rs.setVeterinariosIndependientes(veterinariosIndependientes);
 
         try {
-            ArrayList<VeterinariaXCiudad> veterinarias = this.veterinariaRepository.findByCiudad(idCiudad);
+            ArrayList<VeterinariaXCiudad> veterinarias = this.veterinariaRepository.findByCiudad(idCiudad, domicilio);
 
             for (VeterinariaXCiudad veterinaria : veterinarias) {
                 List<VeterinarioXciudad> veterinariosDeVeterinaria = this.veterinarioRepository.findByVeterinariaAndTipoEspecie(veterinaria.getId(), idTipoEspecie);

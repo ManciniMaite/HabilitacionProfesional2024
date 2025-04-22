@@ -30,6 +30,8 @@ import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-d
 import { D } from '@angular/cdk/keycodes';
 import { VeterinarioXciudad } from '../model/veterinarioXciudad';
 import { VeterinariaXciudad } from '../model/veterinariaXciudad';
+import { HorarioDisponibilidad } from '../model/HorarioDisponibilidad';
+import { ReservarTurnoRq } from '../model/TurnoRq';
 
 @Component({
   selector: 'app-adm-reservar-turno',
@@ -55,6 +57,9 @@ import { VeterinariaXciudad } from '../model/veterinariaXciudad';
   styleUrl: './adm-reservar-turno.component.scss'
 })
 export class AdmReservarTurnoComponent implements OnInit {
+
+  turnoReservado: boolean = false;
+
   animationDuration = '1000';
 
   mascota: FormGroup;
@@ -72,9 +77,9 @@ export class AdmReservarTurnoComponent implements OnInit {
 
   veterinarios: VeterinarioXciudad[];
 
-  horarios: Horario[] = [];
+  horarios: HorarioDisponibilidad[] = [];
+  idVeterinaria: number;
 
-  usCreado: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -93,7 +98,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     });
 
     this.domicilio = this.fb.group({
-      aDomicilio:    new FormControl('', Validators.required), //radio button para atencion a domicilio o no
+      esADomicilio:    new FormControl(''), //radio button para atencion a domicilio o no
       domicilioUsuario:     new FormControl('') //domicilios que el usuario selecciona
     })
 
@@ -193,7 +198,7 @@ export class AdmReservarTurnoComponent implements OnInit {
   }
 
   getVeterinaries(idCiudad: number){
-    this.veterinariesService.getAll(idCiudad,this.mascota.get("nombreMascota")?.value.id).subscribe({
+    this.veterinariesService.getAll(idCiudad,this.mascota.get("nombreMascota")?.value.id,this.domicilio.get('esADomicilio')?.value?true:false).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.veterinarios = data.veterinariosIndependientes;
@@ -236,7 +241,7 @@ export class AdmReservarTurnoComponent implements OnInit {
       const dia = fecha.getDate().toString().padStart(2, '0');
       const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Los meses empiezan desde 0
       const anio = fecha.getFullYear();
-      return `${dia}/${mes}/${anio}`;
+      return `${anio}-${mes}-${dia}`;
     }
     return '';
   }
@@ -249,7 +254,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     this.turnoService.disponibilidad(rq).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
-            this.horarios = data.horarios;
+            this.horarios = data.horariosDisponibles;
             console.log('Horarios: ',this.horarios)
           } else {
             this.dialog.open(GenericDialogComponent, {
@@ -276,6 +281,7 @@ export class AdmReservarTurnoComponent implements OnInit {
   }
 
   getVeterinariosDeVeterinaria(id: number): VeterinarioXciudad[] {
+    this.idVeterinaria = id;
     const veterinaria = this.veterinarias?.find(v => v.id === id);
     if (veterinaria && Array.isArray(veterinaria.veterinarios)) {
       return veterinaria.veterinarios;
@@ -283,98 +289,84 @@ export class AdmReservarTurnoComponent implements OnInit {
     return [];
   }
 
-  // agregarAnimal(){
-  //   let selectedAnimal = new Animal;
-  //   selectedAnimal.nombre = this.mascota.value.nombreMascota;
-  //   selectedAnimal.fechaNac = this.mascota.value.fechaNacMascota;
-  //   selectedAnimal.raza.especie = this.mascota.value.especie;
-  //   selectedAnimal.raza = this.mascota.value.raza;
-  //   selectedAnimal.peso = this.mascota.value.peso;
-  //   this.animales.push(selectedAnimal);
-  //   console.log("animal seleccionado: ", selectedAnimal);
-  //   console.log("array de animales: ", this.animales);
-  // }
+  onDialogConfirmarTurno(){
+    const fecha: Date = this.turnero.get('fecha')?.value;
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
 
-  // quitarAnimal(item: Animal){
-  //   let index
-  //   if (this.animales.includes(item)){
-  //     index = this.animales.indexOf(item);
-  //     this.animales.splice(index, 1);
-  //   }
-  // }
- 
-  // onConfirmar(){
-  //   if (this.validarDatosPersonales() && this.validarMascotas()){
-  //     let rq: UsuarioRq = new UsuarioRq();
-  //     rq.tipoUsuario="PACIENTE";
-  //     rq.telefono=this.datosPersonales.get('telefono')?.value;
-  //     rq.correo=this.datosPersonales.get('telefono')?.value;
-  //     rq.contrasenia=this.datosPersonales.get('contrasenia')?.value;
-  //     rq.nombre=this.datosPersonales.get('nombre')?.value;
-  //     rq.apellido=this.datosPersonales.get('apellido')?.value;
-  //     rq.dni=this.datosPersonales.get('dni')?.value;
-  //     rq.fechaNac=this.datosPersonales.get('fechaNac')?.value;
-  //     rq.animales = this.animales;
+    this.dialog.open(GenericDialogComponent, {
+      data: {
+        type: 'normal',
+        title: 'Reservar turno',
+        body: '¿Está seguro de que desea reservar un turno el día: ' + fechaFormateada + 'a las ' + this.turnero.get('hora')?.value.horaInicio + 'hs, para ' + this.mascota.get('nombreMascota')?.value.nombre + '?' ,
+        acceptText: 'Sí, continuar',
+        cancelText: 'Cancelar',
+        onAccept: () => {
+          this.confirmarTurno()
+        }
+      }
+    });
+  }
 
-  //     let domicilio: Domicilio = new Domicilio();
-  //     domicilio.calle = this.ubicacion.get('calle')?.value;
-  //     domicilio.ciudad = this.ubicacion.get('ciudad')?.value;
-  //     domicilio.numero= this.ubicacion.get('numero')?.value;
+  confirmarTurno(){
+    let rq: ReservarTurnoRq = this.getObject();
+    this.turnoService.reservar(rq).subscribe({
+      next:(data)=>{
+        if(data.estado!='ERROR'){
+          this.turnoReservado = true;
+        }else{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body:data.mensaje,
+              cancelText: 'Cerrar'
+            }
+          });
+        }
+      }, error:(error)=>{
+        console.log(error);
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: 'Ocurrio un error al reservar el turno',
+            cancelText: 'Cerrar',
+          }
+        });
+      }
+    });
+    
+  }
 
-  //     rq.domicilio = domicilio;
+  getObject(): ReservarTurnoRq{
+    const fecha: Date = this.turnero.get('fecha')?.value;
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    const fechaFormateada = `${anio}-${mes}-${dia}`;
 
-  //     // this.service.crearCuenta(rq).subscribe({
-  //     //   next:(data) => {
-  //     //     this.usCreado = true;
-  //     //     console.log(data); 
-  //     //   }, error: (error)=>{
-  //     //     console.log(error);
-  //     //   }
-  //     // });
-      
-  //   }
-  //   console.log("Cuenta creada! datos:");
-  //   console.log(this.datosPersonales.value);
-  //   console.log(this.mascota.value);
-  //   console.log(this.ubicacion.value);
-  // }
+    let req: ReservarTurnoRq = new ReservarTurnoRq();
+    
+    req.esDomicilio=this.domicilio.get('esADomicilio')?.value?true:false;
+    req.fecha=fechaFormateada+" "+this.turnero.get('hora')?.value.horaInicio;
+    req.idAnimal=this.mascota.get('nombreMascota')?.value.id;
+    req.idVeterinario=this.veterinaries.get('veterinario')?.value;
+    req.idVeterinaria = this.idVeterinaria;
+
+    return req;
+  }
+
 
   volver(){
     this.location.back();
   }
 
-  // validarDatosPersonales(): boolean{
-  //   return (this.datosPersonales.get('nombre')?.value != null && this.datosPersonales.get('nombre')?.value != undefined && this.datosPersonales.get('nombre')?.value != "")&&
-  //          (this.datosPersonales.get('apellido')?.value != null && this.datosPersonales.get('apellido')?.value != undefined && this.datosPersonales.get('apellido')?.value != "")&&
-  //          (this.datosPersonales.get('fechaNac')?.value != null && this.datosPersonales.get('fechaNac')?.value != undefined && this.datosPersonales.get('fechaNac')?.value != "")&&
-  //          (this.datosPersonales.get('dni')?.value != null && this.datosPersonales.get('dni')?.value != undefined && this.datosPersonales.get('dni')?.value != "")&&
-  //          (this.datosPersonales.get('correo')?.value != null && this.datosPersonales.get('correo')?.value != undefined && this.datosPersonales.get('correo')?.value != "")&&
-  //          (this.datosPersonales.get('telefono')?.value != null && this.datosPersonales.get('telefono')?.value != undefined && this.datosPersonales.get('telefono')?.value != "")&&
-  //          (this.datosPersonales.get('contrasenia')?.value != null && this.datosPersonales.get('contrasenia')?.value != undefined && this.datosPersonales.get('contrasenia')?.value != "")&&
-  //          (this.datosPersonales.get('validarContrasenia')?.value != null && this.datosPersonales.get('validarContrasenia')?.value != undefined && this.datosPersonales.get('validarContrasenia')?.value != "")&&
-  //          this.validarContrasenias();
-  // }
+  limpiarCamposVeterinaries(){
+    this.veterinaries.get('veterinario')?.setValue(null);
+    this.veterinaries.get('veterinariaSeleccionada')?.setValue(null);
+  }
 
-  // validarContrasenias(): boolean{
-  //   return this.datosPersonales.get('contrasenia')?.value === this.datosPersonales.get('validarContrasenia')?.value;
-  // }
-
-  // validarMascotas(): boolean{
-  //   return this.animales.length > 0;
-  // }
-
-  // mostrarFecha(){
-  //   const fecha = this.datosPersonales.get('fechaNac')?.value;
-
-  //   // Formato para la fecha: dd/MM/yyyy
-  //   const opcionesFecha: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  //   const fechaFormateada = fecha.toLocaleDateString('es-AR', opcionesFecha);
-
-  //   // Nombre completo del día
-  //   const opcionesDia: Intl.DateTimeFormatOptions = { weekday: 'long' };
-  //   const diaSemana = fecha.toLocaleDateString('es-AR', opcionesDia);
-
-  //   console.log(`Día: ${diaSemana}, Fecha: ${fechaFormateada}`);
-  //   console.log('fecha: ', this.datosPersonales.get('fechaNac')?.value)
-  // }
 }
