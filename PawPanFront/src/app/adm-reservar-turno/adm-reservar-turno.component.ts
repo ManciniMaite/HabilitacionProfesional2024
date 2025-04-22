@@ -78,7 +78,7 @@ export class AdmReservarTurnoComponent implements OnInit {
   veterinarios: VeterinarioXciudad[];
 
   horarios: HorarioDisponibilidad[] = [];
-  idVeterinaria: number;
+  idVeterinaria: number=0;
 
 
   constructor(
@@ -368,6 +368,7 @@ export class AdmReservarTurnoComponent implements OnInit {
   limpiarCamposVeterinaries(){
     this.veterinaries.get('veterinario')?.setValue(null);
     this.veterinaries.get('veterinariaSeleccionada')?.setValue(null);
+    this.idVeterinaria=0;
   }
 
 }
