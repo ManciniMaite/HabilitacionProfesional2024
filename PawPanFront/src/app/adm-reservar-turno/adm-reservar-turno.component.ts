@@ -249,7 +249,8 @@ export class AdmReservarTurnoComponent implements OnInit {
   getHorariosDisponibles(){
     let rq: DisponibilidadRq = new DisponibilidadRq();
     rq.fecha = this.obtenerFechaFormateada();
-    rq.idVeterinario = this.veterinaries.get('veterinario')?.value;
+    rq.veterinarioId = this.veterinaries.get('veterinario')?.value;
+    rq.veterinariaId = this.idVeterinaria;
     console.log("Require de disponibilidad: ",rq);
     this.turnoService.disponibilidad(rq).subscribe({
       next:(data)=> {
