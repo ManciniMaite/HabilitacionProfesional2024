@@ -13,19 +13,21 @@ import lombok.Data;
 @Data
 public class TurnoRequest {
 
-	private Date fechaConsulta;
+	private Date fecha;
 
 	private TipoEspecie tipoEspecie;
 	private Ciudad ciudad;
 	private Date fechaReserva; 
 	private Estado estado;
-    private Long veterinariaId;
-    private Long veterinarioId;
-    private boolean esADomicilio;
     private String descripcionPrivada;
     private String descripcionPublica;
     private boolean esGuardia;
-    private List<Animal> animales;
+    
+
+    private Long veterinariaId;
+    private Long veterinarioId;
+    private boolean esDomicilio;
+    private long animalId;
 	
     private Long turnoId;
 	

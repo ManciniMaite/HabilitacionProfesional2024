@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
+import com.seminario.integrador.pawplan.controller.values.TurnosResponse;
 import com.seminario.integrador.pawplan.services.TurnoService;
 
 @RestController
@@ -42,7 +43,24 @@ public class TurnoController {
 	@RequestMapping(value = Constantes.URL_PATH_CANCELAR, method = RequestMethod.POST)
     public TurnoResponse reservarCancelar(@RequestBody TurnoRequest request) {
 		
-		return turnoService.reservarCancelar(request);
+		return turnoService.cancelarTurno(request);
 	}
 	
+	@RequestMapping(value = Constantes.URL_PATH_ACEPTAR, method = RequestMethod.POST)
+    public TurnoResponse reservaAceptado(@RequestBody TurnoRequest request) {
+		
+		return turnoService.cancelarTurno(request);
+	}
+	
+	@RequestMapping(value = Constantes.URL_PATH_RECHAZAR, method = RequestMethod.POST)
+    public TurnosResponse reservaRechazar(@RequestBody TurnoRequest request) {
+		
+		return turnoService.rechazarTurno(request);
+	}
+	
+	@RequestMapping(value = Constantes.URL_PATH_ATENDER, method = RequestMethod.POST)
+    public TurnosResponse reservaAtender(@RequestBody TurnoRequest request) {
+		
+		return turnoService.aceptarTurno(request);
+	}
 }

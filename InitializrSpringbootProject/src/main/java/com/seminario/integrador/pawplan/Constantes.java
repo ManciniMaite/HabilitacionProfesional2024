@@ -43,6 +43,9 @@ public class Constantes {
     public static final String URL_PATH_TURNO = "/Turno";
     public static final String URL_PATH_RESERVAR = "/Reservar";
     public static final String URL_PATH_CANCELAR = "/Cancelar";
+    public static final String URL_PATH_ACEPTAR = "/Aceptar";
+    public static final String URL_PATH_RECHAZAR = "/Rechazar";
+    public static final String URL_PATH_ATENDER = "/Atender";
     
     public static final String URL_PATH_CIUDAD = "/ciudades";
     public static final String URL_PATH_RAZA = "/razas";
