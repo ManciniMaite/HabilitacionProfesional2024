@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
-import com.seminario.integrador.pawplan.controller.values.TurnosResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.enums.EnumEstados;
 import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
@@ -97,7 +96,7 @@ public class TurnoService {
 	}
 	
 	@Transactional( )
-	public TurnoResponse reservarturno(TurnoRequest turnoRequest) {
+	public TurnoResponse reservarTurno(TurnoRequest turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -172,9 +171,7 @@ public class TurnoService {
 		
 		Estado estadoCancelado = estadoRepository.findByNombre(EnumEstados.CANCELADO.getNombre()).get(0);
 		
-		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
-		turno.setEstado(estadoCancelado);
-		result.setTurno(turnoRepository.save(turno));
+		result.setTurno(cambiarEstadoTurno(turnoRequest, estadoCancelado));
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Cancelar turno ok.");
@@ -182,9 +179,9 @@ public class TurnoService {
 		return result;
 	}
 	
-	public TurnosResponse buscarTurnos(TurnoRequest turnoRequest) {
+	public TurnoResponse buscarTurnos(TurnoRequest turnoRequest) {
 		
-		TurnosResponse result = new TurnosResponse();
+		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
 		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
@@ -223,9 +220,8 @@ public class TurnoService {
 		return result;
 	}
 	
-	
-	public TurnosResponse confirmarTurno(TurnoRequest turnoRequest) {
-		TurnosResponse result = new TurnosResponse();
+	public TurnoResponse aceptarTurno(TurnoRequest turnoRequest) {
+		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
 		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
@@ -240,20 +236,10 @@ public class TurnoService {
 			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
 		}
 		
-		Estado estadoAceptado = estadoRepository.findByNombre(EnumEstados.ACEPTADO.getNombre()).get(0);
+		Estado estado = estadoRepository.findByNombre(EnumEstados.ACEPTADO.getNombre()).get(0);
 		
-		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		result.setTurno(cambiarEstadoTurno(turnoRequest, estado));
 		
-		turno.setEstado(estadoAceptado);
-		
-		turnoRepository.save(turno);
-		
-		//mail
-		
-		List<Turno> turnos = new ArrayList<Turno>();
-		turnos.add(turno);
-		
-		result.setTurnos(turnos);
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Turno ACEPTADO ok.");
 		
@@ -261,8 +247,8 @@ public class TurnoService {
 		return result;
 	}
 	
-	public TurnosResponse rechazarTurno(TurnoRequest turnoRequest) {
-		TurnosResponse result = new TurnosResponse();
+	public TurnoResponse rechazarTurno(TurnoRequest turnoRequest) {
+		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
 		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
@@ -277,20 +263,10 @@ public class TurnoService {
 			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
 		}
 		
-		Estado estadoRechazado = estadoRepository.findByNombre(EnumEstados.RECHAZADO.getNombre()).get(0);
+		Estado estado = estadoRepository.findByNombre(EnumEstados.RECHAZADO.getNombre()).get(0);
 		
-		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		result.setTurno(cambiarEstadoTurno(turnoRequest, estado));
 		
-		turno.setEstado(estadoRechazado);
-		
-		turnoRepository.save(turno);
-		
-		//mail
-		
-		List<Turno> turnos = new ArrayList<Turno>();
-		turnos.add(turno);
-		
-		result.setTurnos(turnos);
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Turno RECHAZADO ok.");
 		
@@ -298,9 +274,8 @@ public class TurnoService {
 		return result;
 	}
 	
-	
-	public TurnosResponse aceptarTurno(TurnoRequest turnoRequest) {
-		TurnosResponse result = new TurnosResponse();
+	public TurnoResponse atenderTurno(TurnoRequest turnoRequest) {
+		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
 		if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
@@ -315,24 +290,20 @@ public class TurnoService {
 			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
 		}
 		
-		Estado estadoRechazado = estadoRepository.findByNombre(EnumEstados.RECHAZADO.getNombre()).get(0);
+		Estado estado = estadoRepository.findByNombre(EnumEstados.ATENDIDO.getNombre()).get(0);
 		
-		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		result.setTurno(cambiarEstadoTurno(turnoRequest, estado));
 		
-		turno.setEstado(estadoRechazado);
-		
-		turnoRepository.save(turno);
-		
-		//mail
-		
-		List<Turno> turnos = new ArrayList<Turno>();
-		turnos.add(turno);
-		
-		result.setTurnos(turnos);
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Turno RECHAZADO ok.");
 		
 		
 		return result;
+	}
+	
+	public Turno cambiarEstadoTurno(TurnoRequest turnoRequest, Estado estado) {
+		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+		turno.setEstado(estado);
+		return turnoRepository.save(turno);
 	}
 }
