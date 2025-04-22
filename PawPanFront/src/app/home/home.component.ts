@@ -34,9 +34,9 @@ export class HomeComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-      this.authService.usuario$.subscribe(usuario => {
-        this.role = usuario?.rol
-      });
+    this.authService.usuario$.subscribe(usuario => {
+      this.role = usuario?.rol
+    });
   }
 
   navegar(item:MenuItems){

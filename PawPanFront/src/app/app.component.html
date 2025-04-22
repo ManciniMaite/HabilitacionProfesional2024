@@ -1,7 +1,9 @@
 @if (shouldRun) {
   <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
     <mat-toolbar class="example-toolbar">
-      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      @if (tieneSesion) {
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      }
       <h1 class="example-app-name" style="width: 100%;"><app-header></app-header></h1>
     </mat-toolbar>
 
@@ -11,14 +13,16 @@
                   [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
         <mat-nav-list>
           @for (item of menuItems; track item) {
-            <a  mat-list-item  [routerLink]="[item.path]">
-              <div style="display: flex;">
-                <mat-icon style="margin: 0 15px;">
-                  <img [src]="item.icono" class="svg-icon">
-                </mat-icon>
-                <span style="margin-top: 2px;"> {{item.nombre}}</span>
-              </div>
-            </a>
+            @if (esRol(item)) {
+              <a  mat-list-item  [routerLink]="[item.path]">
+                <div style="display: flex;">
+                  <mat-icon style="margin: 0 15px;">
+                    <img [src]="item.icono" class="svg-icon">
+                  </mat-icon>
+                  <span style="margin-top: 2px;"> {{item.nombre}}</span>
+                </div>
+              </a>
+            }
           }
         </mat-nav-list>
       </mat-sidenav>

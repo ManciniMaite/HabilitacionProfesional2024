@@ -10,6 +10,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { MenuItems } from './model/MenuItems';
 import { menuItems } from './model/data/data-MenuItems';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,8 @@ export class AppComponent implements OnDestroy, OnInit{
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
   
   menuItems: MenuItems[] = menuItems;
+  role: string;
+  tieneSesion: boolean;
   
 
   fillerContent = Array.from(
@@ -38,7 +41,7 @@ export class AppComponent implements OnDestroy, OnInit{
 
   private _mobileQueryListener: () => void;
 
-  constructor() {
+  constructor(private authService: AuthService) {
     const changeDetectorRef = inject(ChangeDetectorRef);
     const media = inject(MediaMatcher);
 
@@ -51,8 +54,16 @@ export class AppComponent implements OnDestroy, OnInit{
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.usuario$.subscribe(usuario => {
+      this.tieneSesion = usuario? true : false;
+      this.role = usuario?.rol;
+    });
+  }
 
+  esRol(item: MenuItems): boolean{
+    return item.role.includes(this.role);
+  }
   
   shouldRun = true;
 }
