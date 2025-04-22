@@ -1,7 +1,7 @@
 export class ReservarTurnoRq {
-    idVeterinaria: number;
-    idVeterinario: number;
-    idAnimal: number;
+    veterinariaId: number;
+    veterinarioId: number;
+    animalId: number;
     fecha: string;
     esDomicilio: boolean
 }

@@ -353,9 +353,9 @@ export class AdmReservarTurnoComponent implements OnInit {
     
     req.esDomicilio=this.domicilio.get('esADomicilio')?.value?true:false;
     req.fecha=fechaFormateada+" "+this.turnero.get('hora')?.value.horaInicio;
-    req.idAnimal=this.mascota.get('nombreMascota')?.value.id;
-    req.idVeterinario=this.veterinaries.get('veterinario')?.value;
-    req.idVeterinaria = this.idVeterinaria;
+    req.animalId=this.mascota.get('nombreMascota')?.value.id;
+    req.veterinarioId=this.veterinaries.get('veterinario')?.value;
+    req.veterinariaId = this.idVeterinaria;
 
     return req;
   }
