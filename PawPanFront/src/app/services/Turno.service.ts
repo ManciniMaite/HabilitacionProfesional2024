@@ -54,6 +54,7 @@ export class TurnoService {
 
   disponibilidad(rq: DisponibilidadRq):Observable<DisponibilidadTurnoRs>{
     //return of(DATA_DISPONIBILIDAD_TURNO);
+    console.log("Fecha: " + rq.fecha);
     return this.http.post<DisponibilidadTurnoRs>(this.baseURL + "/Turno/Consultar", rq);
   }
 

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
+import com.seminario.integrador.pawplan.controller.values.ReservarTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
 import com.seminario.integrador.pawplan.services.TurnoService;
@@ -29,12 +31,13 @@ public class TurnoController {
 	private TurnoService turnoService;
 
 	@RequestMapping(value = Constantes.URL_PATH_CONSULTAR, method = RequestMethod.POST)
-    public TurnoResponse consultarTurnosDisponible(@RequestBody TurnoRequest request) throws JsonMappingException, JsonProcessingException, ParseException {
+    public TurnoResponse consultarTurnosDisponible(@RequestBody DisponibilidadRq request) throws JsonMappingException, JsonProcessingException, ParseException {
+		System.out.println("FECHA REST: " + request.getFecha());
 		return turnoService.getTurnosDisponibles(request);
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_RESERVAR, method = RequestMethod.POST)
-    public TurnoResponse reservarTurnos(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservarTurnos(@RequestBody ReservarTurnoRq request) {
 		
 		return turnoService.reservarTurno(request);
 	}
