@@ -9,8 +9,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +24,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
+import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
+import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
 import com.seminario.integrador.pawplan.controller.values.ReservarTurnoRq;
+import com.seminario.integrador.pawplan.controller.values.TurnoFb;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
@@ -91,9 +99,9 @@ public class TurnoService {
 		//int tiempo = 10;
 		//if (turnoRequest.get)
 		ObjectMapper mapper = Constantes.getObjectMapper();
-		System.out.println( "Id vet: " + vetId + " FECHA: " + turnoRequest.getFecha());
+		//System.out.println( "Id vet: " + vetId + " FECHA: " + turnoRequest.getFecha());
 		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFecha());
-		System.out.println("DISPONIBILIDAD: " + disponibilidad);
+		//System.out.println("DISPONIBILIDAD: " + disponibilidad);
 		ArrayList<Horario> horarios_disponibles = mapper.readValue(disponibilidad, mapper.getTypeFactory().constructCollectionType(List.class, Horario.class));
 		result.setHorariosDisponibles(horarios_disponibles);
 		
@@ -135,7 +143,7 @@ public class TurnoService {
 		turnoFinal.setEstado(estadoReservado);
 		
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
-		System.out.println("FECHA RESERVAR: " + turnoRequest.getFecha());
+		//System.out.println("FECHA RESERVAR: " + turnoRequest.getFecha());
 		
 
         Instant instantFecha = Instant.parse(turnoRequest.getFecha());
@@ -353,5 +361,116 @@ public class TurnoService {
 		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
 		turno.setEstado(estado);
 		return turnoRepository.save(turno);
+	}
+
+	public PaginaTurnosRs getMisTurnos (FiltroTurnoRq turnoRequest){
+
+		PaginaTurnosRs rs = new PaginaTurnosRs();
+
+		// System.out.println("NEstado: " + turnoRequest.getNEstado());
+		// System.out.println("Fecha recibida: " + turnoRequest.getFecha());
+		// System.out.println("Cliente ID: " + turnoRequest.getIdCliente());
+		// System.out.println("Animal ID: " + turnoRequest.getIdAnimal());
+		// System.out.println("Veterinario ID: " + turnoRequest.getIdVeterinario());
+
+		
+		//OBTENER US SESSION
+		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+		Role role = Role.resolve(principalPawplan.getRole().toString());
+
+		//SET ID SEGUN CORRESPONDA
+		if (role != null) {
+			switch (role) {
+				case VETERINARIA:
+					turnoRequest.setIdVeterinaria(principalPawplan.getClienteId());
+					break;
+				case VETERINARIO:
+					turnoRequest.setIdVeterinario(principalPawplan.getClienteId());
+					break;
+				case PACIENTE:
+					turnoRequest.setIdCliente(principalPawplan.getClienteId());
+					break;
+				default:
+					rs.setEstado("ERROR");
+					rs.setMensaje("Rol de Session no valido!");
+					return rs;
+			}
+		} else {
+			rs.setEstado("ERROR");
+			rs.setMensaje("Rol de Session invalido!");
+			return rs;
+		}
+
+		//buscar estado que venga en la rq
+		Estado estado = estadoRepository.findByNombre(turnoRequest.getNEstado()).get(0);
+		
+		//fecha sin hora 
+		// java.sql.Date fechaSinHora = null;
+		// if (turnoRequest.getFecha() != null) {
+		// 	fechaSinHora = new java.sql.Date(turnoRequest.getFecha().getTime());
+		// }
+
+		LocalDate fechaSinHora = null;
+		if (turnoRequest.getFecha() != null) {
+			fechaSinHora = turnoRequest.getFecha().toInstant()
+									.atZone(ZoneId.systemDefault())
+									.toLocalDate();
+		}
+
+		//listado de id de los animales del cliente
+		List<Long> animalIds = null;
+		if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
+			//si hay un id especifico entonces buscamos por ese
+			animalIds = List.of(turnoRequest.getIdAnimal());
+		} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
+			//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
+			animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
+		}
+
+		String animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
+
+		List<TurnoFb> turnos = null;
+		Long total = 0l;
+		System.out.println(animalIds);
+
+		try {
+
+			System.out.println("idEstado: " + estado.getId());
+			System.out.println("Fecha recibida: " + turnoRequest.getFecha());
+			System.out.println("Cliente ID: " + turnoRequest.getIdCliente());
+			System.out.println("Animales: " + animalesId);
+			System.out.println("Veterinario ID: " + turnoRequest.getIdVeterinario());
+
+
+			turnos = turnoRepository.buscarTurnosPagina(
+				animalesId, 
+				turnoRequest.getIdVeterinaria(), 
+				turnoRequest.getIdVeterinario(), 
+				estado.getId(), 
+				fechaSinHora, 
+				turnoRequest.getPage(), turnoRequest.getSize(), turnoRequest.getOrderBy(), turnoRequest.getOrderDir());
+    		total = turnoRepository.contarTurnos(
+				animalesId, 
+				turnoRequest.getIdVeterinaria(), 
+				turnoRequest.getIdVeterinario(), 
+				estado.getId(), 
+				fechaSinHora
+			);
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			rs.setTurnos(turnos);
+			rs.setEstado("ERROR");
+			rs.setMensaje("Ocurrio un error al filtrar los turnos");
+		}
+		
+		
+
+		rs.setTurnos(turnos);
+		rs.setTotal(total);
+		rs.setEstado("OK");
+		rs.setMensaje("Consulta ok!");
+		return rs;
 	}
 }

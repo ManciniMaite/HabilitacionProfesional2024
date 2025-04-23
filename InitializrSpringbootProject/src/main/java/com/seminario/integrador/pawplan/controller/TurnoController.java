@@ -5,8 +5,6 @@ package com.seminario.integrador.pawplan.controller;
 */
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +16,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
+import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
+import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
 import com.seminario.integrador.pawplan.controller.values.ReservarTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
 import com.seminario.integrador.pawplan.services.TurnoService;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @RequestMapping(Constantes.URL_PATH_TURNO)
@@ -65,4 +67,10 @@ public class TurnoController {
 		
 		return turnoService.atenderTurno(request);
 	}
+
+	@RequestMapping(value = Constantes.URL_PATH_MIS_TURNOS, method = RequestMethod.POST)
+	public PaginaTurnosRs getMisTurnos(@RequestBody FiltroTurnoRq request) {
+		return turnoService.getMisTurnos(request);
+	}
+	
 }
