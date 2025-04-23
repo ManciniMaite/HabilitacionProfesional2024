@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -473,4 +474,20 @@ public class TurnoService {
 		rs.setMensaje("Consulta ok!");
 		return rs;
 	}
+
+
+	public Turno getById(Long id){
+		Optional<Turno> ot = turnoRepository.findById(id);
+		if(ot.isPresent()){
+			Turno t = ot.get();
+			t.getVeterinario().setHorarios(null);
+			if(t.getVeterinaria()!=null){
+				t.getVeterinaria().setHorarioAtencion(null);
+			}
+			return t;
+		}else{
+			return null; 
+		}
+	}
+
 }
