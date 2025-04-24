@@ -32,6 +32,7 @@ public class Constantes {
     /***** URL **********/
     public static final String URL_PATH_ADMIN_PLATFORM = "/admin/platform";
     public static final String URL_PATH_SESSION_MANAGER = "/SessionManager";
+    public static final String URL_PATH_SESSION_MANAGER_LOGOUT = "/SessionLogout";
     public static final String URL_PATH_HASH = "/Hash";
     
     public static final String URL_PATH_CREAR = "/Crear";
