@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import { Turnos } from '../model/data/data-Turnos';
+//import { Turnos } from '../model/data/data-Turnos';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Turno } from '../model/Turno';
 
@@ -31,7 +31,7 @@ export class AdmTurnosReservadosComponent {
 
   readonly panelOpenState = signal(false);
 
-  turnos: Turno[] = Turnos;
+  //turnos: Turno[] = Turnos;
 
   constructor(private routes: Router){}
 }

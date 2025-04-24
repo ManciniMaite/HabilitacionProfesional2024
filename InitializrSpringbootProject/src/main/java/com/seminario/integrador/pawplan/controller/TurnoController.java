@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.AtenderTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
 import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
@@ -67,7 +68,7 @@ public class TurnoController {
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_ATENDER, method = RequestMethod.POST)
-    public TurnoResponse reservaAtender(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservaAtender(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.atenderTurno(request);
 	}

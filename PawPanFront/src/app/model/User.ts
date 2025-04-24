@@ -3,8 +3,9 @@ import { Role } from "./Role";
 export class User {
     id: number;
     telefono: string;
-    role: Role;
+    role: string;
     correo: string;
     contrasenia: string;
-    isActivo: boolean = true;
+    activo: boolean = true;
+
 }

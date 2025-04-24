@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.AtenderTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
 import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
@@ -375,7 +376,7 @@ public class TurnoService {
 		return result;
 	}
 	
-	public TurnoResponse atenderTurno(TurnoRequest turnoRequest) {
+	public TurnoResponse atenderTurno(AtenderTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -391,12 +392,24 @@ public class TurnoService {
 			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
 		}
 		
+		Turno turno = turnoRepository.findById(turnoRequest.getIdTurno()).get();
+
 		Estado estado = estadoRepository.findByNombre(EnumEstados.ATENDIDO.getNombre()).get(0);
 		
-		result.setTurno(cambiarEstadoTurno(turnoRequest, estado));
+		turno.setDescripcionPublica(turnoRequest.getDescripcion());
+		turno.setEstado(estado);
+
+		turnoRepository.save(turno);
+
+		turno.getVeterinario().setHorarios(null);
+		if(turno.getVeterinaria()!=null){
+			turno.getVeterinaria().setHorarioAtencion(null);
+		}
+
+		result.setTurno(turno);
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
-		result.setMensaje("Turno RECHAZADO ok.");
+		result.setMensaje("Turno ATENDIDO ok.");
 		
 		
 		return result;

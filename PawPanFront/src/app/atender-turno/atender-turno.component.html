@@ -1,0 +1,73 @@
+<div class="form">
+    <div class="container">
+        <mat-card style="width: 90%; height: fit-content;">
+            @if(!cargando && turno){
+                <mat-card-content>
+                    <mat-card-title style="margin: 20px">Registrar atencion de turno:</mat-card-title>
+                    <p style="margin-left: 20px">
+                        {{turno.fechaHora | date:'dd/MM/yyyy hh:mm'}}<br>
+                    </p>
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <mat-accordion style="width: 95%; margin-bottom: 10px;">
+                            <mat-expansion-panel expanded>
+                              <mat-expansion-panel-header>
+                                <mat-panel-title>Datos del animal </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <p>
+                                Nombre: {{turno.animal.nombre}} <br>
+                                Especie: {{turno.animal.raza.especie.nombre}}<br>
+                                Raza: {{turno.animal.raza.nombre}} <br>
+                                Dueño: {{turno.animal.cliente.nombre + " " + turno.animal.cliente.apellido}} <br>
+                              </p>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                        <mat-accordion style="width: 95%;">
+                            <mat-expansion-panel >
+                              <mat-expansion-panel-header>
+                                <mat-panel-title> Datos del Profesional </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <p>
+                                Nombre: {{turno.veterinario.nombre + " " + turno.veterinario.apellido}} <br>
+                                Matricula: {{turno.veterinario.matricula}} <br>
+                              </p>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                        @if(turno.veterinaria){
+                            <mat-accordion style="width: 95%;">
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title> Datos de la Veterinaria </mat-panel-title>
+                                  </mat-expansion-panel-header>
+                                  <p>
+                                    Nombre: {{turno.veterinaria.razonSocial}}<br>
+                                  </p>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        }
+                    </div>
+                    <div style="margin: 20px">
+                        <p>
+                            Descripcion: <br>
+                            <mat-form-field style="width: 100%;">
+                                <textarea matInput [(ngModel)]="descripcion"></textarea>
+                            </mat-form-field>
+                        </p>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions style="display: flex; justify-content: end;">
+                    <button mat-flat-button (click)="onDialogSave()">Guardar</button>
+                </mat-card-actions>
+            }
+            @if(cargando){
+                <mat-card-content>
+                    Recuperando datos, por favor aguarde...
+                </mat-card-content>
+            }
+            @if(!cargando && !turno){
+                <mat-card-content>
+                    No se pudo recuperar la informacion del turno
+                </mat-card-content>
+            }
+        </mat-card>
+    </div>
+</div>

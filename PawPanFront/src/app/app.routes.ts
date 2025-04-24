@@ -14,6 +14,7 @@ import { AdmReservarTurnoComponent } from './adm-reservar-turno/adm-reservar-tur
 import { EmergenciaComponent } from './emergencia/emergencia.component';
 import { HomeComponent } from './home/home.component';
 import { authGuard } from './access-guard/authGuard';
+import { AtenderTurnoComponent } from './atender-turno/atender-turno.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'adm-veterinarios', component: AdmVeterinariosComponent, canActivate: [authGuard] },
   { path: 'mascota/:id', component: MascotaEditComponent, canActivate: [authGuard] },
   { path: 'emergencia', component: EmergenciaComponent, canActivate: [authGuard] },
+  { path: 'atender-turno/:id', component: AtenderTurnoComponent, canActivate: [authGuard] },
 
   // Rutas públicas
   { path: 'iniciar-sesion', component: InicioComponent },
