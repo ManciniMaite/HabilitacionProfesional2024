@@ -5,6 +5,7 @@ import { misTurnosGetRq } from '../model/misTurnosGetRq';
 import { TurnoService } from '../services/Turno.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-adm-turnos-reservados',
@@ -53,22 +54,33 @@ export class AdmTurnosReservadosComponent {
     },
   ];
 
-  filtro: misTurnosGetRq;
+  role: string;
+  filtro: misTurnosGetRq = new misTurnosGetRq;
 
-  filters: { [key: string]: FormControl } = {};
+  // filters: { [key: string]: FormControl } = {};
 
   constructor(
-    private turnoService: TurnoService
+    private turnoService: TurnoService,
+    private authService: AuthService,
   ){}
 
   ngOnInit(): void {
+    this.authService.usuario$.subscribe(usuario => {
+      this.role = usuario?.rol;
+    });
     // this.dataSourcePaginada.turnos = this.data;
 
     // Crear FormControls para cada columna
-    this.displayedColumns.forEach(column => {
-      this.filters[column] = new FormControl('');
-      this.filters[column].valueChanges.subscribe(() => this.applyFilters());
-    });
+    this.filtro.page = 0;
+    this.filtro.size = 10;
+    this.filtro.orderDir ="desc";
+    this.filtro.orderBy = "fecha_hora";
+    this.getTurnos();
+
+    // this.displayedColumns.forEach(column => {
+    //   this.filters[column] = new FormControl('');
+    //   this.filters[column].valueChanges.subscribe(() => this.applyFilters());
+    // });
   }
 
   getTurnos(){
@@ -81,16 +93,16 @@ export class AdmTurnosReservadosComponent {
     })
   }
 
-  applyFilters(): void {
-    const filterValues = Object.entries(this.filters).reduce((acc, [key, control]) => {
-      acc[key] = control.value ? control.value.toString().toLowerCase() : '';
-      return acc;
-    }, {} as { [key: string]: string });
+  // applyFilters(): void {
+  //   const filterValues = Object.entries(this.filters).reduce((acc, [key, control]) => {
+  //     acc[key] = control.value ? control.value.toString().toLowerCase() : '';
+  //     return acc;
+  //   }, {} as { [key: string]: string });
 
-    this.dataSourcePaginada = this.data.filter(item =>
-      Object.entries(filterValues).every(([key, value]) =>
-        !value || (item[key]?.toString().toLowerCase().includes(value))
-      )
-    );
-  }
+  //   this.dataSourcePaginada = this.data.filter(item =>
+  //     Object.entries(filterValues).every(([key, value]) =>
+  //       !value || (item[key]?.toString().toLowerCase().includes(value))
+  //     )
+  //   );
+  // }
 }
