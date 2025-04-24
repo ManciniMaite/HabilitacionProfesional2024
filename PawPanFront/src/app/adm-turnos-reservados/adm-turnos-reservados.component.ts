@@ -1,37 +1,96 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { Router, RouterLink } from '@angular/router';
-import { Turnos } from '../model/data/data-Turnos';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { Turno } from '../model/Turno';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { misTurnosGetRq } from '../model/misTurnosGetRq';
+import { TurnoService } from '../services/Turno.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-adm-turnos-reservados',
   standalone: true,
-  imports: [MatCardModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    CommonModule, 
-    ReactiveFormsModule,
-    RouterLink,
-    MatButtonModule,
-    MatIconModule,
-    MatExpansionModule,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatDatepickerModule,
+    ReactiveFormsModule
   ],
   templateUrl: './adm-turnos-reservados.component.html',
   styleUrl: './adm-turnos-reservados.component.scss'
 })
 export class AdmTurnosReservadosComponent {
+  displayedColumns: string[] = [
+    'id', 'raza', 'especie', 'fecha', 'idAnimal', 'idVeterinario',
+    'idVeterinaria', 'nombreAnimal', 'nombreVeterinario', 'nombreVeterinaria'
+  ];
 
-  readonly panelOpenState = signal(false);
+  dataSourcePaginada : {
+    id : number;
+    raza : string;
+    especie : string;
+    fecha : Date;
+    idAnimal : number;
+    idVeterinario :number;
+    idVeterinaria : number;
+    nombreAnimal : string;
+    nombreVeterinario : string;
+    nombreVeterinaria : string;
+}[]; 
+  // = new MatTableDataSource<any>([]);
 
-  turnos: Turno[] = Turnos;
+  data: any[] = [
+    {
+      "id": 6,
+      "raza": "Sin especificar",
+      "especie": "perro",
+      "fecha": "2025-04-29T06:00:00",
+      "idAnimal": 1,
+      "idVeterinario": 11,
+      "idVeterinaria": null,
+      "nombreAnimal": "Nailon",
+      "nombreVeterinario": "Marcela Rivero",
+      "nombreVeterinaria": null
+    },
+  ];
 
-  constructor(private routes: Router){}
+  filtro: misTurnosGetRq;
+
+  filters: { [key: string]: FormControl } = {};
+
+  constructor(
+    private turnoService: TurnoService
+  ){}
+
+  ngOnInit(): void {
+    // this.dataSourcePaginada.turnos = this.data;
+
+    // Crear FormControls para cada columna
+    this.displayedColumns.forEach(column => {
+      this.filters[column] = new FormControl('');
+      this.filters[column].valueChanges.subscribe(() => this.applyFilters());
+    });
+  }
+
+  getTurnos(){
+    this.turnoService.getMisTurnos(this.filtro).subscribe({
+      next:(data) => {
+        if(data && data.estado == "OK"){
+          this.dataSourcePaginada = data.turnos;
+        }
+      }
+    })
+  }
+
+  applyFilters(): void {
+    const filterValues = Object.entries(this.filters).reduce((acc, [key, control]) => {
+      acc[key] = control.value ? control.value.toString().toLowerCase() : '';
+      return acc;
+    }, {} as { [key: string]: string });
+
+    this.dataSourcePaginada = this.data.filter(item =>
+      Object.entries(filterValues).every(([key, value]) =>
+        !value || (item[key]?.toString().toLowerCase().includes(value))
+      )
+    );
+  }
 }

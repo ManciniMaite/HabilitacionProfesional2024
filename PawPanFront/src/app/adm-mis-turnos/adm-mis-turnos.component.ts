@@ -26,7 +26,18 @@ export class AdmMisTurnosComponent {
     'idVeterinaria', 'nombreAnimal', 'nombreVeterinario', 'nombreVeterinaria'
   ];
 
-  dataSourcePaginada: misTurnosGetRs; 
+  dataSourcePaginada : {
+    id : number;
+    raza : string;
+    especie : string;
+    fecha : Date;
+    idAnimal : number;
+    idVeterinario :number;
+    idVeterinaria : number;
+    nombreAnimal : string;
+    nombreVeterinario : string;
+    nombreVeterinaria : string;
+}[]; 
   // = new MatTableDataSource<any>([]);
 
   data: any[] = [
@@ -66,7 +77,7 @@ export class AdmMisTurnosComponent {
     this.turnoService.getMisTurnos(this.filtro).subscribe({
       next:(data) => {
         if(data && data.estado == "OK"){
-          this.dataSourcePaginada.turnos = data.turnos;
+          this.dataSourcePaginada = data.turnos;
         }
       }
     })
@@ -78,7 +89,7 @@ export class AdmMisTurnosComponent {
       return acc;
     }, {} as { [key: string]: string });
 
-    this.dataSourcePaginada.turnos = this.data.filter(item =>
+    this.dataSourcePaginada = this.data.filter(item =>
       Object.entries(filterValues).every(([key, value]) =>
         !value || (item[key]?.toString().toLowerCase().includes(value))
       )
