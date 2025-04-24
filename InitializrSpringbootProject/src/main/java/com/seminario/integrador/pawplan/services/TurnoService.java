@@ -110,19 +110,13 @@ public class TurnoService {
 		//int tiempo = 10;
 		//if (turnoRequest.get)
 		ObjectMapper mapper = Constantes.getObjectMapper();
-<<<<<<< HEAD
 		logger.debug( "Id vet: " + vetId + " FECHA: " + turnoRequest.getFecha());
 		
-=======
 		//System.out.println( "Id vet: " + vetId + " FECHA: " + turnoRequest.getFecha());
->>>>>>> branch 'desarrollo' of https://github.com/ManciniMaite/HabilitacionProfesional2024
 		String disponibilidad = turnoRepository.consultarTurnosDisponibles(vetId, turnoRequest.getFecha());
-<<<<<<< HEAD
 		logger.debug("DISPONIBILIDAD: " + disponibilidad);
 		
-=======
 		//System.out.println("DISPONIBILIDAD: " + disponibilidad);
->>>>>>> branch 'desarrollo' of https://github.com/ManciniMaite/HabilitacionProfesional2024
 		ArrayList<Horario> horarios_disponibles = mapper.readValue(disponibilidad, mapper.getTypeFactory().constructCollectionType(List.class, Horario.class));
 		result.setHorariosDisponibles(horarios_disponibles);
 		
@@ -173,10 +167,7 @@ public class TurnoService {
 		turnoFinal.setEstado(estadoReservado);
 		
 		turnoFinal.setFechaHoraReserva(new Date(System.currentTimeMillis()));
-<<<<<<< HEAD
-=======
 		//System.out.println("FECHA RESERVAR: " + turnoRequest.getFecha());
->>>>>>> branch 'desarrollo' of https://github.com/ManciniMaite/HabilitacionProfesional2024
 		
 		logger.debug("FECHA RESERVAR: " + turnoRequest.getFecha());
 
