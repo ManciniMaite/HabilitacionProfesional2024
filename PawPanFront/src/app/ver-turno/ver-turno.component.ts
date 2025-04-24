@@ -12,30 +12,27 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
-import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
-
 @Component({
-  selector: 'app-atender-turno',
+  selector: 'app-ver-turno',
   standalone: true,
   imports: [
-    MatCardModule,
-    CommonModule,
-    MatExpansionModule,
-    MatCard,
-    MatInputModule, 
-    TextFieldModule,
-    MatFormFieldModule,
-    FormsModule,
-    MatButtonModule,
-    MatIconModule
-  ],
-  templateUrl: './atender-turno.component.html',
-  styleUrl: './atender-turno.component.scss'
+      MatCardModule,
+      CommonModule,
+      MatExpansionModule,
+      MatCard,
+      MatInputModule, 
+      TextFieldModule,
+      MatFormFieldModule,
+      FormsModule,
+      MatButton,
+      MatIconModule,
+      MatButtonModule
+    ],
+  templateUrl: './ver-turno.component.html',
+  styleUrl: './ver-turno.component.scss'
 })
-export class AtenderTurnoComponent implements OnInit {
-  private _snackBar = inject(MatSnackBar);
+export class VerTurnoComponent implements OnInit{
   id: number;
   turno: Turno
 
@@ -52,7 +49,6 @@ export class AtenderTurnoComponent implements OnInit {
   ){
 
   }
-
   ngOnInit(): void {
     this.cargando=true;
     this.route.paramMap.subscribe(params => {
@@ -78,57 +74,6 @@ export class AtenderTurnoComponent implements OnInit {
         }
       });
     });
-  }
-
-  onDialogSave(){
-    this.dialog.open(GenericDialogComponent, {
-      data: {
-        type: 'normal',
-        title: 'Registrar Atencion',
-        body: '¿Estás seguro de que querés continuar?',
-        acceptText: 'Sí, continuar',
-        cancelText: 'Cancelar',
-        onAccept: () => {
-          this.save();
-        }
-      }
-    });
-  }
-
-  save(){
-    let rq: AtenderTurnoRq = new AtenderTurnoRq();
-    rq.idTurno=this.id;
-    rq.descripcion=this.descripcion
-    this.service.atender(rq).subscribe({
-      next: (data)=>{
-        if (data.estado!= "ERROR"){
-          this.openSnackBar('Cambios guardados!', 'Cerrar');
-          this.router.navigate(['adm-turnos-veterinario']);
-        } else{
-          this.dialog.open(GenericDialogComponent, {
-            data: {
-              type: 'error',
-              title: '¡Algo salió mal!',
-              body: data.mensaje,
-              cancelText: 'Cerrar'
-            }
-          });
-        }
-      }, error: (error)=>{
-        this.dialog.open(GenericDialogComponent, {
-          data: {
-            type: 'error',
-            title: '¡Algo salió mal!',
-            body: 'Ocurrio un error al guardar la atencion',
-            cancelText: 'Cerrar'
-          }
-        });
-      }
-    });
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action);
   }
   volver(){
     this.location.back();

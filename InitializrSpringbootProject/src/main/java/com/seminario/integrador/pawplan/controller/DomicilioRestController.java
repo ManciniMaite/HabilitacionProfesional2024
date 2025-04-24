@@ -41,7 +41,7 @@ public class DomicilioRestController {
         return this.service.actualizarDomicilio(rq);
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public Response deleteDomicilio(@RequestBody DomicilioRq rq){
         return this.service.deleteDomicilio(rq);
     }

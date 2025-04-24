@@ -3,21 +3,21 @@
         <mat-card style="width: 90%; height: fit-content;">
             @if(!cargando && turno){
                 <mat-card-content>
-                    <div class="titleContainer">
-                        <button mat-icon-button (click)="volver()" >
-                            <mat-icon>arrow_back</mat-icon>
-                        </button>
-                        <mat-card-title class="title">
-                            Registrar atencion de turno:
-                        </mat-card-title>
-                    </div>
+                  <div class="titleContainer">
+                    <button mat-icon-button >
+                      <mat-icon>arrow_back</mat-icon>
+                    </button>
+                      <mat-card-title class="title">
+                          Consultar turno
+                      </mat-card-title>
+                  </div>
                     <!-- <mat-card-title style="margin: 20px">Registrar atencion de turno:</mat-card-title> -->
                     <p style="margin-left: 20px">
                         {{turno.fechaHora | date:'dd/MM/yyyy hh:mm'}}<br>
                     </p>
                     <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                         <mat-accordion style="width: 95%; margin-bottom: 10px;">
-                            <mat-expansion-panel expanded>
+                            <mat-expansion-panel >
                               <mat-expansion-panel-header>
                                 <mat-panel-title>Datos del animal </mat-panel-title>
                               </mat-expansion-panel-header>
@@ -30,7 +30,7 @@
                             </mat-expansion-panel>
                         </mat-accordion>
                         <mat-accordion style="width: 95%;">
-                            <mat-expansion-panel >
+                            <mat-expansion-panel expanded>
                               <mat-expansion-panel-header>
                                 <mat-panel-title> Datos del Profesional </mat-panel-title>
                               </mat-expansion-panel-header>
@@ -56,15 +56,10 @@
                     <div style="margin: 20px">
                         <p>
                             Descripcion: <br>
-                            <mat-form-field style="width: 100%;">
-                                <textarea matInput [(ngModel)]="descripcion"></textarea>
-                            </mat-form-field>
+                            {{turno.descripcionPublica}}
                         </p>
                     </div>
                 </mat-card-content>
-                <mat-card-actions style="display: flex; justify-content: end;">
-                    <button mat-flat-button (click)="onDialogSave()">Guardar</button>
-                </mat-card-actions>
             }
             @if(cargando){
                 <mat-card-content>

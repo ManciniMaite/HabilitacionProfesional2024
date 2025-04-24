@@ -30,6 +30,8 @@ import { validacionDni } from '../validators/validacionDni';
 import { UsuarioRequest } from '../model/UsuarioRq';
 import { DomicilioRq } from '../model/DomicilioRq';
 import { AnimalRq } from '../model/AnimalRq';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 
 @Component({
   selector: 'app-crear-cuenta-cliente',
@@ -75,7 +77,8 @@ export class CrearCuentaClienteComponent implements OnInit{
     private service: UsuarioService,
     private especieService: EspecieService,
     private razasService: RazaService,
-    private ciudadesService: CiudadService
+    private ciudadesService: CiudadService,
+    private dialog: MatDialog
   ){
     this.datosPersonales = this.fb.group({
       nombre:               new FormControl('', Validators.required),
@@ -110,15 +113,25 @@ export class CrearCuentaClienteComponent implements OnInit{
             if(data.estado != "ERROR"){
               this.especies = data.especies;
             } else {
-              /**
-               * TODO: DIALOGO DE ERROR
-               */
+              this.dialog.open(GenericDialogComponent, {
+                data: {
+                  type: 'error',
+                  title: '¡Algo salió mal!',
+                  body: data.mensaje,
+                  cancelText: 'Cerrar'
+                }
+              });
               console.log(data.mensaje);
             }
         }, error: (error)=>{
-          /**
-           * TODO: DIALOGO DE ERROR 
-           */
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error interno al bucar las especies",
+              cancelText: 'Cerrar'
+            }
+          });
           console.log(error);
         }
       });
@@ -127,15 +140,25 @@ export class CrearCuentaClienteComponent implements OnInit{
             if(data.estado != "ERROR"){
               this.ciudades = data.ciudades;
             } else {
-              /**
-               * TODO: DIALOGO DE ERROR
-               */
+              this.dialog.open(GenericDialogComponent, {
+                data: {
+                  type: 'error',
+                  title: '¡Algo salió mal!',
+                  body: data.mensaje,
+                  cancelText: 'Cerrar'
+                }
+              });
               console.log(data.mensaje);
             }
         }, error: (error)=>{
-          /**
-           * TODO: DIALOGO DE ERROR 
-           */
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error interno al obtener las ciudades",
+              cancelText: 'Cerrar'
+            }
+          });
           console.log(error);
         }
       });
@@ -147,15 +170,25 @@ export class CrearCuentaClienteComponent implements OnInit{
           if(data.estado != "ERROR"){
             this.razas = data.razas;
           } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar'
+              }
+            });
             console.log(data.mensaje);
           }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "ocurrio un error interno al obtener las razas",
+            cancelText: 'Cerrar'
+          }
+        });
         console.log(error);
       }
     });
@@ -187,6 +220,14 @@ export class CrearCuentaClienteComponent implements OnInit{
           this.usCreado = true;
           console.log(data); 
         }, error: (error)=>{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error al confirmar la creacion del usuario",
+              cancelText: 'Cerrar'
+            }
+          });
           console.log(error);
         }
       });

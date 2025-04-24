@@ -13,6 +13,7 @@ import { Turno } from '../model/Turno';
 import { TURNOBYID } from '../model/data/data-TurnoById';
 import { TurnoRs } from '../model/TurnoRs';
 import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
+import { FiltroTurnoRq } from '../model/FiltroTurnoRq';
 
 @Injectable({
   providedIn: 'root'
@@ -55,23 +56,39 @@ export class TurnoService {
   //   return this.VeterinariesData;
   //   return this.http.post<VeterinariesGetRs>(this.baseURL + "/Turno/Reservar" + idCiudad);
   // }
-
+  
   disponibilidad(rq: DisponibilidadRq):Observable<DisponibilidadTurnoRs>{
     //return of(DATA_DISPONIBILIDAD_TURNO);
     console.log("Fecha: " + rq.fecha);
     return this.http.post<DisponibilidadTurnoRs>(this.baseURL + "/Turno/Consultar", rq);
   }
+  
+  getById(id:number): Observable<Turno>{
+    return this.http.get<Turno>(this.baseURL+"/Turno/"+id);
+  }
+
+  getMisTurnos(rq: FiltroTurnoRq):Observable<any>{
+    return this.http.post<any>(this.baseURL+"/Turno/getMisTurnos",rq)
+  }
+
 
   reservar(rq: ReservarTurnoRq): Observable<Response>{
     return this.http.post<Response>(this.baseURL+"/Turno/Reservar", rq);
   }
 
-  getById(id:number): Observable<Turno>{
-    return this.http.get<Turno>(this.baseURL+"/Turno/"+id);
-  }
-
-
   atender(rq: AtenderTurnoRq):Observable<TurnoRs>{
     return this.http.post<TurnoRs>(this.baseURL+"/Turno/Atender", rq);
+  }
+
+  cancelar(rq: AtenderTurnoRq):Observable<TurnoRs>{
+    return this.http.post<TurnoRs>(this.baseURL+"/Turno/Cancelar", rq);
+  }
+
+  rechazar(rq: AtenderTurnoRq):Observable<TurnoRs>{
+    return this.http.post<TurnoRs>(this.baseURL+"/Turno/Rechazar", rq);
+  }
+
+  aceptar(rq: AtenderTurnoRq):Observable<TurnoRs>{
+    return this.http.post<TurnoRs>(this.baseURL+"/Turno/Aceptar", rq);
   }
 }

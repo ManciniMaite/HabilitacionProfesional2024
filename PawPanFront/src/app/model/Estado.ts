@@ -1,5 +1,5 @@
 export class Estado {
-    id:number
+    id:number|null
     ambito: string;
     nombre: string;
     descripcion: string;

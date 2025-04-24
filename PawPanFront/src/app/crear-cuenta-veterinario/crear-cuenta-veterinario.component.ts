@@ -33,6 +33,8 @@ import { CiudadService } from '../services/ciudad.service';
 import { Ciudad } from '../model/Ciudad';
 import { AppComponent } from '../app.component';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 
 @Component({
   selector: 'app-crear-cuenta-veterinario',
@@ -76,6 +78,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
 
   tipoEspecies: any = [];
 
+  usCreado:boolean=false;
+
   readonly semana = signal<Week>(
     {
       completado: false,
@@ -99,7 +103,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     private usuariosService: UsuarioService,
     private tipoEspecieService: TipoEspecieService,
     private cd: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ){
     this.datosPersonales = this.fb.group({
       nombre:     new FormControl('', Validators.required),
@@ -169,20 +174,29 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     this.usuariosService.crearCuenta(rq).subscribe({
       next: (value) => {
         if (value.estado == 'OK'){
-          AppComponent.onAlerta({
-            titulo: 'Cuenta creada exitosamente',
-            mensaje: 'Ahora debes iniciar sesión con tus datos.',
-            textoAceptar: 'Aceptar',
-            onAceptar: () => {
-              this.router.navigate(['iniciar-sesion']);
+          this.usCreado = true
+        } else{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: value.mensaje,
+              cancelText: 'Cerrar'
             }
           });
         }
       }, error:(err) => {
           console.log(err);
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error interno al crear la cuenta",
+              cancelText: 'Cerrar'
+            }
+          });
       },
     });
-    console.log('obj: ', rq)
   }
 
   volver(){
@@ -455,15 +469,25 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
           if(data.estado != "ERROR"){
             this.ciudades = data.ciudades;
           } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar',
+              }
+            });
             console.log(data.mensaje);
           }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "Ocurrio un error interno al recuperar las ciudades",
+            cancelText: 'Cerrar',
+          }
+        });
         console.log(error);
       }
     });

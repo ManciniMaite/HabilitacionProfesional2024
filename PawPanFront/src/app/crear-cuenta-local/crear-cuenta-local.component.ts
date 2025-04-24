@@ -27,6 +27,8 @@ import { CiudadService } from '../services/ciudad.service';
 import { UsuarioRequest } from '../model/UsuarioRq';
 import { DomicilioRq } from '../model/DomicilioRq';
 import { UsuarioService } from '../services/usuario.service';
+import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface Week {
   completado: boolean;
@@ -65,6 +67,8 @@ export class CrearCuentaLocalComponent implements OnInit {
   ubicacion: FormGroup;
   horarioTrabajo: FormGroup;
 
+  usCreado: boolean=false;
+
   horarios: Horario[] = [];
   diasHorarios: DiaHorarioAtencion[] = [];
 
@@ -91,7 +95,8 @@ export class CrearCuentaLocalComponent implements OnInit {
     private location: Location,
     private service: VeterinariesService,
     private ciudadService: CiudadService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private dialog: MatDialog
   ){
     //console.log("Array de Horarios vacio: ",this.horarios);
     this.datosLocal = this.fb.group({
@@ -135,15 +140,25 @@ export class CrearCuentaLocalComponent implements OnInit {
           this.ciudades = data.ciudades;
         }  else {
           console.log(data.mensaje);
-          /**
-           * MENSAJE DE ERROR
-           */
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: data.mensaje,
+              cancelText: 'Cerrar'
+            }
+          });
         }
       }, error: (error)=>{
         console.log(error);
-        /**
-         * TODO: mensaje Error
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "Ocurrio un errror interno al buscar las ciudades",
+            cancelText: 'Cerrar'
+          }
+        });
       }
     });
   }
@@ -299,8 +314,29 @@ export class CrearCuentaLocalComponent implements OnInit {
     console.log(rq);
     this.usuarioService.crearCuenta(rq).subscribe({
       next:(value)=> {
+        if(value.estado!="ERROR"){
+          this.usCreado=true
+        } else{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: value.mensaje,
+              cancelText: 'Cerrar',
+            }
+          });
+
+        }
           console.log(value);
       }, error: (error)=>{
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "Ocurrio un error interno al crear la cuenta",
+            cancelText: 'Cerrar',
+          }
+        });
         console.log(error);
       }
     });

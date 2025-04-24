@@ -198,7 +198,8 @@ export class AdmReservarTurnoComponent implements OnInit {
   }
 
   getVeterinaries(idCiudad: number){
-    this.veterinariesService.getAll(idCiudad,this.mascota.get("nombreMascota")?.value.id,this.domicilio.get('esADomicilio')?.value?true:false).subscribe({
+    let tipoEspecie: number = this.mascota.get("nombreMascota")?.value.raza.especie.tipoEspecie.id
+    this.veterinariesService.getAll(idCiudad,tipoEspecie,this.domicilio.get('esADomicilio')?.value?true:false).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.veterinarios = data.veterinariosIndependientes;
