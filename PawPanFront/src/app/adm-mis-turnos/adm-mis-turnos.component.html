@@ -1,1 +1,23 @@
-<p>adm-mis-turnos works!</p>
+<table mat-table [dataSource]="dataSourcePaginada" class="mat-elevation-z8">
+    <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+      <th mat-header-cell *matHeaderCellDef>
+        <div>
+          <ng-container *ngIf="column === 'fecha'; else textFilter">
+            <input matInput [matDatepicker]="picker" [formControl]="filters[column]" placeholder="Filtrar fecha">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </ng-container>
+          <ng-template #textFilter>
+            <input matInput placeholder="Filtrar {{ column }}" [formControl]="filters[column]">
+          </ng-template>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element[column] }}
+      </td>
+    </ng-container>
+  
+    <!-- Header y Body -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
