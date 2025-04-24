@@ -20,7 +20,8 @@ RETURNS TABLE (
     nombre_veterinaria VARCHAR,
     especie VARCHAR,
     raza VARCHAR,
-    fecha TIMESTAMP
+    fecha TIMESTAMP,
+    estado_id BIGINT 
 )AS $$
 DECLARE
     sql TEXT;
@@ -65,7 +66,8 @@ BEGIN
         vet.razon_social,
         e.nombre,
         r.nombre,
-        t.fecha_hora
+        t.fecha_hora,
+		t.estado_id
     FROM turno t
     LEFT JOIN animal a ON a.id = t.animal_id
     LEFT JOIN usuario v ON v.id = t.veterinario_id
@@ -75,7 +77,6 @@ BEGIN
     ' || conds || 
     ' ORDER BY t.' || p_order_by || ' ' || p_order_dir || 
     ' LIMIT ' || p_size || ' OFFSET ' || (p_page * p_size);
-
 	
     RETURN QUERY EXECUTE sql USING p_animal_ids;
 END;

@@ -436,6 +436,8 @@ public class TurnoService {
 		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
 		Role role = Role.resolve(principalPawplan.getRole().toString());
 
+		String animalesId = null;
+
 		//SET ID SEGUN CORRESPONDA
 		if (role != null) {
 			switch (role) {
@@ -447,6 +449,19 @@ public class TurnoService {
 					break;
 				case PACIENTE:
 					turnoRequest.setIdCliente(principalPawplan.getClienteId());
+
+					//listado de id de los animales del cliente
+					List<Long> animalIds = null;
+					if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
+						//si hay un id especifico entonces buscamos por ese
+						animalIds = List.of(turnoRequest.getIdAnimal());
+					} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
+						//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
+						animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
+					}
+
+					animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
+
 					break;
 				default:
 					rs.setEstado("ERROR");
@@ -475,21 +490,9 @@ public class TurnoService {
 									.toLocalDate();
 		}
 
-		//listado de id de los animales del cliente
-		List<Long> animalIds = null;
-		if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
-			//si hay un id especifico entonces buscamos por ese
-			animalIds = List.of(turnoRequest.getIdAnimal());
-		} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
-			//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
-			animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
-		}
-
-		String animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
-
+		
 		List<TurnoFb> turnos = null;
 		Long total = 0l;
-		System.out.println(animalIds);
 
 		try {
 
