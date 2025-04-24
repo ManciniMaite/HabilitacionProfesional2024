@@ -15,13 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.AtenderTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
 import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
 import com.seminario.integrador.pawplan.controller.values.ReservarTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.TurnoRequest;
 import com.seminario.integrador.pawplan.controller.values.TurnoResponse;
+import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.services.TurnoService;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -63,7 +68,7 @@ public class TurnoController {
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_ATENDER, method = RequestMethod.POST)
-    public TurnoResponse reservaAtender(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservaAtender(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.atenderTurno(request);
 	}
@@ -71,6 +76,11 @@ public class TurnoController {
 	@RequestMapping(value = Constantes.URL_PATH_MIS_TURNOS, method = RequestMethod.POST)
 	public PaginaTurnosRs getMisTurnos(@RequestBody FiltroTurnoRq request) {
 		return turnoService.getMisTurnos(request);
+	}
+
+	@GetMapping("/{id}")
+	public Turno getById(@PathVariable("id") Long id){
+		return turnoService.getById(id);
 	}
 	
 }

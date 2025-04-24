@@ -33,18 +33,39 @@ public class SessionRestController {
     	
 
 		try {
-                        loginResponse = new SessionManagerResponse();
+			loginResponse = new SessionManagerResponse();
 			loginResponse = sessionManager.login(loginRequest.getCorreo(), loginRequest.getPassword());
-                        loginResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getEstado()));
-                        loginResponse.setMensaje(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getMensaje()));
+			loginResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getEstado()));
+			loginResponse.setMensaje(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getMensaje()));
                         
 		} catch (PawPlanRuleException e) {
 			loginResponse = new SessionManagerResponse();
-                        loginResponse.setEstado(String.valueOf(e.getCodigo()));
-                        loginResponse.setMensaje(e.getMessage());
+			loginResponse.setEstado(String.valueOf(e.getCodigo()));
+	        loginResponse.setMensaje(e.getMessage());
                         
 		}
         
     	return loginResponse;
     }
+    
+    @RequestMapping(value=Constantes.URL_PATH_SESSION_MANAGER_LOGOUT, method=RequestMethod.POST, produces="application/json", consumes = "application/json")
+    public SessionManagerResponse logout() {
+    	
+    	SessionManagerResponse loginResponse = null;
+
+		try {
+			loginResponse = new SessionManagerResponse();
+			loginResponse = sessionManager.logout();
+			loginResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getEstado()));
+			loginResponse.setMensaje(String.valueOf(EnumCodigoErrorLogin.LOGIN_200.getMensaje()));
+                        
+		} catch (PawPlanRuleException e) {
+			loginResponse = new SessionManagerResponse();
+            loginResponse.setEstado(String.valueOf(e.getCodigo()));
+            loginResponse.setMensaje(e.getMessage());
+                        
+		}
+        
+    	return loginResponse;
+	}
 }

@@ -9,8 +9,10 @@ import { DisponibilidadTurnoRs } from '../model/DisponibilidadTurnoRs';
 import { DATA_DISPONIBILIDAD_TURNO } from '../model/data/data-disponibilidadTurnoRs';
 import { ReservarTurnoRq } from '../model/TurnoRq';
 import { Response } from '../model/Response';
-import { misTurnosGetRq } from '../model/misTurnosGetRq';
-import { misTurnosGetRs } from '../model/misTurnosGetRs';
+import { Turno } from '../model/Turno';
+import { TURNOBYID } from '../model/data/data-TurnoById';
+import { TurnoRs } from '../model/TurnoRs';
+import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
 
 @Injectable({
   providedIn: 'root'
@@ -64,8 +66,12 @@ export class TurnoService {
     return this.http.post<Response>(this.baseURL+"/Turno/Reservar", rq);
   }
 
-  getMisTurnos(rq: misTurnosGetRq): Observable<misTurnosGetRs>{
-    return this.http.post<misTurnosGetRs>(this.baseURL+"/Turno/getMisTurnos", rq);
+  getById(id:number): Observable<Turno>{
+    return this.http.get<Turno>(this.baseURL+"/Turno/"+id);
   }
 
+
+  atender(rq: AtenderTurnoRq):Observable<TurnoRs>{
+    return this.http.post<TurnoRs>(this.baseURL+"/Turno/Atender", rq);
+  }
 }

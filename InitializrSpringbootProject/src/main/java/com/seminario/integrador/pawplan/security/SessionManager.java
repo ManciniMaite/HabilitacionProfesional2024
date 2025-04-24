@@ -14,6 +14,7 @@ import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.model.Veterinaria;
 import com.seminario.integrador.pawplan.model.Veterinario;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
+import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
 import java.security.GeneralSecurityException;
 import java.util.Date;
@@ -36,6 +37,9 @@ public class SessionManager {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+	private IAuthenticationFacade authenticationFacade;
 
     @Autowired
     private Hasher hasher;
@@ -126,6 +130,44 @@ public class SessionManager {
         return rs;
 
     }
+    
+    
+    public SessionManagerResponse logout() throws PawPlanRuleException {
+    	SessionManagerResponse logoutResponse = new SessionManagerResponse();
+    	
+    	//obtengo la sesion
+    	PrincipalPawplan session = authenticationFacade.getPrincipal();
+		
+    	if(session.getLoginDateExpiration()<System.currentTimeMillis()) {
+			System.out.println("session expirada");
+			logoutResponse.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
+			logoutResponse.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
+			logger.error(logoutResponse.getMensaje());
+			return logoutResponse;
+		}
+		
+		//seteamos una fecha de exipracion a la de ahora
+		session.setLoginDateExpiration(System.currentTimeMillis());
+		
+		//encripto y genero un token nuevo para que reemplace el viejo
+		String rawToken = null;
+        try {
+            //Convertir el Principal en un json
+            rawToken = mapper.writeValueAsString(session);
+        } catch (Exception e) {
+            logger.error("No se pudo procesar la creacion del token.", e);
+            throw new PawPlanRuleException(EnumCodigoErrorLogin.LOGIN_2000);
+        }
+
+        //generar token a devolver
+        String encodedToken = encriptador.encriptar(rawToken);
+        
+        //devuelvo respuesta de token y rol
+        logoutResponse.setToken("Pawplan "+encodedToken);
+        logoutResponse.setRol(session.getRole().getRole());
+        
+		return logoutResponse;
+	}
     
 	/**
 	 * Obtener el {@link AuthenticationBit}, conteniendo el {@link PrincipalBit} relacionado al token de autenticacion

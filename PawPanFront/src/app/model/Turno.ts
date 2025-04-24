@@ -1,21 +1,18 @@
-import { Cliente } from "./Cliente";
-import { DetalleTurno } from "./DetalleTurno";
+import { Animal } from "./Animal";
 import { Estado } from "./Estado";
 import { Veterinaria } from "./Veterinaria";
 import { Veterinario } from "./Veterinario";
 
+
 export class Turno {
+    id:number;
     fechaHoraReserva: string;
-    fecha: string;
-    hora: string;
-    detalleTurno: DetalleTurno[];
-    estado: Estado;
-    cliente: Cliente;
-    veterinaria: Veterinaria;
-    veterinario: Veterinario;
+    fechaHora: string;
+    animal: Animal;
+    estado: Estado;   
+    veterinaria?:Veterinaria;
+    veterinario:Veterinario ;
     esADomicilio: boolean;
-    duracionEstimada: string;
-    descripcion: string;
-    monto: number;
-    esGuardia: boolean;
+    descripcionPublica: string | null;
+    descripcionPrivada: string | null;
 }

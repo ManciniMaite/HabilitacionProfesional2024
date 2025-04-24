@@ -25,4 +25,6 @@ public interface TurnoFb {
     String getRaza();
     @Column(name = "fecha")
     LocalDateTime getFecha();
+    @Column(name = "estado_id")
+    Long getEstadoId();
 }

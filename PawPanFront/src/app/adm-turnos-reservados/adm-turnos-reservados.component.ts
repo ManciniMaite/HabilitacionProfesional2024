@@ -39,20 +39,7 @@ export class AdmTurnosReservadosComponent {
 }[]; 
   // = new MatTableDataSource<any>([]);
 
-  data: any[] = [
-    {
-      "id": 6,
-      "raza": "Sin especificar",
-      "especie": "perro",
-      "fecha": "2025-04-29T06:00:00",
-      "idAnimal": 1,
-      "idVeterinario": 11,
-      "idVeterinaria": null,
-      "nombreAnimal": "Nailon",
-      "nombreVeterinario": "Marcela Rivero",
-      "nombreVeterinaria": null
-    },
-  ];
+  //turnos: Turno[] = Turnos;
 
   role: string;
   filtro: misTurnosGetRq = new misTurnosGetRq;

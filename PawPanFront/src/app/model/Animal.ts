@@ -1,3 +1,4 @@
+import { Cliente } from "./Cliente";
 import { Especie } from "./Especie";
 import { Raza } from "./Raza";
 
@@ -7,6 +8,6 @@ export class Animal {
     nombre: string;
     fechaNac: string; //DAte??
     peso: number;
-    foto: string;
     raza: Raza;
+    cliente:Cliente;
 }
