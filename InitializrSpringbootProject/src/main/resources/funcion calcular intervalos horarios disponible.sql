@@ -33,7 +33,8 @@ BEGIN
         id_us:=p_usuario_id;
     ELSE
         id_us:=id_veterinaria;
-
+        RAISE NOTICE 'ID DE VETERINARIA';
+        RAISE NOTICE 'Value: %', id_us;
         SELECT hace_domicilio INTO es_domicilio FROM usuario u WHERE u.id = id_veterinaria;
 
         IF es_domicilio THEN
@@ -70,7 +71,7 @@ BEGIN
         FROM Dia_Horario_Atencion d
         JOIN Usuario u ON u.id = d.id_usuario
         JOIN Horario h ON h.dia_horario_atencion_id = d.id
-        WHERE u.id = p_usuario_id
+        WHERE u.id = id_us --Si usamos el p_usuario_id y el veterinario trabaja para una veterinaria entonces no vamos a tener el horario :)
           AND upper(d.dia) = (
               CASE EXTRACT(DOW FROM p_dia)
                   WHEN 0 THEN 'DOMINGO'

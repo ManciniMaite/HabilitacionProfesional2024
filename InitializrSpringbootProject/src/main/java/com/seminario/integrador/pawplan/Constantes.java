@@ -46,6 +46,7 @@ public class Constantes {
     public static final String URL_PATH_ACEPTAR = "/Aceptar";
     public static final String URL_PATH_RECHAZAR = "/Rechazar";
     public static final String URL_PATH_ATENDER = "/Atender";
+    public static final String URL_PATH_MIS_TURNOS = "/getMisTurnos";
     
     public static final String URL_PATH_CIUDAD = "/ciudades";
     public static final String URL_PATH_RAZA = "/razas";

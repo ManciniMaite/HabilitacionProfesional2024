@@ -31,5 +31,4 @@ public class TurnoRequest {
 	
     private Long turnoId;
 	
-	
 }
