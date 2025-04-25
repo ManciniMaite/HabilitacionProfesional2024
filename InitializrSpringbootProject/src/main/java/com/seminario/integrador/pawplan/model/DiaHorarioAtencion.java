@@ -6,6 +6,8 @@ package com.seminario.integrador.pawplan.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +29,7 @@ public class DiaHorarioAtencion {
     private Long id;
     private String dia;
     @OneToMany(mappedBy = "diaHorarioAtencion", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Horario> horarios;
 
     private Long idUsuario;
