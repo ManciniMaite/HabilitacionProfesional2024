@@ -32,6 +32,7 @@ import { VeterinarioXciudad } from '../model/veterinarioXciudad';
 import { VeterinariaXciudad } from '../model/veterinariaXciudad';
 import { HorarioDisponibilidad } from '../model/HorarioDisponibilidad';
 import { ReservarTurnoRq } from '../model/TurnoRq';
+import { fechaDesdeHoyValidator } from '../validators/ValidarFechaVieja'
 
 @Component({
   selector: 'app-adm-reservar-turno',
@@ -80,6 +81,9 @@ export class AdmReservarTurnoComponent implements OnInit {
   horarios: HorarioDisponibilidad[] = [];
   idVeterinaria: number=0;
 
+  minFecha: Date = new Date();
+
+  busquedaTurnos:boolean=false;
 
   constructor(
     private fb: FormBuilder,
@@ -110,7 +114,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     });
 
     this.turnero = this.fb.group({
-      fecha:               new FormControl('', Validators.required),
+      fecha:               new FormControl('', [Validators.required,fechaDesdeHoyValidator]),
       hora:             new FormControl('', Validators.required)
     });
   }
@@ -258,7 +262,7 @@ export class AdmReservarTurnoComponent implements OnInit {
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.horarios = data.horariosDisponibles;
-            console.log('Horarios: ',this.horarios)
+            this.busquedaTurnos = true;
           } else {
             this.dialog.open(GenericDialogComponent, {
               data: {

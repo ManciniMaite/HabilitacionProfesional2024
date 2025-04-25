@@ -128,21 +128,33 @@
                                 <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
                                     <mat-form-field>
                                         <mat-label>Fecha:</mat-label>
-                                        <input matInput formControlName="fecha" [matDatepicker]="dp3">
+                                        <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="minFecha">
                                         <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
-                                        <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
+                                        <mat-datepicker-toggle matIconSuffix [for]="dp3" ></mat-datepicker-toggle>
                                         <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                                        <mat-error *ngIf="turnero.get('fecha')?.hasError('fechaInvalida')">
+                                            La fecha debe ser igual o posterior a hoy.
+                                          </mat-error>
                                     </mat-form-field>
                                     <button mat-button (click)="getHorariosDisponibles()">Consultar</button>
                                 </div>
                                 @if (horarios.length > 0) {
-                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: baseline;">
+                                    <div style="margin-top: 15px;">
                                         <mat-label>Seleccioná un Horario</mat-label>
-                                        <mat-radio-group formControlName="hora" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                            @for (item of horarios; track $index) {
-                                                <mat-radio-button [value]="item">{{item.horaInicio}}</mat-radio-button>
-                                            }
+                                        <mat-radio-group formControlName="hora" 
+                                                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                                          @for (item of horarios; track $index) {
+                                            <mat-radio-button [value]="item" style="text-align: center;">
+                                              {{ item.horaInicio }}
+                                            </mat-radio-button>
+                                          }
                                         </mat-radio-group>
+                                      </div>
+                                }
+
+                                @if( busquedaTurnos && horarios.length===0){
+                                    <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center;">
+                                        Lo sentimos, no hay horarios disponibles para la fecha consultada
                                     </div>
                                 }
 
