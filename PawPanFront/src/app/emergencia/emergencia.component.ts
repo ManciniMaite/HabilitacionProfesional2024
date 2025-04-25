@@ -16,18 +16,19 @@ import { VeterinariesService } from '../services/Veterinaries-service';
 })
 export class EmergenciaComponent {
 
-  contactos: Emergencia[] = [
-    {
-      nombre: "Juan Jose",
-      domicilio: "Remedios de gatitos 340",
-      telefono: "3535648789"
-    },
-    {
-      nombre: "La vete del pueblo SA",
-      domicilio: "en el centro",
-      telefono: "3534278651"
-    }
-  ];
+  contactos: Emergencia[];
+  // contactos: Emergencia[] = [
+  //   {
+  //     nombre: "Juan Jose",
+  //     domicilio: "Remedios de gatitos 340",
+  //     telefono: "3535648789"
+  //   },
+  //   {
+  //     nombre: "La vete del pueblo SA",
+  //     domicilio: "en el centro",
+  //     telefono: "3534278651"
+  //   }
+  // ];
 
   constructor(
     private veterinarieService: VeterinariesService
