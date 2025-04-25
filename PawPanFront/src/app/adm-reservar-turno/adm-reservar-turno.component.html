@@ -87,7 +87,7 @@
                                     </div>
                                 }
                                 
-                                @if(veterinaries.value.vetes === 'independiente'){
+                                @if(veterinaries.value.vetes === 'independiente' &&  domicilio.value.esADomicilio === 'SI'){
                                     <ng-container>
                                       <mat-label style="margin-top: 15px;">Seleccioná un profesional</mat-label>
                                       <span *ngIf="veterinarios.length===0"> Lo sentimos, no hay veterinarios disponibles</span>
@@ -101,24 +101,27 @@
                                 
                                 @if(veterinaries.value.vetes === 'veterinaria' || domicilio.value.esADomicilio === 'NO'){
                                     @if(veterinarias && veterinarias.length>0){
-                                        <div>
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                                <mat-label style="margin-top: 15px;">Seleccioná una veterinaria</mat-label>
-                                                <mat-select formControlName="veterinariaSeleccionada">
-                                                    <mat-option *ngFor="let vet of veterinarias" [value]="vet.id">
-                                                    {{ vet.razonSocial }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                          
-                                          <div>
-                                            <mat-label style="margin-top: 15px;">Selecciona un profesional de la Veterinaria</mat-label>
-                                            <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                              <mat-radio-button *ngFor="let empleado of  getVeterinariosDeVeterinaria(veterinaries.value.veterinariaSeleccionada)" [value]="empleado.id">
-                                                {{ empleado.nombre }} {{ empleado.apellido }}
-                                              </mat-radio-button>
-                                            </mat-radio-group>
-                                          </div>
+                                        <div style="width: 100%; display: flex; flex-direction: column;  justify-content: center;  align-items: center;">
+                                            <div style="width: 100%;display: flex;flex-direction: row;justify-content: center;">
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 500px;">
+                                                    <mat-label style="margin-top: 15px;">Seleccioná una veterinaria</mat-label>
+                                                    <mat-select formControlName="veterinariaSeleccionada">
+                                                        <mat-option *ngFor="let vet of veterinarias" [value]="vet.id">
+                                                            {{ vet.razonSocial }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                          @if(veterinaries.value.veterinariaSeleccionada){
+                                              <div>
+                                                <mat-label style="margin-top: 15px;">Selecciona un profesional de la Veterinaria</mat-label>
+                                                <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                                  <mat-radio-button *ngFor="let empleado of  getVeterinariosDeVeterinaria(veterinaries.value.veterinariaSeleccionada)" [value]="empleado.id">
+                                                    {{ empleado.nombre }} {{ empleado.apellido }}
+                                                  </mat-radio-button>
+                                                </mat-radio-group>
+                                              </div>
+                                          }
                                         </div>
                                     }
 
