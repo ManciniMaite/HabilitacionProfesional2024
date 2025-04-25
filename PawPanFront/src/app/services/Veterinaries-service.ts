@@ -11,6 +11,7 @@ import { Response } from '../model/Response';
 import { ValidarMatriculaRq } from '../model/validarMatriculaRq';
 import { ProfesionalesPorVeterinariaRs } from '../model/ProfesionalesPorVeterinariaRs';
 import { Usuario } from '../model/Usuario';
+import { EmergenciaRs } from '../model/EmergenciaRs';
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,10 @@ export class VeterinariesService {
 
   buscarPorDni(dni: string):Observable<any>{
     return this.http.get<any>(this.baseURL+"/veterinaries/"+dni);
+  }
+
+  getEmergencia():Observable<EmergenciaRs>{
+    return this.http.get<EmergenciaRs>(this.baseURL+"/Emergencia");
   }
 
 }
