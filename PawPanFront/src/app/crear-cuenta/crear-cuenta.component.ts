@@ -18,7 +18,9 @@ import {MatIconModule} from '@angular/material/icon';
     ReactiveFormsModule,
     RouterLink,
     MatButtonModule,
-    MatIconModule ],
+    MatIconModule,
+    RouterLink 
+  ],
   templateUrl: './crear-cuenta.component.html',
   styleUrl: './crear-cuenta.component.scss'
 })
