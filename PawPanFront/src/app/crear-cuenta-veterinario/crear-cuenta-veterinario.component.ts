@@ -32,7 +32,7 @@ import { DomicilioRq } from '../model/DomicilioRq';
 import { CiudadService } from '../services/ciudad.service';
 import { Ciudad } from '../model/Ciudad';
 import { AppComponent } from '../app.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 
@@ -56,7 +56,8 @@ import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-d
     MatCheckboxModule,
     NgxMaterialTimepickerModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    RouterLink
   ],
   templateUrl: './crear-cuenta-veterinario.component.html',
   styleUrl: './crear-cuenta-veterinario.component.scss'

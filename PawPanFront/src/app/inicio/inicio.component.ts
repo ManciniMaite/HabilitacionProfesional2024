@@ -11,6 +11,8 @@ import {MatIconModule} from '@angular/material/icon';
 import { AuthService } from '../services/auth.service';
 import { SessionManagerRequest } from '../model/SessionManagerRequest';
 import { HttpClientModule } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 
 @Component({
   selector: 'app-inicio',
@@ -37,7 +39,8 @@ export class InicioComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private routes: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ){
     this.formGroup = this.fb.group({
       usuario:      new FormControl("",[Validators.required]),
@@ -51,13 +54,27 @@ export class InicioComponent implements OnInit{
     rq.password = this.formGroup.get('contrasenia')?.value
     this.authService.onLogIn(rq).subscribe({
       next:(data) => {
-        console.log(data); 
-        if(data.estado!="ERROR"){
+        if(data.estado=="OK"){
           this.authService.setUsuario(data.token, data.nombre, data.rol ,data.cuil);
           this.routes.navigate(['home']);
+        } else{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: data.mensaje,
+              cancelText: 'Cerrar'
+            }
+          });
         }
       }, error: (error)=>{
-        console.log(error);
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            cancelText: 'Cerrar',
+          }
+        });
       }
     });
   }

@@ -1,6 +1,6 @@
 <div class="form">
     <div class="container">
-        <mat-card style="width: 90%;">
+        <mat-card style="width: 90%; min-height: fit-content;">
             <mat-card-title style="margin:20px">
                 Administracion de turnos
             </mat-card-title>
@@ -44,7 +44,7 @@
                 </div>
               
               
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource">
               
                 <ng-container matColumnDef="fecha">
                   <th mat-header-cell *matHeaderCellDef> FECHA </th>

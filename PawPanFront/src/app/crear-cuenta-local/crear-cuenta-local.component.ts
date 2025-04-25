@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Horario } from '../model/Horario';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatCardModule } from '@angular/material/card';
@@ -55,7 +55,8 @@ export interface Week {
     MatRadioModule,
     MatCheckboxModule,
     NgxMaterialTimepickerModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './crear-cuenta-local.component.html',
   styleUrl: './crear-cuenta-local.component.scss'

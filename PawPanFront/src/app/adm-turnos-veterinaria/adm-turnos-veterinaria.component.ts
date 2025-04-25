@@ -175,7 +175,22 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
         acceptText: 'Sí, continuar',
         cancelText: 'Cancelar',
         onAccept: () => {
-          this.cancelarTurno(turno.id);
+          switch(accion) { 
+            case "Aceptar": { 
+              this.aceptarTurno(turno.id);
+              break; 
+            } 
+            case "Cancelar": { 
+              this.cancelarTurno(turno.id); 
+              break; 
+            } 
+            
+            default: { 
+               //statements; 
+               break; 
+            } 
+         } 
+      
         }
       }
     });
@@ -188,6 +203,37 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
       next: (data)=>{
         if (data.estado!= "ERROR"){
           this.openSnackBar('Turno cancelado!', 'Cerrar');
+          this.getTurnos();
+        } else{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: data.mensaje,
+              cancelText: 'Cerrar'
+            }
+          });
+        }
+      }, error: (error)=>{
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: 'Ocurrio un error al guardar la atencion',
+            cancelText: 'Cerrar'
+          }
+        });
+      }
+    });
+  }
+
+  aceptarTurno(idTurno: number){
+    let rq: AtenderTurnoRq = new AtenderTurnoRq();
+    rq.idTurno=idTurno;
+    this.turnoService.aceptar(rq).subscribe({
+      next: (data)=>{
+        if (data.estado!= "ERROR"){
+          this.openSnackBar('Turno aceptado!', 'Cerrar');
           this.getTurnos();
         } else{
           this.dialog.open(GenericDialogComponent, {

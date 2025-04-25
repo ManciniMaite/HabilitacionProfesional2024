@@ -107,7 +107,7 @@ export class AdmReservarTurnoComponent implements OnInit {
     })
 
     this.veterinaries = this.fb.group({
-      vetes:               new FormControl('', Validators.required),
+      vetes:               new FormControl(''),
       veterinario:         new FormControl('', Validators.required),
       veterinariaSeleccionada: new FormControl()
       
@@ -201,9 +201,11 @@ export class AdmReservarTurnoComponent implements OnInit {
     });
   }
 
-  getVeterinaries(idCiudad: number){
+  getVeterinaries(){
+    let idCiudad = this.domicilio.get('domicilioUsuario')?.value? this.domicilio.get('domicilioUsuario')?.value.ciudad.id : this.domUsuario[0]
+    let domicilio =  this.domicilio.get('esADomicilio')?.value=='SI';
     let tipoEspecie: number = this.mascota.get("nombreMascota")?.value.raza.especie.tipoEspecie.id
-    this.veterinariesService.getAll(idCiudad,tipoEspecie,this.domicilio.get('esADomicilio')?.value?true:false).subscribe({
+    this.veterinariesService.getAll(idCiudad,tipoEspecie,domicilio).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.veterinarios = data.veterinariosIndependientes;

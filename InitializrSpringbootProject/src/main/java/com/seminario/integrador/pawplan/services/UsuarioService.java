@@ -110,6 +110,8 @@ public class UsuarioService {
 			veterinaria.setRole(Role.VETERINARIA);
 
 			veterinaria = crearModificarVeterinaria(veterinaria, usuarioRequest);
+
+			veterinaria.setHorarioAtencion(null);
 			
 			rs.setUsuario(veterinaria);
 
@@ -122,6 +124,7 @@ public class UsuarioService {
 
 			veterinario = crearModificarVeterinario(veterinario, usuarioRequest);
 			
+			veterinario.setHorarios(null);
 			rs.setUsuario(veterinario);
 			
 			break;
