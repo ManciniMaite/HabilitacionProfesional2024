@@ -25,6 +25,10 @@ export class AuthService {
     return this.http.post<SessionManagerResponse>(this.baseURL + "/SessionManager", rq);
   }
 
+  onLogOut(): Observable<SessionManagerResponse>{
+    return this.http.get<SessionManagerResponse>(this.baseURL + "/SessionLogout");
+  }
+
   private getUsuario() {
     const usuarioGuardado = localStorage.getItem('usuario');
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
