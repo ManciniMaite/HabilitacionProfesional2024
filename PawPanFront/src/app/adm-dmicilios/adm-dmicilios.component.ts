@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { NuevoDomicilioComponent } from '../model/dialog/nuevo-domicilio/nuevo-domicilio.component';
 import { DomicilioRq } from '../model/DomicilioRq';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-adm-dmicilios',
@@ -21,7 +22,8 @@ import { DomicilioRq } from '../model/DomicilioRq';
       MatButtonModule,
       MatIconModule,
       MatButton,
-      MatTableModule
+      MatTableModule,
+      MatTooltipModule
     ],
   templateUrl: './adm-dmicilios.component.html',
   styleUrl: './adm-dmicilios.component.scss'

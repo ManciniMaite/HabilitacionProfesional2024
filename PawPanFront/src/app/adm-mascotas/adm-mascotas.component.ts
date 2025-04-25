@@ -13,6 +13,7 @@ import { AnimalService } from '../services/animal.service';
 import { AuthService } from '../services/auth.service';
 import { Animal } from '../model/Animal';
 import { AgregarAnimalComponent } from '../model/dialog/agregar-animal/agregar-animal.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-adm-mascotas',
@@ -23,7 +24,8 @@ import { AgregarAnimalComponent } from '../model/dialog/agregar-animal/agregar-a
     MatButtonModule,
     MatIconModule,
     MatButton,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ],
   templateUrl: './adm-mascotas.component.html',
   styleUrl: './adm-mascotas.component.scss'

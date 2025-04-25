@@ -21,14 +21,14 @@
                 
                   <ng-container matColumnDef="acciones">
                     <th mat-header-cell *matHeaderCellDef>
-                      <button mat-icon-button (click)="onDialogAgregarDomicilio()">
+                      <button mat-icon-button (click)="onDialogAgregarDomicilio()" matTooltip="Agregar domicilio">
                         <span class="material-symbols-outlined">
                           add
                           </span>
                       </button>
                     </th>
                     <td mat-cell *matCellDef="let element"> 
-                      <button mat-icon-button (click)="onDialogQuitar(element)">
+                      <button mat-icon-button (click)="onDialogQuitar(element)" matTooltip="Eliminar domicilio">
                         <span class="material-symbols-outlined">
                             delete
                         </span>
