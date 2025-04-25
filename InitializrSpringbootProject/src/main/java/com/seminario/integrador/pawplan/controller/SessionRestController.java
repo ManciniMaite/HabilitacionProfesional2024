@@ -48,7 +48,7 @@ public class SessionRestController {
     	return loginResponse;
     }
     
-    @RequestMapping(value=Constantes.URL_PATH_SESSION_MANAGER_LOGOUT, method=RequestMethod.POST, produces="application/json", consumes = "application/json")
+    @RequestMapping(value=Constantes.URL_PATH_SESSION_MANAGER_LOGOUT, method=RequestMethod.GET, produces="application/json")
     public SessionManagerResponse logout() {
     	
     	SessionManagerResponse loginResponse = null;
