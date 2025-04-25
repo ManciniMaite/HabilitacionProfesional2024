@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.seminario.integrador.pawplan.controller.values.Contactos;
-import com.seminario.integrador.pawplan.controller.values.EmergenciaRequest;
 import com.seminario.integrador.pawplan.controller.values.EmergenciaResponse;
 import com.seminario.integrador.pawplan.enums.EnumCodigoErrorLogin;
 import com.seminario.integrador.pawplan.enums.EnumEstadosGenerales;
