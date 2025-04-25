@@ -73,7 +73,7 @@ public class AnimalService {
         try{
             // animales = this.repository.findByCliente_Id(principalPawplan.getClienteId());
 
-            animales = this.repository.findByCliente_Id(usuarioId);
+            animales = this.repository.findByCliente_IdAndEsActivoTrue(usuarioId);
             
             if(animales == null){
                 rs.setEstado("ERROR");
@@ -181,8 +181,10 @@ public class AnimalService {
                 rs.setMensaje("No fue posible recuperar el animal con ID: " + id);
                 return rs;
             }
-    
-            repository.deleteById(id);
+            
+            animalExistente.get().setEsActivo(false);
+            repository.save(animalExistente.get());
+            //repository.deleteById(id);
     
             rs.setEstado("OK");
             rs.setMensaje("Registro eliminado con éxito");

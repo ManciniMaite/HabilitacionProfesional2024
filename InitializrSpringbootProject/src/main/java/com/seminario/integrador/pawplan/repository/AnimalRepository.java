@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AnimalRepository extends CrudRepository<Animal, Long> {
-    List<Animal> findByCliente_Id(Long idCliente);
+    List<Animal> findByCliente_IdAndEsActivoTrue(Long idCliente);
 
     @Query(value = """
         SELECT a.id FROM animal a WHERE a.id_cliente = :clienteId        
