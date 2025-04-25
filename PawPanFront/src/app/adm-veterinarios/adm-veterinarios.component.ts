@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { ProfesionalesPorVeterinaria } from '../model/ProfesionalPorVeterinaria';
 
 
 @Component({
@@ -27,7 +28,7 @@ import { MatTableModule } from '@angular/material/table';
 })
 export class AdmVeterinariosComponent implements OnInit{
 
-  dataSource = [];
+  dataSource : ProfesionalesPorVeterinaria[] = [];
 
   displayedColumns: string[] = ['nombre','apellido','matricula', 'acciones']
 

@@ -9,309 +9,317 @@
                     CREAR CUENTA
                 </mat-card-title>
             </div>
-            <mat-card-content>
-                <mat-horizontal-stepper [linear]="true" #stepper [animationDuration]="animationDuration">
-                    <mat-step [stepControl]="datosPersonales">
-                        <form [formGroup]="datosPersonales">
-                            <ng-template matStepLabel>Datos personales</ng-template>
-                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Nombre" formControlName="nombre" required>
-                                    <mat-error *ngIf="datosPersonales.get('nombre')?.hasError('required')">
-                                        Por favor ingrese su nombre.
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Apellido" formControlName="apellido" required>
-                                    <mat-error *ngIf="datosPersonales.get('apellido')?.hasError('required')">
-                                        Por favor ingrese su apellido.
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="DNI" formControlName="dni" required>
-                                    <mat-error *ngIf="datosPersonales.get('dni')?.hasError('required')">
-                                        Por favor ingrese su DNI.
-                                    </mat-error>
-                                    <mat-error *ngIf="datosPersonales.get('dni')?.hasError('dniInvalido')">
-                                        DNI no válido.
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <mat-label>Fecha de Nacimiento</mat-label>
-                                    <input matInput [matDatepicker]="picker" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNac">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                    <mat-error *ngIf="datosPersonales.get('fechaNac')?.hasError('required')">
-                                        Por favor ingrese su fecha de nacimiento.
-                                    </mat-error>
-                                    <mat-error *ngIf="datosPersonales.get('fechaNac')?.hasError('minAge')">
-                                        Debe tener al menos {{ datosPersonales.get('fechaNac')?.getError('minAge').requiredAge }} años.
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Telefono" formControlName="telefono" required>
-                                    <mat-error *ngIf="datosPersonales.get('telefono')?.hasError('required')">
-                                        Por favor ingrese su numero de telefono.
-                                    </mat-error>
-                                    <mat-error *ngIf="datosPersonales.get('telefono')?.hasError('telefonoInvalido')">
-                                        Numero de telefono no válido.
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Correo Electronico" formControlName="correo" required>
-                                    <mat-error *ngIf="datosPersonales.get('contrasenia')?.hasError('required')">
-                                        Por favor ingrese una contraseña.
-                                    </mat-error>
-                                    <mat-error *ngIf="datosPersonales.get('correo')?.hasError('emailInvalido')">
-                                        Formato de correo inválido.
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Contraseña" formControlName="contrasenia" required type="password">
-                                    <mat-error *ngIf="datosPersonales.get('contrasenia')?.hasError('minlength')">
-                                        La contraseña debe tener 6 caracteres como minimo
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Repetir contraseña" formControlName="validarContrasenia" required type="password">
-                                    <mat-error *ngIf="datosPersonales.get('validarContrasenia')?.hasError('minlength')">
-                                        La contraseña debe tener 6 caracteres como minimo
-                                    </mat-error>
-                                    <mat-error *ngIf="datosPersonales.get('validarContrasenia')?.hasError('passwordsMismatch')">
-                                        Las contraseñas no coinciden.
-                                    </mat-error>
-                                </mat-form-field>
-                                <div style="display: flex; flex-direction: row; align-self: flex-end;">
-                                    <button mat-button matStepperNext [disabled]="!validarDatosPersonales()">Siguiente</button>
-                                </div>
-                            </div>
-                        </form>
-                    </mat-step>
-                    <mat-step [completed]="matriculaValidada">
-                        <form [formGroup]="matricula">
-                            <ng-template matStepLabel>Matrícula</ng-template>
-                            <div style="display: flex; flex-direction: column;">
-                                <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                    <mat-label>Matrícula: </mat-label>
-                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 30%; margin: 0 20px;">
-                                        <input matInput placeholder="Nro. Matrícula" formControlName="numeroMatricula" required>
-                                    </mat-form-field>
-                                    <button mat-button style="color: black; background-color: lightblue;" (click)="validarMatricula()">Validar</button>
-                                </div>
-                                <div style="width: 100%;display: flex;justify-content: center;">
-                                    {{mensajeMatricula}}
-                                </div>
-                            </div>
-                            <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                <button mat-button matStepperPrevious>Anterior</button>
-                                <button mat-button matStepperNext>Siguiente</button>
-                            </div>
-                        </form>
-                    </mat-step>
-
-                    <mat-step [stepControl]="formaTrabajo">
-                        <form [formGroup]="formaTrabajo">
-                            <ng-template matStepLabel>Forma de Trabajo</ng-template>
-                            <div style="display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                <div style="width: fit-content;">
-                                    Seleccione el tipo de animal que atiende:
-                                </div>
-                                <div style="display: flex; flex-direction: row; width: fit-content;">
-                                    <div *ngFor="let item of tipoEspecies">
-                                        <mat-checkbox [checked]="item.selected" 
-                                            (change)="selectTipoEspecie($event, item)">
-                                            {{item.nombre}}
-                                        </mat-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                <mat-label>¿Trabaja de forma independiente?</mat-label>
-                                <mat-radio-group formControlName="independiente" style="margin-left: 20px;">
-                                    <mat-radio-button value="true">SI</mat-radio-button>
-                                    <mat-radio-button value="false">NO</mat-radio-button>
-                                </mat-radio-group>
-                            </div>
-                            @if (formaTrabajo.value.independiente == 'false') {
-                                <div style="margin-top: 15px; display: flex; justify-content: center;">
-                                    <span>Una vez creada la cuenta la veterinaria para la cual trabaja deberá asociarlo.</span>
-                                </div>
-                            }
-                            @if (formaTrabajo.value.independiente == 'true') {
-                                <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                    <mat-label>¿Realiza Guardias?</mat-label>
-                                    <mat-radio-group formControlName="haceGuardia" style="margin-left: 20px;">
-                                        <mat-radio-button value="SI">SI</mat-radio-button>
-                                        <mat-radio-button value="NO">NO</mat-radio-button>
-                                    </mat-radio-group>
-                                </div>
-                            }
-                        </form>
-                        @if (formaTrabajo.value.independiente == 'true') {
-                           <span style="margin-left: 125px ;"> <u> Defina los dias y horarios de atención: </u> </span>
-                            <form [formGroup]="horarioTrabajo">
-                                <ng-template matStepLabel>Horaios de Trabajo</ng-template>
+            @if(!usCreado){
+                <mat-card-content>
+                    <mat-horizontal-stepper [linear]="true" #stepper [animationDuration]="animationDuration">
+                        <mat-step [stepControl]="datosPersonales">
+                            <form [formGroup]="datosPersonales">
+                                <ng-template matStepLabel>Datos personales</ng-template>
                                 <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                    <section class="example-section">
-                                        <span class="example-list-section">
-                                            <ul style="display: flex; flex-direction: row;">
-                                                <ng-container *ngFor="let dia of semana().dias; let i = index">
-                                                    <span>
-                                                    <mat-checkbox [(ngModel)]="dia.seleccionado" [ngModelOptions]="{standalone: true}">
-                                                        {{ dia.nombre }}
-                                                    </mat-checkbox>
-                                                    </span>
-                                                </ng-container>
-                                            </ul>
-                                        </span>
-                                    </section>
-                                    <div style="display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 21px; width: 80%;">
-                                        <mat-label>¿Hace horario corrido?</mat-label>
-                                        <mat-radio-group formControlName="corrido" style="margin-left: 20px;">
-                                            <mat-radio-button value="si">Si</mat-radio-button>
-                                            <mat-radio-button value="no">No</mat-radio-button>
-                                        </mat-radio-group>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Nombre" formControlName="nombre" required>
+                                        <mat-error *ngIf="datosPersonales.get('nombre')?.hasError('required')">
+                                            Por favor ingrese su nombre.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Apellido" formControlName="apellido" required>
+                                        <mat-error *ngIf="datosPersonales.get('apellido')?.hasError('required')">
+                                            Por favor ingrese su apellido.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="DNI" formControlName="dni" required>
+                                        <mat-error *ngIf="datosPersonales.get('dni')?.hasError('required')">
+                                            Por favor ingrese su DNI.
+                                        </mat-error>
+                                        <mat-error *ngIf="datosPersonales.get('dni')?.hasError('dniInvalido')">
+                                            DNI no válido.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <mat-label>Fecha de Nacimiento</mat-label>
+                                        <input matInput [matDatepicker]="picker" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNac">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error *ngIf="datosPersonales.get('fechaNac')?.hasError('required')">
+                                            Por favor ingrese su fecha de nacimiento.
+                                        </mat-error>
+                                        <mat-error *ngIf="datosPersonales.get('fechaNac')?.hasError('minAge')">
+                                            Debe tener al menos {{ datosPersonales.get('fechaNac')?.getError('minAge').requiredAge }} años.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Telefono" formControlName="telefono" required>
+                                        <mat-error *ngIf="datosPersonales.get('telefono')?.hasError('required')">
+                                            Por favor ingrese su numero de telefono.
+                                        </mat-error>
+                                        <mat-error *ngIf="datosPersonales.get('telefono')?.hasError('telefonoInvalido')">
+                                            Numero de telefono no válido.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Correo Electronico" formControlName="correo" required>
+                                        <mat-error *ngIf="datosPersonales.get('contrasenia')?.hasError('required')">
+                                            Por favor ingrese una contraseña.
+                                        </mat-error>
+                                        <mat-error *ngIf="datosPersonales.get('correo')?.hasError('emailInvalido')">
+                                            Formato de correo inválido.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Contraseña" formControlName="contrasenia" required type="password">
+                                        <mat-error *ngIf="datosPersonales.get('contrasenia')?.hasError('minlength')">
+                                            La contraseña debe tener 6 caracteres como minimo
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Repetir contraseña" formControlName="validarContrasenia" required type="password">
+                                        <mat-error *ngIf="datosPersonales.get('validarContrasenia')?.hasError('minlength')">
+                                            La contraseña debe tener 6 caracteres como minimo
+                                        </mat-error>
+                                        <mat-error *ngIf="datosPersonales.get('validarContrasenia')?.hasError('passwordsMismatch')">
+                                            Las contraseñas no coinciden.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <div style="display: flex; flex-direction: row; align-self: flex-end;">
+                                        <button mat-button matStepperNext [disabled]="!validarDatosPersonales()">Siguiente</button>
                                     </div>
-                                    <!-- agregar validacion para la opcion seleccionada -->
-                                    <!-- Corregir las condiciones para que se activen al seleccionar si -->
-                                    
-                                    <!-- Horario de corrido -->
-                                    <mat-card *ngIf="horarioTrabajo.value.corrido == 'si'" style="width: 80%;">
-                                        <mat-card-title style="margin: 15px;">Horario de corrido:</mat-card-title>
-                                        <div style="display: flex; align-items: center; justify-content: space-around;">
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
-                                                <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
-                                                    <span>Horario Apertura:</span>
-                                                    <div>
-                                                        <input matInput [ngxTimepicker]="picker" placeholder="Ej: 8:00 AM" formControlName="horarioApertura">
-                                                        <ngx-material-timepicker #picker></ngx-material-timepicker>
-                                                    </div>
-                                                </div>
-                                            </mat-form-field>
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
-                                                <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
-                                                    <span>Horario Cierre:</span>
-                                                    <div>
-                                                        <input matInput [ngxTimepicker]="picker2" placeholder="Ej: 5:00 PM" formControlName="horarioCierre">
-                                                        <ngx-material-timepicker #picker2></ngx-material-timepicker>
-                                                    </div>
-                                                </div>
-                                            </mat-form-field>
-                                        </div>
-                                    </mat-card>
-    
-                                    <!-- Horario cortado -->
-                                    <mat-card *ngIf="horarioTrabajo.value.corrido == 'no'" style="width: 80%;">
-                                        <mat-card-title style="margin: 15px;">Turno Mañana:</mat-card-title>
-                                        <div style="display: flex; align-items: center; justify-content: space-around;">
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
-                                                <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
-                                                    <span>Hora Inicio:</span>
-                                                    <div>
-                                                        <input matInput [ngxTimepicker]="picker3" placeholder="Ej: 8:00 AM" formControlName="mañanaInicio">
-                                                        <ngx-material-timepicker #picker3></ngx-material-timepicker>
-                                                    </div>
-                                                </div>
-                                            </mat-form-field>
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
-                                                <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
-                                                    <span>Hora Fin:</span>
-                                                    <div>
-                                                        <input matInput [ngxTimepicker]="picker4" placeholder="Ej: 12:00 AM" formControlName="mañanaFin">
-                                                        <ngx-material-timepicker #picker4></ngx-material-timepicker>
-                                                    </div>
-                                                </div>
-                                            </mat-form-field>
-                                        </div>
-                                        <mat-card-title style="margin: 15px;">Turno Tarde:</mat-card-title>
-                                        <div style="display: flex; align-items: center; justify-content: space-around;">
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
-                                                <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
-                                                    <span>Hora Inicio:</span>
-                                                    <div>
-                                                        <input matInput [ngxTimepicker]="picker5" placeholder="Ej: 4:00 PM" formControlName="tardeInicio">
-                                                        <ngx-material-timepicker #picker5></ngx-material-timepicker>
-                                                    </div>
-                                                </div>
-                                            </mat-form-field>
-                                            <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
-                                                <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
-                                                    <span>Hora Fin:</span>
-                                                    <div>
-                                                        <input matInput [ngxTimepicker]="picker6" placeholder="Ej: 8:00 PM" formControlName="tardeFin">
-                                                        <ngx-material-timepicker #picker6></ngx-material-timepicker>
-                                                    </div>
-                                                </div>
-                                            </mat-form-field>
-                                        </div>
-                                    </mat-card>
                                 </div>
-    
-                                <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
-                                    <button mat-button [disabled]="!habilitarAgregarHorario()" (click)="agregarHorario()">Agregar</button>
+                            </form>
+                        </mat-step>
+                        <mat-step [completed]="matriculaValidada">
+                            <form [formGroup]="matricula">
+                                <ng-template matStepLabel>Matrícula</ng-template>
+                                <div style="display: flex; flex-direction: column;">
+                                    <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                        <mat-label>Matrícula: </mat-label>
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 30%; margin: 0 20px;">
+                                            <input matInput placeholder="Nro. Matrícula" formControlName="numeroMatricula" required>
+                                        </mat-form-field>
+                                        <button mat-button style="color: black; background-color: lightblue;" (click)="validarMatricula()">Validar</button>
+                                    </div>
+                                    <div style="width: 100%;display: flex;justify-content: center;">
+                                        {{mensajeMatricula}}
+                                    </div>
                                 </div>
-        
-                                <!-- <mat-chip-set style="margin-bottom: 10px;">
-                                    @for (item of horarios; track $index) {
-                                        <mat-chip-row (removed)="quitarHorario(item)">
-                                            {{item.horaInicio}} - {{item.horaFin}}
-                                            <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                            </button>
-                                        </mat-chip-row>
-                                    }
-                                </mat-chip-set> -->
-    
-                                <mat-chip-set style="margin-bottom: 10px;">
-                                    <ng-container *ngFor="let item of diasHorarios; let i = index">
-                                        <mat-chip-row (removed)="quitarHorario(item)">
-                                        {{item.dia}} {{" ["}}
-                                        <ng-container *ngFor="let horario of item.horarios; let j = index">
-                                            {{horario.horaInicio}} - {{horario.horaFin}}
-                                            <span *ngIf="j < item.horarios.length - 1">, </span>  <!-- Separar con coma si no es el último horario -->
-                                        </ng-container>
-                                        {{" ]"}}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                        </mat-chip-row>
-                                    </ng-container>
-                                </mat-chip-set>
-                                    
-        
                                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                     <button mat-button matStepperPrevious>Anterior</button>
+                                    <button mat-button matStepperNext>Siguiente</button>
                                 </div>
                             </form>
-                            <form [formGroup]="ubicacion">
-                                <ng-template matStepLabel>Domicilio</ng-template>
-                                <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                        <mat-label>Ciudad</mat-label>
-                                        <mat-select formControlName="ciudad" required>
-                                            <mat-option value="0">Seleccione su ciudad...</mat-option>
-                                            @for (item of this.ciudades; track $index) {
-                                                <mat-option [value]="item.id">{{item.nombre}}</mat-option>
-                                            }
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                        <input matInput placeholder="Calle" formControlName="calle" required>
-                                    </mat-form-field>
-                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                        <input matInput placeholder="Número" formControlName="numero" required>
-                                    </mat-form-field>
+                        </mat-step>
+    
+                        <mat-step [stepControl]="formaTrabajo">
+                            <form [formGroup]="formaTrabajo">
+                                <ng-template matStepLabel>Forma de Trabajo</ng-template>
+                                <div style="display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                    <div style="width: fit-content;">
+                                        Seleccione el tipo de animal que atiende:
+                                    </div>
+                                    <div style="display: flex; flex-direction: row; width: fit-content;">
+                                        <div *ngFor="let item of tipoEspecies">
+                                            <mat-checkbox [checked]="item.selected" 
+                                                (change)="selectTipoEspecie($event, item)">
+                                                {{item.nombre}}
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                    <mat-label>¿Trabaja de forma independiente?</mat-label>
+                                    <mat-radio-group formControlName="independiente" style="margin-left: 20px;">
+                                        <mat-radio-button value="true">SI</mat-radio-button>
+                                        <mat-radio-button value="false">NO</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                                @if (formaTrabajo.value.independiente == 'false') {
+                                    <div style="margin-top: 15px; display: flex; justify-content: center;">
+                                        <span>Una vez creada la cuenta la veterinaria para la cual trabaja deberá asociarlo.</span>
+                                    </div>
+                                }
+                                @if (formaTrabajo.value.independiente == 'true') {
+                                    <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                        <mat-label>¿Realiza Guardias?</mat-label>
+                                        <mat-radio-group formControlName="haceGuardia" style="margin-left: 20px;">
+                                            <mat-radio-button value="SI">SI</mat-radio-button>
+                                            <mat-radio-button value="NO">NO</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                }
                             </form>
-                        }
-                        <div style="display: flex; flex-direction: row; justify-content: flex-end;" *ngIf="habilitarCrearCuenta()">
-                            <button mat-button (click)="onConfirmar()">Crear cuenta</button>
-                        </div>
-                    </mat-step>
-
-
-                </mat-horizontal-stepper>
-            </mat-card-content>
+                            @if (formaTrabajo.value.independiente == 'true') {
+                               <span style="margin-left: 125px ;"> <u> Defina los dias y horarios de atención: </u> </span>
+                                <form [formGroup]="horarioTrabajo">
+                                    <ng-template matStepLabel>Horaios de Trabajo</ng-template>
+                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <section class="example-section">
+                                            <span class="example-list-section">
+                                                <ul style="display: flex; flex-direction: row;">
+                                                    <ng-container *ngFor="let dia of semana().dias; let i = index">
+                                                        <span>
+                                                        <mat-checkbox [(ngModel)]="dia.seleccionado" [ngModelOptions]="{standalone: true}">
+                                                            {{ dia.nombre }}
+                                                        </mat-checkbox>
+                                                        </span>
+                                                    </ng-container>
+                                                </ul>
+                                            </span>
+                                        </section>
+                                        <div style="display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 21px; width: 80%;">
+                                            <mat-label>¿Hace horario corrido?</mat-label>
+                                            <mat-radio-group formControlName="corrido" style="margin-left: 20px;">
+                                                <mat-radio-button value="si">Si</mat-radio-button>
+                                                <mat-radio-button value="no">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <!-- agregar validacion para la opcion seleccionada -->
+                                        <!-- Corregir las condiciones para que se activen al seleccionar si -->
+                                        
+                                        <!-- Horario de corrido -->
+                                        <mat-card *ngIf="horarioTrabajo.value.corrido == 'si'" style="width: 80%;">
+                                            <mat-card-title style="margin: 15px;">Horario de corrido:</mat-card-title>
+                                            <div style="display: flex; align-items: center; justify-content: space-around;">
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                        <span>Horario Apertura:</span>
+                                                        <div>
+                                                            <input matInput [ngxTimepicker]="picker" placeholder="Ej: 8:00 AM" formControlName="horarioApertura">
+                                                            <ngx-material-timepicker #picker></ngx-material-timepicker>
+                                                        </div>
+                                                    </div>
+                                                </mat-form-field>
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                        <span>Horario Cierre:</span>
+                                                        <div>
+                                                            <input matInput [ngxTimepicker]="picker2" placeholder="Ej: 5:00 PM" formControlName="horarioCierre">
+                                                            <ngx-material-timepicker #picker2></ngx-material-timepicker>
+                                                        </div>
+                                                    </div>
+                                                </mat-form-field>
+                                            </div>
+                                        </mat-card>
+        
+                                        <!-- Horario cortado -->
+                                        <mat-card *ngIf="horarioTrabajo.value.corrido == 'no'" style="width: 80%;">
+                                            <mat-card-title style="margin: 15px;">Turno Mañana:</mat-card-title>
+                                            <div style="display: flex; align-items: center; justify-content: space-around;">
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                        <span>Hora Inicio:</span>
+                                                        <div>
+                                                            <input matInput [ngxTimepicker]="picker3" placeholder="Ej: 8:00 AM" formControlName="mañanaInicio">
+                                                            <ngx-material-timepicker #picker3></ngx-material-timepicker>
+                                                        </div>
+                                                    </div>
+                                                </mat-form-field>
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                        <span>Hora Fin:</span>
+                                                        <div>
+                                                            <input matInput [ngxTimepicker]="picker4" placeholder="Ej: 12:00 AM" formControlName="mañanaFin">
+                                                            <ngx-material-timepicker #picker4></ngx-material-timepicker>
+                                                        </div>
+                                                    </div>
+                                                </mat-form-field>
+                                            </div>
+                                            <mat-card-title style="margin: 15px;">Turno Tarde:</mat-card-title>
+                                            <div style="display: flex; align-items: center; justify-content: space-around;">
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                        <span>Hora Inicio:</span>
+                                                        <div>
+                                                            <input matInput [ngxTimepicker]="picker5" placeholder="Ej: 4:00 PM" formControlName="tardeInicio">
+                                                            <ngx-material-timepicker #picker5></ngx-material-timepicker>
+                                                        </div>
+                                                    </div>
+                                                </mat-form-field>
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 45%;">
+                                                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-around;">
+                                                        <span>Hora Fin:</span>
+                                                        <div>
+                                                            <input matInput [ngxTimepicker]="picker6" placeholder="Ej: 8:00 PM" formControlName="tardeFin">
+                                                            <ngx-material-timepicker #picker6></ngx-material-timepicker>
+                                                        </div>
+                                                    </div>
+                                                </mat-form-field>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+        
+                                    <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 10px; margin-right: 10%;">
+                                        <button mat-button [disabled]="!habilitarAgregarHorario()" (click)="agregarHorario()">Agregar</button>
+                                    </div>
+            
+                                    <!-- <mat-chip-set style="margin-bottom: 10px;">
+                                        @for (item of horarios; track $index) {
+                                            <mat-chip-row (removed)="quitarHorario(item)">
+                                                {{item.horaInicio}} - {{item.horaFin}}
+                                                <button matChipRemove>
+                                                <mat-icon>cancel</mat-icon>
+                                                </button>
+                                            </mat-chip-row>
+                                        }
+                                    </mat-chip-set> -->
+        
+                                    <mat-chip-set style="margin-bottom: 10px;">
+                                        <ng-container *ngFor="let item of diasHorarios; let i = index">
+                                            <mat-chip-row (removed)="quitarHorario(item)">
+                                            {{item.dia}} {{" ["}}
+                                            <ng-container *ngFor="let horario of item.horarios; let j = index">
+                                                {{horario.horaInicio}} - {{horario.horaFin}}
+                                                <span *ngIf="j < item.horarios.length - 1">, </span>  <!-- Separar con coma si no es el último horario -->
+                                            </ng-container>
+                                            {{" ]"}}
+                                            <button matChipRemove>
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                            </mat-chip-row>
+                                        </ng-container>
+                                    </mat-chip-set>
+                                        
+            
+                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                        <button mat-button matStepperPrevious>Anterior</button>
+                                    </div>
+                                </form>
+                                <form [formGroup]="ubicacion">
+                                    <ng-template matStepLabel>Domicilio</ng-template>
+                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                            <mat-label>Ciudad</mat-label>
+                                            <mat-select formControlName="ciudad" required>
+                                                <mat-option value="0">Seleccione su ciudad...</mat-option>
+                                                @for (item of this.ciudades; track $index) {
+                                                    <mat-option [value]="item.id">{{item.nombre}}</mat-option>
+                                                }
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                            <input matInput placeholder="Calle" formControlName="calle" required>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                            <input matInput placeholder="Número" formControlName="numero" required>
+                                        </mat-form-field>
+                                    </div>
+                                </form>
+                            }
+                            <div style="display: flex; flex-direction: row; justify-content: flex-end;" *ngIf="habilitarCrearCuenta()">
+                                <button mat-button (click)="onConfirmar()">Crear cuenta</button>
+                            </div>
+                        </mat-step>
+    
+    
+                    </mat-horizontal-stepper>
+                </mat-card-content>
+            }
+            @if(usCreado){
+                <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-content: center; margin-top: 20px;">
+                    <mat-card-title style="display: flex; justify-content: center;">Usuario creado con éxito</mat-card-title>
+                    <mat-card-content style="display: flex; justify-content: center;">El usuario fue creado exitosamente. Ya podes iniciar sesion con tu correo y contraseña <a routerLink="/iniciar-sesion" style="margin-left: 5px;">ingresando acá</a>.</mat-card-content>
+                </div>
+            }
         </mat-card>
     </div>
 </div>

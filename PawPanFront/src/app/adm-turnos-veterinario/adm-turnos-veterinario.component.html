@@ -1,0 +1,93 @@
+<div class="form">
+    <div class="container">
+        <mat-card style="width: 90%;">
+            <mat-card-title style="margin:20px">
+                Administracion de turnos
+            </mat-card-title>
+            <mat-card-content>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Buscar por fecha</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filtros.fecha">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+              
+                  <mat-form-field appearance="outline">
+                    <mat-label>Filtrar por estado</mat-label>
+                    <mat-select [(ngModel)]="filtros.nEstado">
+                      <mat-option *ngFor="let estado of estados" [value]="estado.nombre">
+                        {{ estado.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              
+                </div>
+              
+                <button mat-icon-button (click)="getTurnos()">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </div>
+              
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+              
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef> FECHA </th>
+                  <td mat-cell *matCellDef="let element"> {{ element.fecha | date:"dd/MM/yyyy HH:mm" }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="animal">
+                  <th mat-header-cell *matHeaderCellDef> ANIMAL </th>
+                  <td mat-cell *matCellDef="let element"> {{ element.nombreAnimal }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="especie">
+                  <th mat-header-cell *matHeaderCellDef> ESPECIE </th>
+                  <td mat-cell *matCellDef="let element"> {{ element.especie }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="raza">
+                  <th mat-header-cell *matHeaderCellDef> RAZA </th>
+                  <td mat-cell *matCellDef="let element"> {{ element.raza }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef> ESTADO </th>
+                  <td mat-cell *matCellDef="let element"> {{ getNombreEstado(element.estadoId) }} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef>  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button (click)="onDialogConfirmar(element, 'Atender')" matTooltip="Registrar atención de turno" *ngIf="element.estadoId==3">
+                      <span class="material-symbols-outlined">
+                        edit_note
+                      </span>
+                    </button>
+                    <button mat-icon-button (click)="onDialogConfirmar(element, 'Aceptar')" matTooltip="Aceptar turno"  *ngIf="element.estadoId==1">
+                      <span class="material-symbols-outlined">
+                        check
+                      </span>
+                    </button>
+                    <button mat-icon-button (click)="onDialogConfirmar(element, 'Cancelar')" matTooltip="Cancelar turno"  *ngIf="element.estadoId==3">
+                      <span class="material-symbols-outlined">
+                        close
+                      </span>
+                    </button>
+                    <button mat-icon-button (click)="onDialogConfirmar(element, 'Rechazar')" matTooltip="Rechazar turno"  *ngIf="element.estadoId==1">
+                      <span class="material-symbols-outlined">
+                        close
+                      </span>
+                    </button>
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator [pageSize]="filtros.size" [hidePageSize]="true" [length]="total" (page)="paginado($event)"></mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

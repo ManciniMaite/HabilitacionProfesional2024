@@ -27,9 +27,7 @@
         }
         <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
             <mat-label>Fecha de Nacimiento</mat-label>
-            <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
+            <input matInput  placeholder="Ingresa la fecha de nacimiento" formControlName="fechaNacMascota">
         </mat-form-field>
         <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
             <input matInput placeholder="Peso en kg" formControlName="peso" required>
@@ -38,6 +36,6 @@
 
     <mat-card-actions style="display: flex; justify-content: end;">
         <button mat-raised-button style="margin-right: 10px;" (click)="close()">Cancelar</button>
-        <button mat-flat-button (click)="onSave()">Agregar</button>
+        <button mat-flat-button (click)="onSave()" [disabled]="!mascota.valid">Agregar</button>
     </mat-card-actions>
 </form>

@@ -1,1 +1,20 @@
-<p>emergencia works!</p>
+<div style="display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px;">
+  @if (contactos) {
+    <mat-accordion style="width: 60%;">
+      @for (vete of contactos; track $index) {
+        <mat-expansion-panel class="alert-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="alert-icon">notification_important</mat-icon>
+              {{vete.nombre}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>Tel: <b>{{vete.telefono}}</b></p>
+          <p>Domicilio: <b>{{vete.domicilio}}</b></p>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  } @else {
+    <span>No hay servicios de guardias disponibles.</span>
+  }
+</div>

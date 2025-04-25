@@ -50,19 +50,19 @@ public class TurnoController {
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_CANCELAR, method = RequestMethod.POST)
-    public TurnoResponse reservarCancelar(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservarCancelar(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.cancelarTurno(request);
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_ACEPTAR, method = RequestMethod.POST)
-    public TurnoResponse reservaAceptado(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservaAceptado(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.aceptarTurno(request);
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_RECHAZAR, method = RequestMethod.POST)
-    public TurnoResponse reservaRechazar(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservaRechazar(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.rechazarTurno(request);
 	}

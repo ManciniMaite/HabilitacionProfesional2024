@@ -8,7 +8,7 @@
     @if(usuario){
         <div style="width:fit-content; display: flex; flex-direction: row; align-items: center;">
             <span>{{usuario.nombre}}</span>
-            <button mat-icon-button><mat-icon><img [src]="'../../assets/logout_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg'"></mat-icon></button>
+            <button mat-icon-button (click)="logOut()"><mat-icon><img [src]="'../../assets/logout_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg'"></mat-icon></button>
         </div>
     }
 </div>

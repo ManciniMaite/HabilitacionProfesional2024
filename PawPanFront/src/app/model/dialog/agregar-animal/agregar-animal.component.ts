@@ -9,16 +9,18 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../generic-dialog/generic-dialog.component';
 import { AnimalService } from '../../../services/animal.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker'; 
+import { MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { AuthService } from '../../../services/auth.service';
+import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 
 @Component({
   selector: 'app-agregar-animal',
@@ -31,15 +33,21 @@ import { AuthService } from '../../../services/auth.service';
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    MatNativeDateModule,
     MatDatepickerModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatNativeDateModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-AR' }
   ],
   templateUrl: './agregar-animal.component.html',
   styleUrl: './agregar-animal.component.scss'
 })
 export class AgregarAnimalComponent implements OnInit{
+  private dateAdapter = inject(DateAdapter);
+
   idUs: number;
 
   mascota: FormGroup;
@@ -67,6 +75,7 @@ export class AgregarAnimalComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.dateAdapter.setLocale('es-AR');
     this.getEspecies();
   }
 
@@ -146,7 +155,7 @@ export class AgregarAnimalComponent implements OnInit{
     this.service.crearAnimal(rq).subscribe({
       next:(data)=>{
         if(data.estado!='ERROR'){
-          this.openSnackBar('Profesional quitado', 'Cerrar');
+          this.openSnackBar('Animal agregado!', 'Cerrar');
           this.dialogRef.close(true);
         }else{
           this.dialog.open(GenericDialogComponent, {

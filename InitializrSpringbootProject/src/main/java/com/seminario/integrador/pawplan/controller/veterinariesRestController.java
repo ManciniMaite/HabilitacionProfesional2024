@@ -4,6 +4,7 @@
  */
 package com.seminario.integrador.pawplan.controller;
 
+import com.seminario.integrador.pawplan.controller.values.ProfesionalesPorVeterinariaRs;
 import com.seminario.integrador.pawplan.controller.values.Response;
 import com.seminario.integrador.pawplan.controller.values.VeterinarioVeterinariaResponse;
 import com.seminario.integrador.pawplan.model.Usuario;
@@ -32,7 +33,7 @@ public class veterinariesRestController {
     }
 
     @GetMapping("/getVeterinariosPorVeterinaria")
-    public Response getProfesionalesPorVeterinaria(){
+    public ProfesionalesPorVeterinariaRs getProfesionalesPorVeterinaria(){
         return this.service.getProfesionales();
     }
 
@@ -51,4 +52,5 @@ public class veterinariesRestController {
     public Usuario getByDni(@PathVariable("dni") String dni ){
         return this.service.getByDni(dni);
     }
+
 }

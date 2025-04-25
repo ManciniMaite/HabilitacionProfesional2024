@@ -253,7 +253,7 @@ public class TurnoService {
 		//return null;
 	}
 	
-	public TurnoResponse cancelarTurno(TurnoRequest turnoRequest) {
+	public TurnoResponse cancelarTurno(AtenderTurnoRq turnoRequest) {
 		
 		TurnoResponse result = new TurnoResponse();
 		
@@ -269,9 +269,14 @@ public class TurnoService {
 		Estado estadoCancelado = estadoRepository.findByNombre(EnumEstados.CANCELADO.getNombre()).get(0);
 		
 		//hacemos el cambio de estado
-		result.setTurno(
-				cambiarEstadoTurno(turnoRequest, estadoCancelado)
-				);
+		Turno turno = cambiarEstadoTurno(turnoRequest.getIdTurno(), estadoCancelado);
+
+		turno.getVeterinario().setHorarios(null);
+		if(turno.getVeterinaria()!=null){
+			turno.getVeterinaria().setHorarioAtencion(null);
+		}
+
+		result.setTurno(turno);
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Cancelar turno ok.");
@@ -322,7 +327,7 @@ public class TurnoService {
 		return result;
 	}
 	
-	public TurnoResponse aceptarTurno(TurnoRequest turnoRequest) {
+	public TurnoResponse aceptarTurno(AtenderTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -340,7 +345,14 @@ public class TurnoService {
 		
 		Estado estado = estadoRepository.findByNombre(EnumEstados.ACEPTADO.getNombre()).get(0);
 		
-		result.setTurno(cambiarEstadoTurno(turnoRequest, estado));
+		Turno turno = cambiarEstadoTurno(turnoRequest.getIdTurno(), estado);
+
+		turno.getVeterinario().setHorarios(null);
+		if(turno.getVeterinaria()!=null){
+			turno.getVeterinaria().setHorarioAtencion(null);
+		}
+
+		result.setTurno(turno);
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Turno ACEPTADO ok.");
@@ -349,7 +361,7 @@ public class TurnoService {
 		return result;
 	}
 	
-	public TurnoResponse rechazarTurno(TurnoRequest turnoRequest) {
+	public TurnoResponse rechazarTurno(AtenderTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
 		PrincipalPawplan session = authenticationFacade.getPrincipal();
@@ -367,7 +379,14 @@ public class TurnoService {
 		
 		Estado estado = estadoRepository.findByNombre(EnumEstados.RECHAZADO.getNombre()).get(0);
 		
-		result.setTurno(cambiarEstadoTurno(turnoRequest, estado));
+		Turno turno = cambiarEstadoTurno(turnoRequest.getIdTurno(), estado);
+
+		turno.getVeterinario().setHorarios(null);
+		if(turno.getVeterinaria()!=null){
+			turno.getVeterinaria().setHorarioAtencion(null);
+		}
+
+		result.setTurno(turno);
 		
 		result.setEstado(EnumEstadosGenerales.OK.getEstado());
 		result.setMensaje("Turno RECHAZADO ok.");
@@ -415,8 +434,8 @@ public class TurnoService {
 		return result;
 	}
 	
-	public Turno cambiarEstadoTurno(TurnoRequest turnoRequest, Estado estado) {
-		Turno turno = turnoRepository.findById(turnoRequest.getTurnoId()).get();
+	public Turno cambiarEstadoTurno(Long idTurno, Estado estado) {
+		Turno turno = turnoRepository.findById(idTurno).get();
 		turno.setEstado(estado);
 		return turnoRepository.save(turno);
 	}
@@ -436,6 +455,8 @@ public class TurnoService {
 		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
 		Role role = Role.resolve(principalPawplan.getRole().toString());
 
+		String animalesId = null;
+
 		//SET ID SEGUN CORRESPONDA
 		if (role != null) {
 			switch (role) {
@@ -447,6 +468,19 @@ public class TurnoService {
 					break;
 				case PACIENTE:
 					turnoRequest.setIdCliente(principalPawplan.getClienteId());
+
+					//listado de id de los animales del cliente
+					List<Long> animalIds = null;
+					if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
+						//si hay un id especifico entonces buscamos por ese
+						animalIds = List.of(turnoRequest.getIdAnimal());
+					} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
+						//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
+						animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
+					}
+
+					animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
+
 					break;
 				default:
 					rs.setEstado("ERROR");
@@ -460,7 +494,11 @@ public class TurnoService {
 		}
 
 		//buscar estado que venga en la rq
-		Estado estado = estadoRepository.findByNombre(turnoRequest.getNEstado()).get(0);
+		Long idEstado = null;
+		if(turnoRequest.getNEstado()!=null && !"".trim().equals(turnoRequest.getNEstado())){
+			idEstado = estadoRepository.findByNombre(turnoRequest.getNEstado()).get(0).getId();
+		}
+
 		
 		//fecha sin hora 
 		// java.sql.Date fechaSinHora = null;
@@ -470,30 +508,17 @@ public class TurnoService {
 
 		LocalDate fechaSinHora = null;
 		if (turnoRequest.getFecha() != null) {
-			fechaSinHora = turnoRequest.getFecha().toInstant()
-									.atZone(ZoneId.systemDefault())
-									.toLocalDate();
+			fechaSinHora = turnoRequest.getFecha().toLocalDate();
 		}
 
-		//listado de id de los animales del cliente
-		List<Long> animalIds = null;
-		if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
-			//si hay un id especifico entonces buscamos por ese
-			animalIds = List.of(turnoRequest.getIdAnimal());
-		} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
-			//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
-			animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
-		}
 
-		String animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
-
+		
 		List<TurnoFb> turnos = null;
 		Long total = 0l;
-		System.out.println(animalIds);
 
 		try {
 
-			System.out.println("idEstado: " + estado.getId());
+			System.out.println("idEstado: " + idEstado);
 			System.out.println("Fecha recibida: " + turnoRequest.getFecha());
 			System.out.println("Cliente ID: " + turnoRequest.getIdCliente());
 			System.out.println("Animales: " + animalesId);
@@ -504,14 +529,14 @@ public class TurnoService {
 				animalesId, 
 				turnoRequest.getIdVeterinaria(), 
 				turnoRequest.getIdVeterinario(), 
-				estado.getId(), 
+				idEstado, 
 				fechaSinHora, 
 				turnoRequest.getPage(), turnoRequest.getSize(), turnoRequest.getOrderBy(), turnoRequest.getOrderDir());
     		total = turnoRepository.contarTurnos(
 				animalesId, 
 				turnoRequest.getIdVeterinaria(), 
 				turnoRequest.getIdVeterinario(), 
-				estado.getId(), 
+				idEstado, 
 				fechaSinHora
 			);
 
