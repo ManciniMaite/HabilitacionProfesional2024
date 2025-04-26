@@ -118,7 +118,7 @@
                                 }
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                     <mat-label>Fecha de Nacimiento</mat-label>
-                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota">
+                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota" [max]="date">
                                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                     <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>

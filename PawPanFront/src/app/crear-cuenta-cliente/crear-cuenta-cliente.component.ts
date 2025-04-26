@@ -62,6 +62,8 @@ export class CrearCuentaClienteComponent implements OnInit{
   mascota: FormGroup;
   ubicacion: FormGroup;
 
+  date: Date = new Date();
+
   animales: Animal[] = [];
 
   ciudades: Ciudad[] = [];

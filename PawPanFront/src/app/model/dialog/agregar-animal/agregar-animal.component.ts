@@ -45,6 +45,8 @@ import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/materia
 export class AgregarAnimalComponent implements OnInit{
   private dateAdapter = inject(DateAdapter);
 
+  date: Date = new Date();
+
   idUs: number;
 
   mascota: FormGroup;
