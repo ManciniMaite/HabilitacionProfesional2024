@@ -28,6 +28,7 @@ export class AuthService {
 
   onLogOut(): Observable<SessionManagerResponse>{
     AppComponent.app.tieneSesion = false;
+    AppComponent.app.cerrarSiveNav();
     return this.http.get<SessionManagerResponse>(this.baseURL + "/SessionLogout");
   }
 
