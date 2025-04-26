@@ -13,7 +13,7 @@
                   </div>
                     <!-- <mat-card-title style="margin: 20px">Registrar atencion de turno:</mat-card-title> -->
                     <p style="margin-left: 20px">
-                        {{turno.fechaHora | date:'dd/MM/yyyy hh:mm'}}<br>
+                        Fecha hora: {{turno.fechaHora | date:'dd/MM/yyyy hh:mm'}}<br>
                     </p>
                     <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                         <mat-accordion style="width: 95%; margin-bottom: 10px;">
@@ -53,11 +53,17 @@
                             </mat-accordion>
                         }
                     </div>
-                    <div style="margin: 20px">
-                        <p>
-                            Descripcion: <br>
-                            {{turno.descripcionPublica}}
-                        </p>
+                    <div style="margin: 20px; ">
+                        <div>
+                          <mat-card-subtitle>Descripcion de atencion: </mat-card-subtitle>
+                          {{turno.descripcionPublica}}
+                        </div>
+                        @if((rol=="VETERINARIO" || rol=="VETERINARIA") && turno.descripcionPrivada ){
+                          <div>
+                            <mat-card-subtitle>Informacion interna: </mat-card-subtitle>
+                            {{turno.descripcionPrivada}}
+                          </div>
+                        }
                     </div>
                 </mat-card-content>
             }

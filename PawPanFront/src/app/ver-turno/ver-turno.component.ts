@@ -13,6 +13,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-ver-turno',
   standalone: true,
@@ -33,6 +34,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './ver-turno.component.scss'
 })
 export class VerTurnoComponent implements OnInit{
+  authService = inject(AuthService); 
+  rol: string
   id: number;
   turno: Turno
 
@@ -50,6 +53,9 @@ export class VerTurnoComponent implements OnInit{
 
   }
   ngOnInit(): void {
+    this.authService.usuario$.subscribe(usuario => {
+      this.rol = usuario?.rol  
+    });
     this.cargando=true;
     this.route.paramMap.subscribe(params => {
       this.id = Number(params.get('id'));

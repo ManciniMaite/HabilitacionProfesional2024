@@ -25,6 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClienteDTO } from '../model/ClienteDTO';
+import { AnimalDTO } from '../model/AnimalDTO';
 
 @Component({
   selector: 'app-adm-turnos-reservados',
@@ -58,6 +60,11 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
   dataSource: TurnoFb[];
   total: number;
 
+  clientes: ClienteDTO[];
+  clientesFiltrados: ClienteDTO[];
+  animales: AnimalDTO[];
+  inputDNI: string
+
   displayedColumns: string[] = 
   [
     'fecha',
@@ -87,7 +94,8 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
     this.filtros.size=10;
     this.filtros.orderDir="DESC"
     this.filtros.orderBy="fecha_hora"
-    this.getTurnos()
+    this.getTurnos();
+    this.getClientes();
   }
   volver(){
     this.location.back();
@@ -97,7 +105,7 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
     this.turnoService.getMisTurnos(this.filtros).subscribe({
       next: (data)=>{
         if(data.estado!="ERROR"){
-          this.dataSource=data.turnos;
+          this.dataSource=[...data.turnos];
           this.total = data.total;
         }else{
           this.dialog.open(GenericDialogComponent, {
@@ -268,6 +276,60 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
     });
   }
 
+  getClientes(){
+    this.turnoService.getClientesDeVeterinarie().subscribe({
+      next: (data)=>{
+        if (data.estado!= "ERROR"){
+          this.clientes = data.clientes;
+          this.clientesFiltrados = this.clientes;
+        } else{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: data.mensaje,
+              cancelText: 'Cerrar'
+            }
+          });
+        }
+      }, error: (error)=>{
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: 'Ocurrio un error al buscar los clientes',
+            cancelText: 'Cerrar'
+          }
+        });
+      }
+    });
+  }
+
+  filtrarClientesPorDni(){
+    this.clientesFiltrados = this.clientes.filter(cliente =>
+      cliente.dni.includes(this.inputDNI)
+    );
+  }
+
+  limpiarFiltroCliente(){
+    this.filtros.idCliente=0;
+    this.filtros.idAnimal=0;
+  }
+
+  getAnimalesDeCliente(id: number) {
+    this.filtros.idAnimal=0;
+    let a: AnimalDTO[] | undefined = [];
+    
+    if (this.filtros.idCliente != 0) {
+        a = this.clientes.find(cliente => cliente.clienteId === id)?.animales;
+    }
+
+    if (a) {
+        this.animales = [...a];
+    }
+  }
+
+
   paginado(event:any){
 		this.filtros.page = event.pageIndex;
     this.getTurnos();
@@ -277,4 +339,7 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
     this._snackBar.open(message, action);
   }
 
+  onVer(id:number){
+    this.router.navigate(['ver-turno/'+id])
+  }
 }

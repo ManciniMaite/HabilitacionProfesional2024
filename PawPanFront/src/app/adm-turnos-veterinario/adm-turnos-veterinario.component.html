@@ -10,6 +10,36 @@
               </mat-card-title>
           </div>
             <mat-card-content>
+              <div style="display: flex; gap: 15px; align-items: baseline;">
+                <mat-form-field appearance="outline" style="width: 400px;">
+                  <mat-label>Buscar Cliente</mat-label>
+                
+                  <mat-select [(ngModel)]="filtros.idCliente">
+                    <input matInput placeholder="DNI del cliente" [(ngModel)]="inputDNI" (input)="filtrarClientesPorDni()" style="width: 100%;">
+                    <mat-option *ngFor="let cliente of clientesFiltrados" [value]="cliente.clienteId" (click)="getAnimalesDeCliente(cliente.clienteId)">
+                      {{ cliente.clienteNombre }} {{ cliente.clienteApellido }} 
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                @if(filtros.idCliente && animales && animales.length>0){
+                  <mat-form-field appearance="outline" style="width: 400px;">
+                    <mat-label>Filtrar por mascota</mat-label>
+                    <mat-select [(ngModel)]="filtros.idAnimal">
+                        <mat-option *ngFor="let animal of animales" [value]="animal.animal_id">
+                        {{ animal.animal_nombre }}
+                        </mat-option>
+                        <mat-option [value]="null">
+                          TODOS
+                        </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                }
+
+                <button  mat-stroked-button (click)="limpiarFiltroCliente()">
+                  Quitar filtro cliente
+                </button>
+
+              </div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; gap: 15px; align-items: center;">
                   <mat-form-field appearance="outline">
@@ -83,6 +113,11 @@
                     <button mat-icon-button (click)="onDialogConfirmar(element, 'Rechazar')" matTooltip="Rechazar turno"  *ngIf="element.estadoId==1">
                       <span class="material-symbols-outlined">
                         close
+                      </span>
+                    </button>
+                    <button mat-icon-button (click)="onVer(element.id)" matTooltip="Ver turno"  *ngIf="element.estadoId==5">
+                      <span class="material-symbols-outlined">
+                        visibility
                       </span>
                     </button>
                   </td>

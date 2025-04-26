@@ -454,8 +454,8 @@ public class TurnoService {
 
 		// System.out.println("NEstado: " + turnoRequest.getNEstado());
 		// System.out.println("Fecha recibida: " + turnoRequest.getFecha());
-		// System.out.println("Cliente ID: " + turnoRequest.getIdCliente());
-		// System.out.println("Animal ID: " + turnoRequest.getIdAnimal());
+		System.out.println("Cliente ID RQ: " + turnoRequest.getIdCliente());
+		System.out.println("Animal ID RQ: " + turnoRequest.getIdAnimal());
 		// System.out.println("Veterinario ID: " + turnoRequest.getIdVeterinario());
 
 		
@@ -463,7 +463,7 @@ public class TurnoService {
 		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
 		Role role = Role.resolve(principalPawplan.getRole().toString());
 
-		String animalesId = null;
+		
 
 		//SET ID SEGUN CORRESPONDA
 		if (role != null) {
@@ -477,18 +477,7 @@ public class TurnoService {
 				case PACIENTE:
 					turnoRequest.setIdCliente(principalPawplan.getClienteId());
 
-					//listado de id de los animales del cliente
-					List<Long> animalIds = null;
-					if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
-						//si hay un id especifico entonces buscamos por ese
-						animalIds = List.of(turnoRequest.getIdAnimal());
-					} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
-						//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
-						animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
-					}
-
-					animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
-
+					
 					break;
 				default:
 					rs.setEstado("ERROR");
@@ -500,6 +489,24 @@ public class TurnoService {
 			rs.setMensaje("Rol de Session invalido!");
 			return rs;
 		}
+
+		String animalesId = null;
+		//FILTRO DE ANIMALES SEGUN CLIENTE
+		List<Long> animalIds = null;
+		if (turnoRequest.getIdAnimal() != null && turnoRequest.getIdAnimal() != 0) {
+			//si hay un id especifico entonces buscamos por ese
+			animalIds = List.of(turnoRequest.getIdAnimal());
+		} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
+			//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
+			animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
+		}
+
+		if(animalIds!=null && !animalIds.isEmpty()){
+			animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
+		} else{
+			animalesId = null;
+		}
+
 
 		//buscar estado que venga en la rq
 		Long idEstado = null;
@@ -528,8 +535,8 @@ public class TurnoService {
 
 			System.out.println("idEstado: " + idEstado);
 			System.out.println("Fecha recibida: " + turnoRequest.getFecha());
-			System.out.println("Cliente ID: " + turnoRequest.getIdCliente());
-			System.out.println("Animales: " + animalesId);
+			System.out.println("Cliente ID FIN: " + turnoRequest.getIdCliente());
+			System.out.println("Animales FIN: " + animalesId);
 			System.out.println("Veterinario ID: " + turnoRequest.getIdVeterinario());
 
 

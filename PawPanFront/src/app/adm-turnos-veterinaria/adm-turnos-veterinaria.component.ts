@@ -26,6 +26,8 @@ import { ProfesionalesPorVeterinaria } from '../model/ProfesionalPorVeterinaria'
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
+import { ClienteDTO } from '../model/ClienteDTO';
+import { AnimalDTO } from '../model/AnimalDTO';
 
 @Component({
   selector: 'app-adm-turnos-veterinaria',
@@ -60,6 +62,11 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
   dataSource: TurnoFb[];
   total: number
 
+  clientes: ClienteDTO[];
+  clientesFiltrados: ClienteDTO[];
+  animales: AnimalDTO[];
+  inputDNI: string
+
   veterinarios: ProfesionalesPorVeterinaria[]
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -78,7 +85,7 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
   estados = estados;
 
   constructor(
-    private routes: Router,
+    private router: Router,
     private turnoService: TurnoService,
     private dialog: MatDialog,
     private location: Location,
@@ -95,6 +102,7 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
     this.filtros.orderBy="fecha_hora"
     this.getTurnos();
     this.getVeterinarios();
+    this.getClientes();
   }
 
   volver(){
@@ -133,7 +141,7 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
     this.turnoService.getMisTurnos(this.filtros).subscribe({
       next: (data)=>{
         if(data.estado!="ERROR"){
-          this.dataSource=data.turnos;
+          this.dataSource=[...data.turnos];
           this.total = data.total;
         }else{
           this.dialog.open(GenericDialogComponent, {
@@ -262,6 +270,59 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
     });
   }
 
+  getClientes(){
+      this.turnoService.getClientesDeVeterinarie().subscribe({
+        next: (data)=>{
+          if (data.estado!= "ERROR"){
+            this.clientes = data.clientes;
+            this.clientesFiltrados = this.clientes;
+          } else{
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar'
+              }
+            });
+          }
+        }, error: (error)=>{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: 'Ocurrio un error al buscar los clientes',
+              cancelText: 'Cerrar'
+            }
+          });
+        }
+      });
+    }
+  
+    filtrarClientesPorDni(){
+      this.clientesFiltrados = this.clientes.filter(cliente =>
+        cliente.dni.includes(this.inputDNI)
+      );
+    }
+  
+    limpiarFiltroCliente(){
+      this.filtros.idCliente=0;
+      this.filtros.idAnimal=0;
+    }
+  
+    getAnimalesDeCliente(id: number) {
+      this.filtros.idAnimal=0;
+      let a: AnimalDTO[] | undefined = [];
+      
+      if (this.filtros.idCliente != 0) {
+          a = this.clientes.find(cliente => cliente.clienteId === id)?.animales;
+      }
+  
+      if (a) {
+          this.animales = [...a];
+      }
+    }
+
   paginado(event:any){
 		this.filtros.page = event.pageIndex;
     this.getTurnos();
@@ -269,5 +330,9 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  onVer(id:number){
+    this.router.navigate(['ver-turno/'+id])
   }
 }

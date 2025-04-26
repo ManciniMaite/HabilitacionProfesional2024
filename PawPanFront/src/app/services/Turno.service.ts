@@ -14,6 +14,7 @@ import { TURNOBYID } from '../model/data/data-TurnoById';
 import { TurnoRs } from '../model/TurnoRs';
 import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
 import { FiltroTurnoRq } from '../model/FiltroTurnoRq';
+import { ClientesDeVeterinaria } from '../model/ClientesDeVeterinariaRs';
 
 @Injectable({
   providedIn: 'root'
@@ -90,5 +91,9 @@ export class TurnoService {
 
   aceptar(rq: AtenderTurnoRq):Observable<TurnoRs>{
     return this.http.post<TurnoRs>(this.baseURL+"/Turno/Aceptar", rq);
+  }
+
+  getClientesDeVeterinarie():Observable<ClientesDeVeterinaria>{
+    return this.http.get<ClientesDeVeterinaria>(this.baseURL+"/Turno/getClientesDeVeterinarie")
   }
 }
