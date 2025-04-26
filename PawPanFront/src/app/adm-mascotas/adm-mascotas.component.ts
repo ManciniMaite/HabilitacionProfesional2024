@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 import { Animal } from '../model/Animal';
 import { AgregarAnimalComponent } from '../model/dialog/agregar-animal/agregar-animal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-adm-mascotas',
@@ -43,7 +44,7 @@ export class AdmMascotasComponent {
 
   constructor(
     private service: AnimalService,
-
+    private location: Location,
     private dialog: MatDialog
   ){}
 
@@ -141,6 +142,10 @@ export class AdmMascotasComponent {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  volver(){
+    this.location.back();
   }
 
 }

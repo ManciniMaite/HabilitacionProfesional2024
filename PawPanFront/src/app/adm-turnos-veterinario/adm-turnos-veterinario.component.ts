@@ -89,6 +89,9 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
     this.filtros.orderBy="fecha_hora"
     this.getTurnos()
   }
+  volver(){
+    this.location.back();
+  }
 
   getTurnos(){
     this.turnoService.getMisTurnos(this.filtros).subscribe({

@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { ProfesionalesPorVeterinaria } from '../model/ProfesionalPorVeterinaria';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -37,11 +38,16 @@ export class AdmVeterinariosComponent implements OnInit{
 
   constructor(
     private service: VeterinariesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private location: Location
   ){}
 
   ngOnInit(): void {
       this.getDatos();
+  }
+
+  volver(){
+    this.location.back();
   }
 
   getDatos(){

@@ -97,6 +97,10 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
     this.getVeterinarios();
   }
 
+  volver(){
+    this.location.back();
+  }
+
   getVeterinarios(){
     this.veterinariesService.getProfesionalesPorVeterinaria().subscribe({
       next:(data)=>{

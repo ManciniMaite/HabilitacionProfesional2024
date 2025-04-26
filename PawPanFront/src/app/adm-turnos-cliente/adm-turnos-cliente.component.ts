@@ -231,4 +231,8 @@ export class AdmTurnosClienteComponent {
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+
+  volver(){
+    this.location.back()
+  }
 }

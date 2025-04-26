@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NuevoDomicilioComponent } from '../model/dialog/nuevo-domicilio/nuevo-domicilio.component';
 import { DomicilioRq } from '../model/DomicilioRq';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-adm-dmicilios',
@@ -39,7 +40,8 @@ export class AdmDmiciliosComponent {
 
   constructor(
     private dialog: MatDialog,
-    private service: DomicilioService
+    private service: DomicilioService,
+    private location: Location
   ){}
 
   ngOnInit(): void {
@@ -128,5 +130,9 @@ export class AdmDmiciliosComponent {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  volver(){
+    this.location.back();
   }
 }
