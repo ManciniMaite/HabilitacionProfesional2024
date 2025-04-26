@@ -193,7 +193,65 @@ public class UsuarioService {
 		return consulta;
 	}
 	
+	public UsuarioResponse<?> recuperarContrasena(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
+
+		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuario == null) {
+			throw new PawPlanRuleException(0,"USUARIO NULL");
+		}
+			
+		switch (usuario.getRole()) {
+		case PACIENTE:
+			Cliente cliente = (Cliente) usuario;
+			if (cliente.getDni().equals(usuarioRequest.getDni())) {
+				consulta.setEstado("OK");
+				return consulta;
+			}
+			break;
+		case VETERINARIA:
+			Veterinaria veterinaria = (Veterinaria) usuario;
+			if (veterinaria.getCuit().equals(usuarioRequest.getCuit())) {
+				consulta.setEstado("OK");
+				return consulta;
+			}
+			break;
+		case VETERINARIO:
+			Veterinario veterinario = (Veterinario) usuario;
+			if (veterinario.getDni().equals(usuarioRequest.getDni())) {
+				consulta.setEstado("OK");
+				return consulta;
+			}
+			break;
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + usuario.getRole());
+		}
+		
+		//no deberia pasar jamas por aca pero lo pide el metodo
+		return null;
+		
+	}
 	
+	public UsuarioResponse<?> nuevaContrasena(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
+
+		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuario == null) {
+			throw new PawPlanRuleException(0,"USUARIO NULL");
+		}
+			
+		usuario.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
+		
+		usuario = usuarioRepository.save(usuario);
+		
+		consulta.setEstado("OK");
+		
+		return consulta;
+			
+		
+	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
 	private Cliente crearModificarCliente(Cliente cliente, UsuarioRequest usuarioRequest) {

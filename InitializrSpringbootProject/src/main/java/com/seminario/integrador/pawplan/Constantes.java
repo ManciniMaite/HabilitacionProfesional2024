@@ -39,6 +39,8 @@ public class Constantes {
     public static final String URL_PATH_MODIFICAR = "/Modificar";
     public static final String URL_PATH_ELIMINAR = "/Eliminar";
     public static final String URL_PATH_CONSULTAR = "/Consultar";
+    public static final String URL_PATH_RECUPERAR_CONTRASENA = "/RecuperarContrasena";
+    public static final String URL_PATH_NUEVA_CONTRASENA = "/NuevaContrasena";
     
     public static final String URL_PATH_USUARIO = "/Usuario";
     public static final String URL_PATH_TURNO = "/Turno";

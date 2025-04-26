@@ -115,6 +115,34 @@ public class UsuarioRestController {
         return this.domicilioService.getByUsuario(dniCliente);
     }
     
+    @RequestMapping(value = Constantes.URL_PATH_RECUPERAR_CONTRASENA, method = RequestMethod.POST)
+    public UsuarioResponse<?> recuperarContraseña(@RequestBody UsuarioRequest usuarioRequest) {
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.recuperarContrasena(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al recuperar un usuarios - 05. " + e.getMessage());
+			logger.error("ERROR AL eliminsar USUARIOS",e);
+		}
+    	
+    	return result;
+    }
     
+    @RequestMapping(value = Constantes.URL_PATH_NUEVA_CONTRASENA, method = RequestMethod.POST)
+    public UsuarioResponse<?> nuevaContraseña(@RequestBody UsuarioRequest usuarioRequest) {
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.nuevaContrasena(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al recuperar un usuarios - 05. " + e.getMessage());
+			logger.error("ERROR AL eliminsar USUARIOS",e);
+		}
+    	
+    	return result;
+    }
     
 }
