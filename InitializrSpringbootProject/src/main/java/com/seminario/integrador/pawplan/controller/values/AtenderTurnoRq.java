@@ -8,6 +8,8 @@ import lombok.Data;
 public class AtenderTurnoRq {
     @JsonProperty("idTurno")
     private Long idTurno;
-    @JsonProperty("descripcion")
-    private String descripcion;
+    @JsonProperty("descripcionPublica")
+    private String descripcionPublica;
+    @JsonProperty("descripcionPrivada")
+    private String descripcionPrivada;
 }

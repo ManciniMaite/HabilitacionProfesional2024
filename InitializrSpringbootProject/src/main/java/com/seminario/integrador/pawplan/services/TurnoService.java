@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
+import com.seminario.integrador.pawplan.controller.values.AnimalDTO;
 import com.seminario.integrador.pawplan.controller.values.AtenderTurnoRq;
+import com.seminario.integrador.pawplan.controller.values.ClienteDTO;
+import com.seminario.integrador.pawplan.controller.values.ClientesDeVeterinarieRs;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
 import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
@@ -337,6 +341,7 @@ public class TurnoService {
 			return result;
 		}
 		
+		//CONTROL DE QUE NO SEA UN PACIENTE QUIEN ENVIA LA PETICION
 		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
 		if (usuario.getRole() == Role.PACIENTE) {
 			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
@@ -347,10 +352,10 @@ public class TurnoService {
 		
 		Turno turno = cambiarEstadoTurno(turnoRequest.getIdTurno(), estado);
 
-		turno.getVeterinario().setHorarios(null);
-		if(turno.getVeterinaria()!=null){
-			turno.getVeterinaria().setHorarioAtencion(null);
-		}
+		// turno.getVeterinario().setHorarios(null);
+		// if(turno.getVeterinaria()!=null){
+		// 	turno.getVeterinaria().setHorarioAtencion(null);
+		// }
 
 		result.setTurno(turno);
 		
@@ -371,6 +376,7 @@ public class TurnoService {
 			return result;
 		}
 		
+		//CONTROL DE QUE NO SEA UN PACIENTE QUIEN ENVIA LA PETICION
 		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
 		if (usuario.getRole() == Role.PACIENTE) {
 			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
@@ -381,10 +387,10 @@ public class TurnoService {
 		
 		Turno turno = cambiarEstadoTurno(turnoRequest.getIdTurno(), estado);
 
-		turno.getVeterinario().setHorarios(null);
-		if(turno.getVeterinaria()!=null){
-			turno.getVeterinaria().setHorarioAtencion(null);
-		}
+		// turno.getVeterinario().setHorarios(null);
+		// if(turno.getVeterinaria()!=null){
+		// 	turno.getVeterinaria().setHorarioAtencion(null);
+		// }
 
 		result.setTurno(turno);
 		
@@ -405,8 +411,9 @@ public class TurnoService {
 			return result;
 		}
 		
+		//CONTROL DE QUE NO SEA UN PACIENTE O VETERINARIA QUIEN ENVIA LA PETICION
 		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
-		if (usuario.getRole() == Role.PACIENTE) {
+		if (usuario.getRole() != Role.VETERINARIO) {
 			result.setEstado(String.valueOf(EnumCodigoErrorLogin.LOGIN_2420.getCodigo()));
 			result.setMensaje(EnumCodigoErrorLogin.LOGIN_2420.getMensaje());
 		}
@@ -415,15 +422,16 @@ public class TurnoService {
 
 		Estado estado = estadoRepository.findByNombre(EnumEstados.ATENDIDO.getNombre()).get(0);
 		
-		turno.setDescripcionPublica(turnoRequest.getDescripcion());
+		turno.setDescripcionPublica(turnoRequest.getDescripcionPublica());
+		turno.setDescripcionPrivada(turnoRequest.getDescripcionPrivada());
 		turno.setEstado(estado);
 
 		turnoRepository.save(turno);
 
-		turno.getVeterinario().setHorarios(null);
-		if(turno.getVeterinaria()!=null){
-			turno.getVeterinaria().setHorarioAtencion(null);
-		}
+		// turno.getVeterinario().setHorarios(null);
+		// if(turno.getVeterinaria()!=null){
+		// 	turno.getVeterinaria().setHorarioAtencion(null);
+		// }
 
 		result.setTurno(turno);
 		
@@ -571,5 +579,53 @@ public class TurnoService {
 			return null; 
 		}
 	}
+
+	public ClientesDeVeterinarieRs obtenerClientesConAnimales() throws JsonProcessingException {
+
+		ClientesDeVeterinarieRs rs = new ClientesDeVeterinarieRs();
+		rs.setEstado("ERROR");
+		rs.setClientes(null);
+
+		//Us en session
+		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+
+		if(Role.PACIENTE.name().equals(principalPawplan.getRole().name())){
+			rs.setMensaje("Usted no tiene permiso para acceder a esta funcionalidad");
+			return rs;
+		}
+
+		List<ClienteDTO> clientes = new ArrayList<>();
+		try{
+			System.out.println("ROL: " + principalPawplan.getRole().name() + " ID: "+  principalPawplan.getClienteId());
+			//																					        VETERINARIO - VETERINARIA            Id VETERINARIE
+			List<Map<String, Object>> resultados = turnoRepository.findClientesConAnimalesByFiltro(principalPawplan.getRole().name(), principalPawplan.getClienteId());
+
+			ObjectMapper mapper = Constantes.getObjectMapper();
+
+			for (Map<String, Object> fila : resultados) {
+				ClienteDTO cliente = new ClienteDTO();
+				cliente.setClienteId(Long.parseLong(fila.get("cliente_id").toString()));
+				cliente.setClienteNombre(fila.get("cliente_nombre").toString());
+				cliente.setClienteApellido(fila.get("cliente_apellido").toString());
+				cliente.setDni(fila.get("dni").toString());
+
+				String animalesJson = fila.get("animales").toString();
+				List<AnimalDTO> animales = mapper.readValue(animalesJson,
+						mapper.getTypeFactory().constructCollectionType(List.class, AnimalDTO.class));
+
+				cliente.setAnimales(animales);
+
+				clientes.add(cliente);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			rs.setMensaje("Ocurrio un error al buscar los clientes");
+			return rs;
+		}
+
+        rs.setClientes(clientes);
+		rs.setEstado("OK");
+		return rs;
+    }
 
 }

@@ -7,6 +7,7 @@ package com.seminario.integrador.pawplan.repository;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Query;
@@ -45,33 +46,6 @@ public interface TurnoRepository extends CrudRepository<Turno, Long>{
             @Param("estados") List<String> estados);
 
 
-    // @Query(value = """
-    //     SELECT * FROM turno t
-    //     WHERE (COALESCE(:animalIds, ARRAY[]::bigint[]) = ARRAY[]::bigint[] OR t.animal_id = ANY(:animalIds))
-    //     AND (:veterinariaId IS NULL OR t.veterinaria_id = :veterinariaId)
-    //     AND (:veterinarioId IS NULL OR t.veterinario_id = :veterinarioId)
-    //     AND (:estadoId IS NULL OR t.estado_id = :estadoId)
-    //     AND (:fecha IS NULL OR DATE(t.fecha_hora) = :fecha)
-    // """,
-    // countQuery = """
-    //     SELECT count(*) FROM turno t
-    //     WHERE (COALESCE(:animalIds, ARRAY[]::bigint[]) = ARRAY[]::bigint[] OR t.animal_id = ANY(:animalIds))
-    //     AND (:veterinariaId IS NULL OR t.veterinaria_id = :veterinariaId)
-    //     AND (:veterinarioId IS NULL OR t.veterinario_id = :veterinarioId)
-    //     AND (:estadoId IS NULL OR t.estado_id = :estadoId)
-    //     AND (:fecha IS NULL OR DATE(t.fecha_hora) = :fecha)
-    // """,
-    // nativeQuery = true)
-    // Page<Turno> buscarTurnosConFiltros(
-    //         @Param("animalIds") List<Long> animalIds,
-    //         @Param("veterinariaId") Long veterinariaId,
-    //         @Param("veterinarioId") Long veterinarioId,
-    //         @Param("estadoId") Long estadoId,
-    //         @Param("fecha") Date fecha,
-    //         Pageable pageable
-    // );
-
-
     @Query(value = "SELECT * FROM buscar_turnos_con_filtros_paginado_dinamico(:animalIds, :veterinariaId, :veterinarioId, :estadoId, :fecha, :page, :size, :orderBy, :orderDir)", nativeQuery = true)
     List<TurnoFb> buscarTurnosPagina(
         @Param("animalIds") String animalIds,
@@ -93,6 +67,33 @@ public interface TurnoRepository extends CrudRepository<Turno, Long>{
         @Param("estadoId") Long estadoId,
         @Param("fecha") LocalDate fecha
     );
+
+
+    @Query(value = """
+        SELECT 
+            u.id AS cliente_id,
+            u.nombre AS cliente_nombre,
+            u.apellido AS cliente_apellido,
+            u.dni as dni,
+            json_agg(
+                DISTINCT jsonb_build_object(
+                    'animal_id', a.id,
+                    'animal_nombre', a.nombre,
+                    'raza_nombre', r.nombre,
+                    'especie_nombre', e.nombre
+                )
+            ) AS animales
+        FROM turno t
+        LEFT JOIN animal a ON a.id = t.animal_id
+        LEFT JOIN raza r ON r.id = a.raza_id
+        LEFT JOIN especie e ON e.id = r.especie_id
+        LEFT JOIN usuario u ON u.id = a.id_cliente
+        WHERE (:tipoFiltro = 'VETERINARIA' AND t.veterinaria_id = :idFiltro)
+           OR (:tipoFiltro = 'VETERINARIO' AND t.veterinario_id = :idFiltro)
+        GROUP BY u.id, u.nombre, u.apellido
+        ORDER BY u.id
+    """, nativeQuery = true)
+    List<Map<String, Object>> findClientesConAnimalesByFiltro(@Param("tipoFiltro") String tipoFiltro, @Param("idFiltro") Long idFiltro);
 
 
 }

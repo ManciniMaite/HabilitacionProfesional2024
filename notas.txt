@@ -1,0 +1,10 @@
+~Mensaje en sacar turno~
+Animal. No se podia agregar por una falla en fecha
+Bug al salir de la session. Quedo abierto el panel izquierdo
+~Turno. No envio la coudad~
+Error al iniciar sesión (algo cacheado)
+~Veterinaria. Registrar fallo 02 - Could not Comit jpa transacción~
+Agregar reporte
+Cuantas veces lleve a la mascota
+Recuperar contraseña
+Filtro por cliente desde el veterinario
