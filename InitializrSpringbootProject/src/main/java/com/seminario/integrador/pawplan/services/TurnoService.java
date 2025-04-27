@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.AnimalDTO;
+import com.seminario.integrador.pawplan.controller.values.AnimalRq;
+import com.seminario.integrador.pawplan.controller.values.AnimalRs;
 import com.seminario.integrador.pawplan.controller.values.AtenderTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.ClienteDTO;
 import com.seminario.integrador.pawplan.controller.values.ClientesDeVeterinarieRs;
@@ -85,6 +87,12 @@ public class TurnoService {
 	
 	@Autowired
 	private IAuthenticationFacade authenticationFacade;
+
+	@Autowired
+	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private AnimalService animalService;
 	
 	@Transactional(rollbackFor = Throwable.class)
 	public TurnoResponse getTurnosDisponibles(DisponibilidadRq turnoRequest) throws JsonMappingException, JsonProcessingException{
@@ -101,9 +109,11 @@ public class TurnoService {
 		
 		//CONTROL VETERINARIA VETERINARIO
 		long vetId = 0;
-		if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
+		if(session.getRole()==Role.VETERINARIO){ //Si NO es un veterinario quien hace la peticion => tiene que venir el id del veterinario en la request
+			vetId = session.getClienteId();
+		} else if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
 			vetId = turnoRequest.getVeterinarioId();
-		} else {
+		} else { //sino viene => no se puede consultar
 			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10001.getCodigo()));
 			result.setMensaje(EnumEstadosGenerales.ERROR_10001.getMensaje());
 			logger.error(result.getMensaje());
@@ -152,19 +162,107 @@ public class TurnoService {
 		
 		//OBTENEMOS EL USUARIO DE SESSION
 		Usuario usuario = usuarioRepository.findById(session.getClienteId()).get();
-		
-		switch (usuario.getRole()) {
-		case PACIENTE:
-			Cliente cliente = (Cliente) usuario;
-			//turnoFinal.setCliente(cliente);
-			break;
-		
-		default:
-			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getCodigo()));
-			result.setMensaje(EnumEstadosGenerales.ERROR_10002.getMensaje());
-			logger.error(result.getMensaje());
+		if (usuario == null) {
+			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getEstado()));
+			result.setMensaje("Usuario de sesión no encontrado.");
 			return result;
 		}
+		
+		Cliente clienteTurno = null;
+		switch (usuario.getRole()) {
+			case PACIENTE:
+				clienteTurno = (Cliente) usuario;
+				// buscamos al veterinario/a
+				if (turnoRequest.getVeterinariaId() != null && turnoRequest.getVeterinariaId() != 0) {
+					turnoFinal.setVeterinaria(veterinariaRepository.findById(turnoRequest.getVeterinariaId()).get());
+				}
+				
+				if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
+					turnoFinal.setVeterinario(veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get());
+				}
+
+				turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
+				break;
+	
+			case VETERINARIO:
+				Veterinario veterinarioSesion = (Veterinario) usuario;
+				turnoFinal.setVeterinario(veterinarioSesion);
+
+				//Si es un veterinario quien reserva el turno debo buscar si es independiente y si no lo es setear la veterinaria
+				//es domicilio depende de si es independiente o de la veterinaria
+				if (!veterinarioSesion.isEsIndependiente()) {
+					Veterinaria veterinaria = veterinariaRepository.findById(veterinarioSesion.getVeterinaria().getId()).get();
+					turnoFinal.setVeterinaria(veterinaria);
+					turnoFinal.setEsADomicilio(veterinaria.isHaceDomicilio());
+				} else{
+					turnoFinal.setEsADomicilio(true);
+				}
+
+				break;
+	
+			case VETERINARIA:
+				Veterinaria veterinariaSesion = (Veterinaria) usuario;
+				turnoFinal.setVeterinaria(veterinariaSesion);
+
+				if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
+					turnoFinal.setVeterinario(veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get());
+				}
+
+				turnoFinal.setEsADomicilio(veterinariaSesion.isHaceDomicilio());
+
+				break;
+	
+			default:
+				result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getEstado()));
+				result.setMensaje("Rol de usuario no permitido para reservar turnos.");
+				return result;
+		}
+
+		System.out.println("DNI: " + turnoRequest.getDniCliente());
+		System.out.println(usuario.getRole());
+		System.out.println((usuario.getRole() == Role.VETERINARIO || usuario.getRole() == Role.VETERINARIA));
+		if ((usuario.getRole() == Role.VETERINARIO || usuario.getRole() == Role.VETERINARIA) && (turnoRequest.getDniCliente() != null && !"".equals(turnoRequest.getDniCliente().trim()))) {
+			System.out.println("PASA FILTRO DNI Y ROL");
+			Optional<Usuario> opCliente = usuarioRepository.findByDniOrCuit(turnoRequest.getDniCliente());
+			if (opCliente.isPresent()) {
+				System.out.println("IS PRESENT");
+				clienteTurno = (Cliente) opCliente.get();
+			} else {
+				System.out.println("NO ESTA EN BD");
+				// Creamos un nuevo cliente con dni y su rol
+				Cliente nuevoCliente = new Cliente();
+				nuevoCliente.setDni(turnoRequest.getDniCliente());
+				nuevoCliente.setRole(Role.PACIENTE);
+				clienteTurno = clienteRepository.save(nuevoCliente);
+			}
+		}
+
+
+		//Vemos si es necesario crear un animal, o sea, si no viene en la rq no 
+		Animal animalTurno = null;
+		if (turnoRequest.getAnimalRq() != null) {
+			//crear nuevo animal
+			turnoRequest.getAnimalRq().setUsuarioId(clienteTurno.getId());
+			AnimalRs rs = animalService.crearAnimal(turnoRequest.getAnimalRq());
+			if("ERROR".equals(rs.getEstado())){
+				result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getEstado()));
+				result.setMensaje("No fue posible crear el nuevo animal");
+				return result;
+			} else{
+				animalTurno = rs.getAnimal();
+			}
+		} else {
+			// Buscar animal existente
+			animalTurno = animalRepository.findById(turnoRequest.getAnimalId()).orElse(null);
+		}
+
+		//controlamos que este ok el animal
+		if (animalTurno == null) {
+			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR.getEstado()));
+			result.setMensaje("Animal no encontrado o inválido.");
+			return result;
+		}
+		turnoFinal.setAnimal(animalTurno);
 		
 		//Proceso creacion turno
 		// buscamos estado necesario
@@ -188,28 +286,19 @@ public class TurnoService {
 
 		turnoFinal.setFechaHora( Date.from(zdtFinal.toInstant()));
 		
-		// buscamos al veterinario/a
-		if (turnoRequest.getVeterinariaId() != null && turnoRequest.getVeterinariaId() != 0) {
-			turnoFinal.setVeterinaria((veterinariaRepository.findById(turnoRequest.getVeterinariaId()).get()));
-		}
-		
-		if (turnoRequest.getVeterinarioId() != null && turnoRequest.getVeterinarioId() != 0) {
-			turnoFinal.setVeterinario((veterinarioRepository.findById(turnoRequest.getVeterinarioId()).get()));
-		}
-		
-		//buscamos al animal
-		Animal animal = animalRepository.findById(turnoRequest.getAnimalId()).get();
-		if (animal == null ){
-			result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getCodigo()));
-			result.setMensaje(EnumEstadosGenerales.ERROR_10002.getMensaje());
-			logger.error(result.getMensaje());
-			return result;
-		}
-		turnoFinal.setAnimal(animal);
+		// //buscamos al animal
+		// Animal animal = animalRepository.findById(turnoRequest.getAnimalId()).get();
+		// if (animal == null ){
+		// 	result.setEstado(String.valueOf(EnumEstadosGenerales.ERROR_10002.getCodigo()));
+		// 	result.setMensaje(EnumEstadosGenerales.ERROR_10002.getMensaje());
+		// 	logger.error(result.getMensaje());
+		// 	return result;
+		// }
+		// turnoFinal.setAnimal(animal);
 		
 		//turnoFinal.setDescripcionPublica(turnoRequest.getDescripcionPublica());
 		
-		turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
+		//turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
 
 		//se puede guardar el turno??
 		// busco estados a tener en cuenta para poder guardar
@@ -606,6 +695,54 @@ public class TurnoService {
 			System.out.println("ROL: " + principalPawplan.getRole().name() + " ID: "+  principalPawplan.getClienteId());
 			//																					        VETERINARIO - VETERINARIA            Id VETERINARIE
 			List<Map<String, Object>> resultados = turnoRepository.findClientesConAnimalesByFiltro(principalPawplan.getRole().name(), principalPawplan.getClienteId());
+
+			ObjectMapper mapper = Constantes.getObjectMapper();
+
+			for (Map<String, Object> fila : resultados) {
+				ClienteDTO cliente = new ClienteDTO();
+				cliente.setClienteId(Long.parseLong(fila.get("cliente_id").toString()));
+				cliente.setClienteNombre(fila.get("cliente_nombre").toString());
+				cliente.setClienteApellido(fila.get("cliente_apellido").toString());
+				cliente.setDni(fila.get("dni").toString());
+
+				String animalesJson = fila.get("animales").toString();
+				List<AnimalDTO> animales = mapper.readValue(animalesJson,
+						mapper.getTypeFactory().constructCollectionType(List.class, AnimalDTO.class));
+
+				cliente.setAnimales(animales);
+
+				clientes.add(cliente);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			rs.setMensaje("Ocurrio un error al buscar los clientes");
+			return rs;
+		}
+
+        rs.setClientes(clientes);
+		rs.setEstado("OK");
+		return rs;
+    }
+
+	public ClientesDeVeterinarieRs obtenerClientesConTodosSusAnimales() throws JsonProcessingException {
+
+		ClientesDeVeterinarieRs rs = new ClientesDeVeterinarieRs();
+		rs.setEstado("ERROR");
+		rs.setClientes(null);
+
+		//Us en session
+		PrincipalPawplan principalPawplan = authenticationFacade.getPrincipal();
+
+		if(Role.PACIENTE.name().equals(principalPawplan.getRole().name())){
+			rs.setMensaje("Usted no tiene permiso para acceder a esta funcionalidad");
+			return rs;
+		}
+
+		List<ClienteDTO> clientes = new ArrayList<>();
+		try{
+			System.out.println("ROL: " + principalPawplan.getRole().name() + " ID: "+  principalPawplan.getClienteId());
+			//																					        VETERINARIO - VETERINARIA            Id VETERINARIE
+			List<Map<String, Object>> resultados = turnoRepository.findClientesConAnimalesCompleto(principalPawplan.getRole().name(), principalPawplan.getClienteId());
 
 			ObjectMapper mapper = Constantes.getObjectMapper();
 

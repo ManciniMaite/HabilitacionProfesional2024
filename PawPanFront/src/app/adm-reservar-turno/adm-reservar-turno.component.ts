@@ -31,7 +31,7 @@ import { D } from '@angular/cdk/keycodes';
 import { VeterinarioXciudad } from '../model/veterinarioXciudad';
 import { VeterinariaXciudad } from '../model/veterinariaXciudad';
 import { HorarioDisponibilidad } from '../model/HorarioDisponibilidad';
-import { ReservarTurnoRq } from '../model/TurnoRq';
+import { ReservarTurnoRq } from '../model/ReservarTurnoRq';
 import { fechaDesdeHoyValidator } from '../validators/ValidarFechaVieja'
 
 @Component({

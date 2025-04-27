@@ -93,6 +93,10 @@ public class AnimalService {
         return rs;
                 
     }
+
+    public List<Animal> obtenerAnimalesPorUsuarioId(Long usuarioId) {
+        return this.repository.findByCliente_IdAndEsActivoTrue(usuarioId);
+    }
     
     public AnimalRs crearAnimal(AnimalRq rq){
         AnimalRs rs = new AnimalRs();

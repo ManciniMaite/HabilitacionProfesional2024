@@ -90,5 +90,10 @@ public class TurnoController {
 	public ClientesDeVeterinarieRs getClientes() throws JsonMappingException, JsonProcessingException{
 		return turnoService.obtenerClientesConAnimales();
 	}
+
+	@GetMapping("/getClientesDeVeterinarieCompleto")
+	public ClientesDeVeterinarieRs getClientesCompletos() throws JsonMappingException, JsonProcessingException{
+		return turnoService.obtenerClientesConTodosSusAnimales();
+	}
 	
 }
