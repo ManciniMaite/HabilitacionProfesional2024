@@ -214,7 +214,7 @@ export class CrearCuentaClienteComponent implements OnInit{
   }
  
   onConfirmar(){
-    if(this.validarDatosPersonales() && this.validarMascotas()){
+    if(this.validarDatosPersonales()){
       let rq : UsuarioRequest=this.getObject()
       console.log('us rq: ', rq)
       this.service.crearCuenta(rq).subscribe({

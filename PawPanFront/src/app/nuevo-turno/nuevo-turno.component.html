@@ -23,7 +23,7 @@
                                         [(ngModel)]="inputDNI"
                                         [matAutocomplete]="auto"
                                         (input)="filtrarClientesPorDni()">
-                                <button mat-icon-button matSuffix (click)="buscarCliente()" [disabled]="!(inputDNI && inputDNI !== '' && !clienteSeleccionado)">
+                                <button mat-icon-button matSuffix (click)="buscarCliente()" [disabled]="!(inputDNI && inputDNI !== '' && (inputDNI.length==7 || inputDNI.length==8) && !clienteSeleccionado)">
                                     <mat-icon>search</mat-icon>
                                 </button>
                                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClienteNombre" (optionSelected)="onClienteSelected($event.option.value)">
@@ -88,34 +88,34 @@
                             <form [formGroup]="mascota">
                             <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
+                                    <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
                                 </mat-form-field>
                         
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <mat-label>Especie</mat-label>
-                                <mat-select formControlName="especie" required>
-                                    <mat-option value="">Seleccione una especie...</mat-option>
-                                    <mat-option *ngFor="let item of especies" [value]="item" (click)="getRazas(item.id)">
-                                    {{item.nombre}}
-                                    </mat-option>
-                                </mat-select>
+                                    <mat-label>Especie</mat-label>
+                                    <mat-select formControlName="especie" required>
+                                        <mat-option value="">Seleccione una especie...</mat-option>
+                                        <mat-option *ngFor="let item of especies" [value]="item" (click)="getRazas(item.id)">
+                                        {{item.nombre}}
+                                        </mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                         
                                 <mat-form-field *ngIf="mascota.get('especie')?.value" appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <mat-label>Raza</mat-label>
-                                <mat-select formControlName="raza" required>
-                                    <mat-option value="">Seleccione una raza...</mat-option>
-                                    <mat-option *ngFor="let item of razas" [value]="item">
-                                    {{item.nombre}}
-                                    </mat-option>
-                                </mat-select>
+                                    <mat-label>Raza</mat-label>
+                                    <mat-select formControlName="raza" required>
+                                        <mat-option value="">Seleccione una raza...</mat-option>
+                                        <mat-option *ngFor="let item of razas" [value]="item">
+                                        {{item.nombre}}
+                                        </mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                         
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                <mat-label>Fecha de Nacimiento</mat-label>
-                                <input matInput [matDatepicker]="picker2" placeholder="Selecciona tu fecha de nacimiento" formControlName="fechaNacMascota" [max]="date">
-                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                <mat-datepicker #picker2></mat-datepicker>
+                                    <mat-label>Fecha de Nacimiento</mat-label>
+                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona la fecha de nacimiento" formControlName="fechaNacMascota" [max]="date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
                         
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
@@ -147,7 +147,7 @@
                                     <ng-template matStepLabel>Turnero</ng-template>
     
                                     <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                        <mat-form-field>
+                                        <mat-form-field  appearance="outline">
                                             <mat-label>Fecha:</mat-label>
                                             <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="date">
                                             <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
