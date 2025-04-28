@@ -1,0 +1,206 @@
+<div class="form">
+    <div class="container">
+        <mat-card style="width: 90%; height: auto; overflow-y: scroll;">
+                <div class="titleContainer">
+                    <button mat-icon-button (click)="volver()">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <mat-card-title class="title">
+                    REGISTAR NUEVO TURNO
+                    </mat-card-title>
+                </div>
+            @if(!turnoReservado){
+                <div style="height: 95%; display: flex; flex-direction: column; justify-content: space-between;">
+                    <mat-card-content>
+                        <div style="display: flex; gap: 15px; align-items: baseline;">
+                            <mat-form-field appearance="outline" style="width: 400px;">
+                                <mat-label>DNI cliente</mat-label>
+                                
+                                <input type="text"
+                                        placeholder="Ingresa el DNI del cliente"
+                                        aria-label="Number"
+                                        matInput
+                                        [(ngModel)]="inputDNI"
+                                        [matAutocomplete]="auto"
+                                        (input)="filtrarClientesPorDni()">
+                                <button mat-icon-button matSuffix (click)="buscarCliente()" [disabled]="!(inputDNI && inputDNI !== '' && (inputDNI.length==7 || inputDNI.length==8) && !clienteSeleccionado)">
+                                    <mat-icon>search</mat-icon>
+                                </button>
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClienteNombre" (optionSelected)="onClienteSelected($event.option.value)">
+                                    <mat-option *ngFor="let cliente of clientesFiltrados" [value]="cliente">
+                                    {{ cliente.clienteNombre }} {{ cliente.clienteApellido }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            @if(animalesDTO && animalesDTO.length>0){
+                                <div>
+                                    <mat-form-field appearance="outline" style="width: 400px;">
+                                    <mat-label>Filtrar por mascota</mat-label>
+                                    <mat-select [(ngModel)]="idAnimalTurno">
+                                        <mat-option *ngFor="let animal of animalesDTO" [value]="animal.animal_id" (click)="selectAnimal()">
+                                        {{ animal.animal_nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                    </mat-form-field>
+                                    <button mat-icon-button (click)="nuevoAnimal()" matTooltip="Nuevo animal">
+                                        <span class="material-symbols-outlined">
+                                            add_circle
+                                        </span>
+                                    </button>
+                                </div>
+                            }
+                            
+                        </div>
+                        @if(clienteSeleccionado && banderaBuscarCliente){
+    
+                            @if(nomApCliente){
+                                Cliente: {{ nomApCliente }}
+                            }
+                            @else{
+                                DNI: {{ clienteSeleccionado.dni }}
+                            }
+                            
+    
+                            @if(animales && animales.length>0){
+                                <div>
+                                    <mat-form-field appearance="outline" style="width: 400px;">
+                                    <mat-label>Filtrar por mascota</mat-label>
+                                    <mat-select [(ngModel)]="idAnimalTurno">
+                                        <mat-option *ngFor="let animal of animales" [value]="animal.id" (click)="selectAnimal()">
+                                        {{ animal.nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                    </mat-form-field>
+                                    <button mat-icon-button (click)="nuevoAnimal()" matTooltip="Nuevo animal">
+                                        <span class="material-symbols-outlined">
+                                            add_circle
+                                        </span>
+                                    </button>
+                                </div>
+                            }
+                        }
+    
+                        @if(esClienteNuevo){
+                            No se encontró un usuario con el DNI ingresado, pero no te preocupes, ingresaremos el turno para el DNI indicado.
+                        }
+                        @if(banderaNuevoAnimal){
+                            <mat-card-subtitle style="width: 100%; display: flex; justify-content: center;">Ingresá los datos del nuevo animal</mat-card-subtitle>
+                            <form [formGroup]="mascota">
+                            <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <input matInput placeholder="Nombre" formControlName="nombreMascota" required>
+                                </mat-form-field>
+                        
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Especie</mat-label>
+                                    <mat-select formControlName="especie" required>
+                                        <mat-option value="">Seleccione una especie...</mat-option>
+                                        <mat-option *ngFor="let item of especies" [value]="item" (click)="getRazas(item.id)">
+                                        {{item.nombre}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                        
+                                <mat-form-field *ngIf="mascota.get('especie')?.value" appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Raza</mat-label>
+                                    <mat-select formControlName="raza" required>
+                                        <mat-option value="">Seleccione una raza...</mat-option>
+                                        <mat-option *ngFor="let item of razas" [value]="item">
+                                        {{item.nombre}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                        
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                    <mat-label>Fecha de Nacimiento</mat-label>
+                                    <input matInput [matDatepicker]="picker2" placeholder="Selecciona la fecha de nacimiento" formControlName="fechaNacMascota" [max]="date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                        
+                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                <input matInput placeholder="Peso en kg" formControlName="peso" >
+                                </mat-form-field>
+                            </div>
+                            </form>
+                        }
+    
+    
+    
+                        <!-- DISPONIBILIDAD -->
+                        @if(habilitarDisponibilidad()){
+                            @if(rol==="VETERINARIA" ){
+                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                    <mat-card-subtitle>Seleccione un veterinario</mat-card-subtitle>
+                                    <mat-form-field appearance="outline" style="width: 400px;">
+                                        <mat-label>Seleccionar veterinario</mat-label>
+                                        <mat-select [(ngModel)]="idVeterinarioTurno">
+                                            <mat-option *ngFor="let veterinario of veterinarios" [value]="veterinario.id">
+                                            {{ veterinario.nombre + " " + veterinario.apellido }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            }
+                            @if((idVeterinarioTurno && idVeterinarioTurno!=0)|| esVeterinarioLogueado){
+                                <form [formGroup]="turnero">
+                                    <ng-template matStepLabel>Turnero</ng-template>
+    
+                                    <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                                        <mat-form-field  appearance="outline">
+                                            <mat-label>Fecha:</mat-label>
+                                            <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="date">
+                                            <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                                            <mat-datepicker-toggle matIconSuffix [for]="dp3" ></mat-datepicker-toggle>
+                                            <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                                            <mat-error *ngIf="turnero.get('fecha')?.hasError('fechaInvalida')">
+                                                La fecha debe ser igual o posterior a hoy.
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <button mat-button (click)="getHorariosDisponibles()" [disabled]="!turnero.get('fecha')?.value">Consultar</button>
+                                    </div>
+                                    @if (horarios.length > 0) {
+                                        <div style="margin-top: 15px;">
+                                            <mat-label>Seleccioná un Horario</mat-label>
+                                            <mat-radio-group formControlName="hora" 
+                                                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                                            @for (item of horarios; track $index) {
+                                                <mat-radio-button [value]="item" style="text-align: center;">
+                                                {{ item.horaInicio }}
+                                                </mat-radio-button>
+                                            }
+                                            </mat-radio-group>
+                                        </div>
+                                    }
+    
+                                    @if( busquedaTurnos && horarios.length===0){
+                                        <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center;">
+                                            Lo sentimos, no hay horarios disponibles para la fecha consultada
+                                        </div>
+                                    }
+                                </form>
+                            }
+                        }
+                    </mat-card-content>
+        
+                
+                    <mat-card-actions style="display: flex; justify-content: end;">
+                        <button mat-raised-button style="margin-right: 10px;" (click)="volver()">Cancelar</button>
+                        <button mat-flat-button (click)="onDialogNuevoTurno()" [disabled]="!turnero.get('hora')?.value">Reservar Turno</button>
+                    </mat-card-actions>
+                </div>
+            }
+            @if(turnoReservado){
+                <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-content: center; margin-top: 20px;">
+                    <mat-card-title style="display: flex; justify-content: center;">Turno reservado con éxito</mat-card-title>
+                    @if(rol==="VETERINARIA"){
+                        <mat-card-content style="display: flex; justify-content: center;">El turno fue reservado, podrá visualizarlo desde <a routerLink="/adm-turnos-veterinaria" style="margin-left: 5px;">Mis turnos reservados</a>.</mat-card-content>
+                    } 
+                    @if(rol==="VETERINARIO"){
+                        <mat-card-content style="display: flex; justify-content: center;">El turno fue reservado, podrá visualizarlo desde <a routerLink="/adm-turnos-veterinario" style="margin-left: 5px;">Mis turnos reservados</a>.</mat-card-content>
+                    }
+                </div>
+            }
+        </mat-card>
+    </div>
+</div>

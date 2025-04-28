@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -31,8 +31,9 @@ import { D } from '@angular/cdk/keycodes';
 import { VeterinarioXciudad } from '../model/veterinarioXciudad';
 import { VeterinariaXciudad } from '../model/veterinariaXciudad';
 import { HorarioDisponibilidad } from '../model/HorarioDisponibilidad';
-import { ReservarTurnoRq } from '../model/TurnoRq';
+import { ReservarTurnoRq } from '../model/ReservarTurnoRq';
 import { fechaDesdeHoyValidator } from '../validators/ValidarFechaVieja'
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-adm-reservar-turno',
@@ -57,7 +58,7 @@ import { fechaDesdeHoyValidator } from '../validators/ValidarFechaVieja'
   templateUrl: './adm-reservar-turno.component.html',
   styleUrl: './adm-reservar-turno.component.scss'
 })
-export class AdmReservarTurnoComponent implements OnInit {
+export class AdmReservarTurnoComponent implements OnInit, OnDestroy {
 
   turnoReservado: boolean = false;
 
@@ -84,6 +85,10 @@ export class AdmReservarTurnoComponent implements OnInit {
   minFecha: Date = new Date();
 
   busquedaTurnos:boolean=false;
+
+  private authServiceSubscription: Subscription;
+  private animalServiceSubscription: Subscription;
+
 
   constructor(
     private fb: FormBuilder,
@@ -120,7 +125,7 @@ export class AdmReservarTurnoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.usuario$.subscribe(usuario => {
+    this.authServiceSubscription = this.authService.usuario$.subscribe(usuario => {
       console.log('getUS')
       this.getAnimales(usuario.cuil);
       this.getDomicilios(usuario.cuil);
@@ -129,11 +134,28 @@ export class AdmReservarTurnoComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.authServiceSubscription.unsubscribe();
+    this.animalServiceSubscription.unsubscribe();
+  }
+
   getAnimales(cuil: string){
-    this.animalService.getAnimales(cuil).subscribe({
+    this.animalServiceSubscription =  this.animalService.getAnimales(cuil).subscribe({
       next:(data)=> {
           if(data.estado != "ERROR"){
             this.mascotas = data.animales;
+            if(this.mascotas.length==0){
+              this.dialog.open(GenericDialogComponent, {
+                data: {
+                  type: 'normal',
+                  body: "En este momento no tenes mascotas registradas, por lo que no es posible reservar un turno. Por favor registra tu/s mascota/s y volvé a intentarlo ",
+                  acceptText: 'Aceptar',
+                  onAccept: () => {
+                    this.location.back();
+                  }
+                }
+              });
+            }
           } else {
             this.dialog.open(GenericDialogComponent, {
               data: {

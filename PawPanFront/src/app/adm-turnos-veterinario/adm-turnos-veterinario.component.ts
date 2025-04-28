@@ -27,6 +27,7 @@ import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClienteDTO } from '../model/ClienteDTO';
 import { AnimalDTO } from '../model/AnimalDTO';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-adm-turnos-reservados',
@@ -49,7 +50,8 @@ import { AnimalDTO } from '../model/AnimalDTO';
     FormsModule,
     MatTableModule,
     MatTooltipModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatAutocompleteModule
   ],
   templateUrl: './adm-turnos-veterinario.component.html',
   styleUrl: './adm-turnos-veterinario.component.scss'
@@ -63,7 +65,8 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
   clientes: ClienteDTO[];
   clientesFiltrados: ClienteDTO[];
   animales: AnimalDTO[];
-  inputDNI: string
+  inputDNI: string;
+  clienteSeleccionado: ClienteDTO | null;
 
   displayedColumns: string[] = 
   [
@@ -305,6 +308,16 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
     });
   }
 
+  displayClienteNombre(cliente: any): string {
+    return cliente ? `${cliente.clienteNombre} ${cliente.clienteApellido}` : '';
+  }
+  
+  onClienteSelected(cliente: any) {
+    this.clienteSeleccionado = cliente;
+    this.filtros.idCliente = cliente.clienteId; 
+    this.getAnimalesDeCliente(cliente.clienteId);
+  }
+
   filtrarClientesPorDni(){
     this.clientesFiltrados = this.clientes.filter(cliente =>
       cliente.dni.includes(this.inputDNI)
@@ -314,6 +327,9 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
   limpiarFiltroCliente(){
     this.filtros.idCliente=0;
     this.filtros.idAnimal=0;
+    this.inputDNI = '';
+    this.clienteSeleccionado = null;
+    this.clientesFiltrados = this.clientes;
   }
 
   getAnimalesDeCliente(id: number) {
@@ -341,5 +357,9 @@ export class AdmTurnosVeterinarioComponent implements OnInit {
 
   onVer(id:number){
     this.router.navigate(['ver-turno/'+id])
+  }
+  
+  onNuevoTurno(){
+    this.router.navigate(['nuevo-turno']);
   }
 }

@@ -18,6 +18,7 @@ import { AdmTurnosVeterinariaComponent } from './adm-turnos-veterinaria/adm-turn
 import { AdmTurnosClienteComponent } from './adm-turnos-cliente/adm-turnos-cliente.component';
 import { VerTurnoComponent } from './ver-turno/ver-turno.component';
 import { AdmDmiciliosComponent } from './adm-dmicilios/adm-dmicilios.component';
+import { NuevoTurnoComponent } from './nuevo-turno/nuevo-turno.component';
 
 export const routes: Routes = [
   { path: 'home',                       component: HomeComponent, canActivate: [authGuard] },
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'atender-turno/:id',          component: AtenderTurnoComponent, canActivate: [authGuard] },
   { path: 'ver-turno/:id',              component: VerTurnoComponent, canActivate: [authGuard] },
   { path: 'adm-domicilios',             component: AdmDmiciliosComponent, canActivate: [authGuard] },
+  { path: 'nuevo-turno',                component: NuevoTurnoComponent, canActivate: [authGuard] },
 
   // Rutas públicas
   { path: 'iniciar-sesion',             component: InicioComponent },
