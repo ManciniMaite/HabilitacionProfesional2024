@@ -235,4 +235,8 @@ export class AdmTurnosClienteComponent {
   volver(){
     this.location.back()
   }
+
+  onNuevoTurno(){
+    this.router.navigate(['adm-reservar-turno']);
+  }
 }

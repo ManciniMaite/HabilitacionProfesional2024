@@ -4,6 +4,8 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -15,12 +17,14 @@ import lombok.Data;
 @Entity
 @Data
 public class Cliente extends Usuario{
-    @NotNull(message = "debe contener nombre")
     private String nombre;
-    @NotNull(message = "debe contener apellido")
     private String apellido;
     @NotNull(message = "debe contener dni")
+    @Column(unique = true)
     private String dni;
+
+    //ATRIBUTO PARA DETERMINAR SI TIENE O NO CUENTA
+    private String estadoCuenta;
 
     public String getNombre() {
         return nombre;

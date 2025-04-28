@@ -7,7 +7,7 @@ import { DisponibilidadRq } from '../model/DisponibilidadRq';
 import { DisponibilidadRs } from '../model/DisponibilidadRs';
 import { DisponibilidadTurnoRs } from '../model/DisponibilidadTurnoRs';
 import { DATA_DISPONIBILIDAD_TURNO } from '../model/data/data-disponibilidadTurnoRs';
-import { ReservarTurnoRq } from '../model/TurnoRq';
+import { ReservarTurnoRq } from '../model/ReservarTurnoRq';
 import { Response } from '../model/Response';
 import { Turno } from '../model/Turno';
 import { TURNOBYID } from '../model/data/data-TurnoById';
@@ -95,5 +95,9 @@ export class TurnoService {
 
   getClientesDeVeterinarie():Observable<ClientesDeVeterinaria>{
     return this.http.get<ClientesDeVeterinaria>(this.baseURL+"/Turno/getClientesDeVeterinarie")
+  }
+  //TODOS LOS ANIMALES DEL CLIENTE
+  getClientesDeVeterinarieCompleto():Observable<ClientesDeVeterinaria>{
+    return this.http.get<ClientesDeVeterinaria>(this.baseURL+"/Turno/getClientesDeVeterinarieCompleto")
   }
 }

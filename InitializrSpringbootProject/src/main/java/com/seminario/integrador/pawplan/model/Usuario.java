@@ -31,10 +31,8 @@ public class Usuario {
     
     private Role role;
     
-    @Column(unique = true,  nullable = false)
-    @NotNull(message = "El correo no puede ser nulo")
+    @Column(unique = true,  nullable = true)
     private String correo;
-    @NotNull(message = "La contrasenia no puede ser nula")
     private String contrasenia;
     
     private String pregunta;

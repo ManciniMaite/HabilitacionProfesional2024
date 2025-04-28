@@ -7,7 +7,7 @@ export const menuItems: MenuItems[]=[
     {id:3,  nombre: 'Administracion de turnos',  icono:'../assets/iconos-menu-lateral/event.svg',            path: 'adm-turnos-veterinaria', hidden:false, tipo: 'accent', role:['VETERINARIA']},
     {id:4,  nombre: 'Mis turnos',                icono:'../assets/iconos-menu-lateral/event.svg',            path: 'adm-turnos-cliente',     hidden:false, tipo: 'accent', role:['PACIENTE']},
     {id:5,  nombre: 'Mis Mascotas',              icono:'../assets/iconos-menu-lateral/pet_supplies.svg',     path: 'adm-mascotas',           hidden:false, tipo: 'accent', role:['PACIENTE']},
-    //{id:6,  nombre: 'Administar horarios',       icono:'../assets/iconos-menu-lateral/calendar_clock.svg',   path: '',                       hidden:false, tipo: 'accent', role:['VETERINARIO','VETERINARIA']}, //OJOO solo si es Independiente
+    {id:6,  nombre: 'Nuevo Turno',               icono:'../assets/iconos-menu-lateral/add_circle.svg',       path: 'nuevo-turno',            hidden:false, tipo: 'accent', role:['VETERINARIO','VETERINARIA']},
     {id:7,  nombre: 'Administrar veterinarios',  icono:'../assets/iconos-menu-lateral/adm-vaterinarios.svg', path: 'adm-veterinarios',       hidden:false, tipo: 'accent', role:['VETERINARIA']},
     {id:8,  nombre: 'Mis domicilios',            icono:'../assets/iconos-menu-lateral/home.svg',             path: 'adm-domicilios',         hidden:false, tipo: 'accent', role:['PACIENTE']},
     {id:9,  nombre: 'Emergencia',                icono:'../assets/iconos-menu-lateral/e911_emergency.svg',   path: 'emergencia',             hidden:false, tipo: 'warn',   role:['PACIENTE']},

@@ -12,4 +12,9 @@ public class ReservarTurnoRq {
     private long animalId;
     private String fecha;
     private String hora;
+
+    //================
+
+    private String dniCliente; //En caso de necesitar crear un nuevo cliente
+    private AnimalRq animalRq; //En caso de necesitar crear un nuevo animal
 }

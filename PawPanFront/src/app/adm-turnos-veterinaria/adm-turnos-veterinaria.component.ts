@@ -28,6 +28,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
 import { ClienteDTO } from '../model/ClienteDTO';
 import { AnimalDTO } from '../model/AnimalDTO';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-adm-turnos-veterinaria',
@@ -50,7 +51,8 @@ import { AnimalDTO } from '../model/AnimalDTO';
     FormsModule,
     MatTableModule,
     MatTooltipModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatAutocompleteModule
   ],
   templateUrl: './adm-turnos-veterinaria.component.html',
   styleUrl: './adm-turnos-veterinaria.component.scss'
@@ -64,6 +66,7 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
 
   clientes: ClienteDTO[];
   clientesFiltrados: ClienteDTO[];
+  clienteSeleccionado:ClienteDTO | null;
   animales: AnimalDTO[];
   inputDNI: string
 
@@ -298,6 +301,16 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
         }
       });
     }
+
+    displayClienteNombre(cliente: any): string {
+      return cliente ? `${cliente.clienteNombre} ${cliente.clienteApellido}` : '';
+    }
+    
+    onClienteSelected(cliente: any) {
+      this.clienteSeleccionado = cliente;
+      this.filtros.idCliente = cliente.clienteId; 
+      this.getAnimalesDeCliente(cliente.clienteId);
+    }
   
     filtrarClientesPorDni(){
       this.clientesFiltrados = this.clientes.filter(cliente =>
@@ -308,6 +321,9 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
     limpiarFiltroCliente(){
       this.filtros.idCliente=0;
       this.filtros.idAnimal=0;
+      this.inputDNI = '';
+      this.clienteSeleccionado = null;
+      this.clientesFiltrados = this.clientes;
     }
   
     getAnimalesDeCliente(id: number) {
@@ -334,5 +350,9 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
 
   onVer(id:number){
     this.router.navigate(['ver-turno/'+id])
+  }
+
+  onNuevoTurno(){
+    this.router.navigate(['nuevo-turno']);
   }
 }
