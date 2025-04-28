@@ -36,6 +36,9 @@ public class Usuario {
     private String correo;
     @NotNull(message = "La contrasenia no puede ser nula")
     private String contrasenia;
+    
+    private String pregunta;
+    private String respuesta;
 
     private boolean isActivo = true;
     
