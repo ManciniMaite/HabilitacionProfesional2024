@@ -230,6 +230,8 @@ public class UsuarioService {
 				consulta.setEstado("OK");
 				
 				return consulta;
+			} else {
+				consulta.setEstado("ERROR");
 			}
 			break;
 		case VETERINARIA:
@@ -238,6 +240,8 @@ public class UsuarioService {
 				consulta.setPregunta(veterinaria.getPregunta());
 				consulta.setEstado("OK");
 				return consulta;
+			} else {
+				consulta.setEstado("ERROR");
 			}
 			break;
 		case VETERINARIO:
@@ -246,6 +250,8 @@ public class UsuarioService {
 				consulta.setPregunta(veterinario.getPregunta());
 				consulta.setEstado("OK");
 				return consulta;
+			} else {
+				consulta.setEstado("ERROR");
 			}
 			break;
 		default:
@@ -253,7 +259,7 @@ public class UsuarioService {
 		}
 		
 		//no deberia pasar jamas por aca pero lo pide el metodo
-		return null;
+		return consulta;
 		
 	}
 	
