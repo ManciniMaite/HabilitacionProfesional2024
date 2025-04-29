@@ -221,8 +221,18 @@ export class CrearCuentaClienteComponent implements OnInit{
       console.log('us rq: ', rq)
       this.service.crearCuenta(rq).subscribe({
         next:(data) => {
-          this.usCreado = true;
-          console.log(data); 
+          if(data.estado!="ERROR"){
+            this.usCreado=true
+          } else{
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar',
+              }
+            });
+          }
         }, error: (error)=>{
           this.dialog.open(GenericDialogComponent, {
             data: {

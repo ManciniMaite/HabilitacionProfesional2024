@@ -176,17 +176,18 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     let rq: UsuarioRequest = this.getObject();
     this.usuariosService.crearCuenta(rq).subscribe({
       next: (value) => {
-        if (value.estado == 'OK'){
-          this.usCreado = true
+        if(value.estado!="ERROR"){
+          this.usCreado=true
         } else{
           this.dialog.open(GenericDialogComponent, {
             data: {
               type: 'error',
               title: '¡Algo salió mal!',
               body: value.mensaje,
-              cancelText: 'Cerrar'
+              cancelText: 'Cerrar',
             }
           });
+
         }
       }, error:(err) => {
           console.log(err);
