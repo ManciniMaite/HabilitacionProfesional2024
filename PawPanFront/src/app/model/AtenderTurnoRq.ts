@@ -1,4 +1,5 @@
 export class AtenderTurnoRq {
     idTurno: number;
-    descripcion: string
+    descripcionPublica: string;
+    descripcionPrivada:string;
 }

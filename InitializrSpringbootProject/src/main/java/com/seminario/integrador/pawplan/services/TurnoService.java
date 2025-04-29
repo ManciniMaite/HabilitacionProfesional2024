@@ -685,10 +685,10 @@ public class TurnoService {
 		Optional<Turno> ot = turnoRepository.findById(id);
 		if(ot.isPresent()){
 			Turno t = ot.get();
-			t.getVeterinario().setHorarios(null);
-			if(t.getVeterinaria()!=null){
-				t.getVeterinaria().setHorarioAtencion(null);
-			}
+			// t.getVeterinario().setHorarios(null);
+			// if(t.getVeterinaria()!=null){
+			// 	t.getVeterinaria().setHorarioAtencion(null);
+			// }
 			return t;
 		}else{
 			return null; 

@@ -25,7 +25,7 @@
                                 Nombre: {{turno.animal.nombre}} <br>
                                 Especie: {{turno.animal.raza.especie.nombre}}<br>
                                 Raza: {{turno.animal.raza.nombre}} <br>
-                                Dueño: {{turno.animal.cliente.nombre + " " + turno.animal.cliente.apellido}} <br>
+                                Dueño: {{turno.animal.cliente.nombre? (turno.animal.cliente.nombre + " " + turno.animal.cliente.apellido) : turno.animal.cliente.dni}} <br>
                               </p>
                             </mat-expansion-panel>
                         </mat-accordion>
@@ -57,7 +57,15 @@
                         <p>
                             Descripcion: <br>
                             <mat-form-field style="width: 100%;">
+                                <mat-label>La informacion que ingrese aqui sera visible para todos</mat-label>
                                 <textarea matInput [(ngModel)]="descripcion"></textarea>
+                            </mat-form-field>
+                        </p>
+                        <p>
+                            Descripcion Interna: <br>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Esta informacion estará disponible solo para profesionales</mat-label>
+                                <textarea matInput [(ngModel)]="descripcionPrivada"></textarea>
                             </mat-form-field>
                         </p>
                     </div>
