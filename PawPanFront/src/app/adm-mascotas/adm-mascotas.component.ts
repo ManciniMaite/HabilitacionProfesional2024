@@ -89,6 +89,7 @@ export class AdmMascotasComponent {
         type: 'normal',
         title: 'Quitar Animal',
         body: '¿Está seguro que desea eliminar a '+ animal.nombre + '  de sus mascotas?',
+        body2: 'Te recordamos que si tiene turnos pendiendes, estos serán cancelados',
         acceptText: 'Sí, continuar',
         cancelText: 'Cancelar',
         onAccept: () => {

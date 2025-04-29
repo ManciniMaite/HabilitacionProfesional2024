@@ -173,6 +173,16 @@ public class VeterinarioVeterinariaService {
             Optional<Veterinario> opVet = this.veterinarioRepository.findById(idProfesional);
 
             if(opVet.isPresent()){
+                if(opVet.get().isEsIndependiente()){
+                    rs.setEstado("ERROR");
+                    rs.setMensaje("El profesional trabaja de forma independiente por lo que no puede ser asociado a una veterinaria");
+                    return rs;
+                }
+                if(opVet.get().getVeterinaria()!=null){
+                    rs.setEstado("ERROR");
+                    rs.setMensaje("El profesional ya se encuentra asociado a una veterinaria");
+                    return rs;
+                }
                 opVet.get().setVeterinaria(veterinaria.get());
                 this.veterinarioRepository.save(opVet.get());
             } else {

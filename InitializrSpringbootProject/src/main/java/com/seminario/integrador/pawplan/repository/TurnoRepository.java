@@ -36,12 +36,12 @@ public interface TurnoRepository extends CrudRepository<Turno, Long>{
     List<Turno> findByVeterinarioAndEstado(Veterinario veterinario, Estado estado);
 
     @Query("SELECT t FROM Turno t " +
-               "WHERE (t.veterinario = :veterinario OR t.veterinaria = :veterinaria OR (t.veterinario = :veterinario AND t.veterinaria = :veterinaria) ) " +
+               //"WHERE (t.veterinario = :veterinario OR t.veterinaria = :veterinaria OR (t.veterinario = :veterinario AND t.veterinaria = :veterinaria) ) " +
+               "WHERE t.veterinario = :veterinario "+ 
                "AND t.fechaHora = :fechaHora " +
                "AND t.estado.nombre IN :estados")
     List<Turno> buscarTurnosPorVeterinariaVeterinarioYFechaYEstado(
             @Param("veterinario") Veterinario veterinario,
-            @Param("veterinaria") Veterinaria veterinaria,
             @Param("fechaHora") Date fechaHora,
             @Param("estados") List<String> estados);
 
@@ -137,7 +137,7 @@ public interface TurnoRepository extends CrudRepository<Turno, Long>{
     List<Map<String, Object>> findClientesConAnimalesCompleto(@Param("tipoFiltro") String tipoFiltro, @Param("idFiltro") Long idFiltro);
 
 
-
+    List<Turno> findByAnimalIdAndEstadoIdIn(Long animalId, List<Long> estadoIds);
 }
 
 

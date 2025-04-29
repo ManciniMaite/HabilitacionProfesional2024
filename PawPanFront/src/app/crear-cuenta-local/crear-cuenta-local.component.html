@@ -65,6 +65,19 @@
                                             Las contraseñas no coinciden.
                                         </mat-error>
                                     </mat-form-field>
+                                    <p>Ingrese una pregunta y respuesta secreta para usarse en caso de necesitar cambiar su contraseña.</p>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Pregunta secreta" formControlName="preguntaSecreta" required>
+                                        <mat-error *ngIf="datosLocal.get('preguntaSecreta')?.hasError('required')">
+                                            Por favor ingrese una pregunta secreta.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Respuesta secreta" formControlName="respuestaSecreta" required>
+                                        <mat-error *ngIf="datosLocal.get('respuestaSecreta')?.hasError('required')">
+                                            Por favor ingrese una respuesta a su pregunta secreta.
+                                        </mat-error>
+                                    </mat-form-field>
                                     <div style="display: flex; flex-direction: row; align-self: flex-end;">
                                         <button mat-button matStepperNext>Siguiente</button>
                                     </div>
@@ -158,6 +171,7 @@
                                                 </div>
                                             </mat-form-field>
                                         </div>
+                                        <span *ngIf="!validarHorarios()" style="width: 100%; display: flex; justify-content: center;">Los horarios ingresados no son validos</span>
                                     </mat-card>
     
                                     <!-- Horario cortado -->
@@ -204,6 +218,7 @@
                                                 </div>
                                             </mat-form-field>
                                         </div>
+                                        <span *ngIf="!validarHorarios()" style="width: 100%; display: flex; justify-content: center;">Los horarios ingresados no son validos</span>
                                     </mat-card>
                                 </div>
     

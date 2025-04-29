@@ -42,6 +42,7 @@ export class AtenderTurnoComponent implements OnInit {
   cargando: boolean = false;
 
   descripcion:string
+  descripcionPrivada:string
 
   constructor(
     private service: TurnoService,
@@ -98,7 +99,8 @@ export class AtenderTurnoComponent implements OnInit {
   save(){
     let rq: AtenderTurnoRq = new AtenderTurnoRq();
     rq.idTurno=this.id;
-    rq.descripcion=this.descripcion
+    rq.descripcionPublica=this.descripcion;
+    rq.descripcionPrivada=this.descripcionPrivada;
     this.service.atender(rq).subscribe({
       next: (data)=>{
         if (data.estado!= "ERROR"){

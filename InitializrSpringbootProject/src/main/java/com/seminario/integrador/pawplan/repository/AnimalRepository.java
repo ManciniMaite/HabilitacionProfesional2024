@@ -26,4 +26,10 @@ public interface AnimalRepository extends CrudRepository<Animal, Long> {
         nativeQuery = true)
     List<Long> findIdsByClienteId(@Param("clienteId") Long clienteId);
 
+    @Query(value = """
+        SELECT a.id FROM animal a WHERE a.id_cliente = :clienteId AND a.es_activo=true;        
+        """ ,
+        nativeQuery = true)
+    List<Long> findIdsByClienteIdAndEsActivo(@Param("clienteId") Long clienteId);
+
 }

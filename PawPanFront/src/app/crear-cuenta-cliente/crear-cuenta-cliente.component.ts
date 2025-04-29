@@ -90,7 +90,9 @@ export class CrearCuentaClienteComponent implements OnInit{
       correo:               new FormControl('', [Validators.required, Validators.email,validacionFormatoCorreo]),
       telefono:             new FormControl('', [Validators.required, validacionTelefonoBasico]),
       contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
-      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)])
+      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)]),
+      preguntaSecreta:      new FormControl('', Validators.required),
+      respuestaSecreta:     new FormControl('', Validators.required),
     }, { validators: validacionContraseniasIguales });
 
     this.mascota = this.fb.group({
@@ -164,7 +166,7 @@ export class CrearCuentaClienteComponent implements OnInit{
           console.log(error);
         }
       });
-  }
+    }
 
   getRazas(id: number){
     this.razasService.getAll(id).subscribe({
@@ -219,8 +221,18 @@ export class CrearCuentaClienteComponent implements OnInit{
       console.log('us rq: ', rq)
       this.service.crearCuenta(rq).subscribe({
         next:(data) => {
-          this.usCreado = true;
-          console.log(data); 
+          if(data.estado!="ERROR"){
+            this.usCreado=true
+          } else{
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar',
+              }
+            });
+          }
         }, error: (error)=>{
           this.dialog.open(GenericDialogComponent, {
             data: {
@@ -246,6 +258,8 @@ export class CrearCuentaClienteComponent implements OnInit{
     rq.apellido=this.datosPersonales.get('apellido')?.value;
     rq.dni=this.datosPersonales.get('dni')?.value;
     rq.fechaNac=this.datosPersonales.get('fechaNac')?.value;
+    rq.pregunta=this.datosPersonales.get('preguntaSecreta')?.value;
+    rq.respuesta=this.datosPersonales.get('respuestaSecreta')?.value;
     
     let animalesRq: AnimalRq[] = []
     console.log('animales: ',this.animales)
@@ -286,6 +300,8 @@ export class CrearCuentaClienteComponent implements OnInit{
            (this.datosPersonales.get('telefono')?.value != null && this.datosPersonales.get('telefono')?.value != undefined && this.datosPersonales.get('telefono')?.value != "")&&
            (this.datosPersonales.get('contrasenia')?.value != null && this.datosPersonales.get('contrasenia')?.value != undefined && this.datosPersonales.get('contrasenia')?.value != "")&&
            (this.datosPersonales.get('validarContrasenia')?.value != null && this.datosPersonales.get('validarContrasenia')?.value != undefined && this.datosPersonales.get('validarContrasenia')?.value != "")&&
+           (this.datosPersonales.get('preguntaSecreta')?.value != null && this.datosPersonales.get('preguntaSecreta')?.value != undefined && this.datosPersonales.get('preguntaSecreta')?.value != "")&&
+           (this.datosPersonales.get('respuestaSecreta')?.value != null && this.datosPersonales.get('respuestaSecreta')?.value != undefined && this.datosPersonales.get('respuestaSecreta')?.value != "")&&
            this.validarContrasenias();
   }
 

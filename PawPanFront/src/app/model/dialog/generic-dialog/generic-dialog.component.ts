@@ -8,6 +8,7 @@ export interface DialogData {
   type: 'normal' | 'error';
   title?: string;
   body: string;
+  body2?:string
   acceptText: string;
   cancelText: string;
   onAccept: () => void;

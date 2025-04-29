@@ -82,6 +82,19 @@
                                             Las contraseñas no coinciden.
                                         </mat-error>
                                     </mat-form-field>
+                                    <p>Ingrese una pregunta y respuesta secreta para usarse en caso de necesitar cambiar su contraseña.</p>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Pregunta secreta" formControlName="preguntaSecreta" required>
+                                        <mat-error *ngIf="datosPersonales.get('preguntaSecreta')?.hasError('required')">
+                                            Por favor ingrese una pregunta secreta.
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+                                        <input matInput placeholder="Respuesta secreta" formControlName="respuestaSecreta" required>
+                                        <mat-error *ngIf="datosPersonales.get('respuestaSecreta')?.hasError('required')">
+                                            Por favor ingrese una respuesta a su pregunta secreta.
+                                        </mat-error>
+                                    </mat-form-field>
                                     <div style="display: flex; flex-direction: row; align-self: flex-end;">
                                         <button mat-button matStepperNext [disabled]="!validarDatosPersonales()">Siguiente</button>
                                     </div>
@@ -127,7 +140,7 @@
                                     <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                    <input matInput placeholder="Peso en kg" formControlName="peso" required>
+                                    <input matInput type="number" placeholder="Peso en kg" formControlName="peso" required>
                                 </mat-form-field>
                             </div>
 

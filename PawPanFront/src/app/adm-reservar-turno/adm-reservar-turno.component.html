@@ -37,7 +37,7 @@
                                 <ng-template matStepLabel>Domicilio</ng-template>
                                 <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                        <mat-label>Quiere ser atendido en su domicilio?</mat-label>
+                                        <mat-label>¿Quiere ser atendido en su domicilio?</mat-label>
                                         <mat-radio-group formControlName="esADomicilio" style="margin-left: 20px;">
                                             <mat-radio-button [value]="'SI'">SI</mat-radio-button>
                                             <mat-radio-button [value]="'NO'">NO</mat-radio-button>
@@ -145,7 +145,7 @@
                                 <ng-template matStepLabel>Turnero</ng-template>
 
                                 <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                    <mat-form-field>
+                                    <mat-form-field appearance="outline">
                                         <mat-label>Fecha:</mat-label>
                                         <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="minFecha">
                                         <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
@@ -179,7 +179,7 @@
 
                                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                     <button mat-button matStepperPrevious>Anterior</button>
-                                    <button mat-button (click)="onDialogConfirmarTurno()">Confirmar</button>
+                                    <button mat-button (click)="onDialogConfirmarTurno()" [disabled]="!turnero.get('hora')?.value">Confirmar</button>
                                 </div>
                             </form>
                         </mat-step>
