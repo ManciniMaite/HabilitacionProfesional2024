@@ -37,15 +37,10 @@
                                 <ng-template matStepLabel>Domicilio</ng-template>
                                 <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                     <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                        <mat-label>Quiere ser atendido en su domicilio?</mat-label>
+                                        <mat-label>¿Quiere ser atendido en su domicilio?</mat-label>
                                         <mat-radio-group formControlName="esADomicilio" style="margin-left: 20px;">
                                             <mat-radio-button [value]="'SI'">SI</mat-radio-button>
-                                            <mat-radio-button [value]="'NO'" (click)="getVeterinaries(domUsuario[0].ciudad.id)">NO</mat-radio-button>
-                                            <!--
-                                            si el turno no es a domicilio, por el momento se envia el id de la primera ciudad del usuario.
-                                            hasta que se refactorice para la seleccion de una de sus ciudades
-                                            en caso de poseer domicilios en mas de una ciudad.
-                                            -->
+                                            <mat-radio-button [value]="'NO'">NO</mat-radio-button>
                                         </mat-radio-group>
                                     </div>
                                     @if (domicilio.value.esADomicilio === 'SI') {
@@ -53,7 +48,17 @@
                                             <mat-label>Por Favor seleccione un domicilio:</mat-label>
                                             <mat-radio-group formControlName="domicilioUsuario" style="margin-left: 20px; display: flex; flex-direction: column;">
                                                 @for (dom of domUsuario; track $index) {
-                                                    <mat-radio-button value="{{dom}}" (click)="getVeterinaries(dom.ciudad.id)">{{dom.calle + ' ' + dom.numero}}</mat-radio-button>
+                                                    <mat-radio-button [value]="dom" >{{dom.calle + ' ' + dom.numero + ", " + dom.ciudad.nombre}}</mat-radio-button>
+                                                }
+                                            </mat-radio-group>
+                                        </div>
+                                    }
+                                    @if (domicilio.value.esADomicilio === 'NO' && domUsuario.length>1) {
+                                        <div style="margin-top: 15px;">
+                                            <mat-label>¿En que ciudad se encuentra?</mat-label>
+                                            <mat-radio-group formControlName="domicilioUsuario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                                @for (dom of domUsuario; track $index) {
+                                                    <mat-radio-button [value]="dom" >{{dom.ciudad.nombre}}</mat-radio-button>
                                                 }
                                             </mat-radio-group>
                                         </div>
@@ -61,7 +66,7 @@
                                 </div>
                                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                     <button mat-button matStepperPrevious>Anterior</button>
-                                    <button mat-button matStepperNext>Siguiente</button>
+                                    <button mat-button matStepperNext (click)="this.getVeterinaries()">Siguiente</button>
                                     <!-- <button mat-button (click)="onConfirmar()">Confirmar</button> -->
                                 </div>
                             </form>
@@ -72,45 +77,59 @@
                             <form [formGroup]="veterinaries">
                               <ng-template matStepLabel>Veterinario/as</ng-template>
                               <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                          
-                                <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: flex-start;">
-                                  <mat-label>Seleccioná una opción</mat-label>
-                                  <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                    <mat-radio-button value="independiente" (change)="limpiarCamposVeterinaries()">Veterinario/a Independiente</mat-radio-button>
-                                    <mat-radio-button value="veterinaria" (change)="limpiarCamposVeterinaries()">Veterinaria</mat-radio-button>
-                                  </mat-radio-group>
-                                </div>
-                          
-                                <ng-container *ngIf="veterinaries.value.vetes === 'independiente'">
-                                  <mat-label style="margin-top: 15px;">Seleccioná un profesional</mat-label>
-                                  <span *ngIf="veterinarios.length===0"> Lo sentimos, no hay veterinarios disponibles</span>
-                                  <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                    <mat-radio-button *ngFor="let vete of veterinarios" [value]="vete.id">
-                                      {{ vete.nombre }} {{ vete.apellido }}
-                                    </mat-radio-button>
-                                  </mat-radio-group>
-                                </ng-container>
-                          
-                                <div *ngIf="veterinaries.value.vetes === 'veterinaria'">
-                                    <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
-                                        <mat-label style="margin-top: 15px;">Seleccioná una veterinaria</mat-label>
-                                        <mat-select formControlName="veterinariaSeleccionada">
-                                            <mat-option *ngFor="let vet of veterinarias" [value]="vet.id">
-                                            {{ vet.razonSocial }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                  
-                                  <div>
-                                    <mat-label style="margin-top: 15px;">Selecciona un profesional de la Veterinaria</mat-label>
-                                    <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                      <mat-radio-button *ngFor="let empleado of  getVeterinariosDeVeterinaria(veterinaries.value.veterinariaSeleccionada)" [value]="empleado.id">
-                                        {{ empleado.nombre }} {{ empleado.apellido }}
-                                      </mat-radio-button>
-                                    </mat-radio-group>
-                                  </div>
-                                </div>
-                          
+                                @if(domicilio.value.esADomicilio === 'SI'){
+                                    <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: flex-start;">
+                                      <mat-label>Seleccioná una opción</mat-label>
+                                      <mat-radio-group formControlName="vetes" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                        <mat-radio-button value="independiente" (change)="limpiarCamposVeterinaries()">Veterinario/a Independiente</mat-radio-button>
+                                        <mat-radio-button value="veterinaria" (change)="limpiarCamposVeterinaries()">Veterinaria</mat-radio-button>
+                                      </mat-radio-group>
+                                    </div>
+                                }
+                                
+                                @if(veterinaries.value.vetes === 'independiente' &&  domicilio.value.esADomicilio === 'SI'){
+                                    <ng-container>
+                                      <mat-label style="margin-top: 15px;">Seleccioná un profesional</mat-label>
+                                      <span *ngIf="veterinarios.length===0"> Lo sentimos, no hay veterinarios disponibles</span>
+                                      <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                        <mat-radio-button *ngFor="let vete of veterinarios" [value]="vete.id">
+                                          {{ vete.nombre }} {{ vete.apellido }}
+                                        </mat-radio-button>
+                                      </mat-radio-group>
+                                    </ng-container>
+                                }
+                                
+                                @if(veterinaries.value.vetes === 'veterinaria' || domicilio.value.esADomicilio === 'NO'){
+                                    @if(veterinarias && veterinarias.length>0){
+                                        <div style="width: 100%; display: flex; flex-direction: column;  justify-content: center;  align-items: center;">
+                                            <div style="width: 100%;display: flex;flex-direction: row;justify-content: center;">
+                                                <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 500px;">
+                                                    <mat-label style="margin-top: 15px;">Seleccioná una veterinaria</mat-label>
+                                                    <mat-select formControlName="veterinariaSeleccionada">
+                                                        <mat-option *ngFor="let vet of veterinarias" [value]="vet.id">
+                                                            {{ vet.razonSocial }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                          @if(veterinaries.value.veterinariaSeleccionada){
+                                              <div>
+                                                <mat-label style="margin-top: 15px;">Selecciona un profesional de la Veterinaria</mat-label>
+                                                <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                                  <mat-radio-button *ngFor="let empleado of  getVeterinariosDeVeterinaria(veterinaries.value.veterinariaSeleccionada)" [value]="empleado.id">
+                                                    {{ empleado.nombre }} {{ empleado.apellido }}
+                                                  </mat-radio-button>
+                                                </mat-radio-group>
+                                              </div>
+                                          }
+                                        </div>
+                                    }
+
+                                    @if(!veterinarias || veterinarias.length===0){
+                                        <span> Lo sentimos, no hay veterinarias disponibles</span>
+                                    }
+                                }
+                                
                                 <div style="display: flex; flex-direction: row; align-self: flex-end; margin-top: 20px;">
                                   <button mat-button matStepperPrevious>Anterior</button>
                                   <button mat-button matStepperNext>Siguiente</button>
@@ -126,29 +145,41 @@
                                 <ng-template matStepLabel>Turnero</ng-template>
 
                                 <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
-                                    <mat-form-field>
+                                    <mat-form-field appearance="outline">
                                         <mat-label>Fecha:</mat-label>
-                                        <input matInput formControlName="fecha" [matDatepicker]="dp3">
+                                        <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="minFecha">
                                         <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
-                                        <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
+                                        <mat-datepicker-toggle matIconSuffix [for]="dp3" ></mat-datepicker-toggle>
                                         <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                                        <mat-error *ngIf="turnero.get('fecha')?.hasError('fechaInvalida')">
+                                            La fecha debe ser igual o posterior a hoy.
+                                          </mat-error>
                                     </mat-form-field>
                                     <button mat-button (click)="getHorariosDisponibles()">Consultar</button>
                                 </div>
                                 @if (horarios.length > 0) {
-                                    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: baseline;">
+                                    <div style="margin-top: 15px;">
                                         <mat-label>Seleccioná un Horario</mat-label>
-                                        <mat-radio-group formControlName="hora" style="margin-left: 20px; display: flex; flex-direction: column;">
-                                            @for (item of horarios; track $index) {
-                                                <mat-radio-button [value]="item">{{item.horaInicio}}</mat-radio-button>
-                                            }
+                                        <mat-radio-group formControlName="hora" 
+                                                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                                          @for (item of horarios; track $index) {
+                                            <mat-radio-button [value]="item" style="text-align: center;">
+                                              {{ item.horaInicio }}
+                                            </mat-radio-button>
+                                          }
                                         </mat-radio-group>
+                                      </div>
+                                }
+
+                                @if( busquedaTurnos && horarios.length===0){
+                                    <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center;">
+                                        Lo sentimos, no hay horarios disponibles para la fecha consultada
                                     </div>
                                 }
 
                                 <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                     <button mat-button matStepperPrevious>Anterior</button>
-                                    <button mat-button (click)="onDialogConfirmarTurno()">Confirmar</button>
+                                    <button mat-button (click)="onDialogConfirmarTurno()" [disabled]="!turnero.get('hora')?.value">Confirmar</button>
                                 </div>
                             </form>
                         </mat-step>
@@ -158,7 +189,7 @@
         @if(turnoReservado){
             <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-content: center; margin-top: 20px;">
                 <mat-card-title style="display: flex; justify-content: center;">Turno reservado con éxito</mat-card-title>
-                <mat-card-content style="display: flex; justify-content: center;">El turno fue reservado, podrá visualizarlo desde <a routerLink="/adm-turnos-reservados" style="margin-left: 5px;">Mis turnos reservados</a>.</mat-card-content>
+                <mat-card-content style="display: flex; justify-content: center;">El turno fue reservado, podrá visualizarlo desde <a routerLink="/adm-turnos-cliente" style="margin-left: 5px;">Mis turnos reservados</a>.</mat-card-content>
             </div>
         }
         </mat-card>

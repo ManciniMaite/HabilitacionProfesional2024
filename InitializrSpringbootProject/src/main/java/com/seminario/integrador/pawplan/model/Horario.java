@@ -4,6 +4,8 @@
  */
 package com.seminario.integrador.pawplan.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class Horario {
 
     @ManyToOne
     @JoinColumn(name = "dia_horario_atencion_id")
+    @JsonBackReference
     private DiaHorarioAtencion diaHorarioAtencion;
 
     public Long getId() {

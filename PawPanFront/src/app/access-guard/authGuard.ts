@@ -10,6 +10,7 @@ export const authGuard: CanActivateFn = () => {
   return authService.usuario$.pipe(
     take(1), // Tomamos solo el último valor
     map(usuario => {
+      console.log('usuario: ', usuario)
       if (usuario) {
         return true;
       } else {

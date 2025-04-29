@@ -1,0 +1,26 @@
+<form [formGroup]="form">
+    <mat-card-title style="margin:15px">Agregar Domicilio</mat-card-title>
+    <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <mat-label>Ciudad</mat-label>
+            <mat-select formControlName="ciudad" required>
+                <mat-option value="">Seleccione una ciudad...</mat-option>
+                @for (item of this.ciudades; track $index) {
+                    <mat-option [value]="item.id">{{item.nombre}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <mat-label>Calle</mat-label>
+            <input matInput  placeholder="Ingresa la calle" formControlName="calle">
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
+            <input matInput type="number" placeholder="Ingrese el numero" formControlName="numero" required>
+        </mat-form-field>
+    </div>
+
+    <mat-card-actions style="display: flex; justify-content: end;">
+        <button mat-raised-button style="margin-right: 10px;" (click)="close()">Cancelar</button>
+        <button mat-flat-button (click)="onDialogSave()" [disabled]="!form.valid">Agregar</button>
+    </mat-card-actions>
+</form>

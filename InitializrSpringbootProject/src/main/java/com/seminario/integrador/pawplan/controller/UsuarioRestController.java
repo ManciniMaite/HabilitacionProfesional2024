@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 /**
  *
@@ -114,7 +116,56 @@ public class UsuarioRestController {
     public List<Domicilio> getDomicilioByCliente(@PathVariable String dniCliente){
         return this.domicilioService.getByUsuario(dniCliente);
     }
+
+	@GetMapping("/{dni}")
+	public UsuarioResponse getMethodName(@PathVariable("dni") String dni) {
+		return usuarioService.consultarUsuarioPorDni(dni) ;
+	}
+	
     
+    @RequestMapping(value = Constantes.URL_PATH_RECUPERAR_CONTRASENA, method = RequestMethod.POST)
+    public UsuarioResponse<?> recuperarContraseña(@RequestBody UsuarioRequest usuarioRequest) {
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.recuperarContrasena(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al recuperar pregunta secreta - 05. " + e.getMessage());
+			logger.error("ERROR recuperar pregunta secreta",e);
+		}
+    	
+    	return result;
+    }
     
+    @RequestMapping(value = Constantes.URL_PATH_PREGUNTA_SECRETA, method = RequestMethod.POST)
+    public UsuarioResponse<?> preguntaSecreta(@RequestBody UsuarioRequest usuarioRequest) {
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.preguntaSecreta(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al comparar pregunta secreta - 05. " + e.getMessage());
+			logger.error("ERROR al comparar pregunta secreta",e);
+		}
+    	
+    	return result;
+    }
+    
+    @RequestMapping(value = Constantes.URL_PATH_NUEVA_CONTRASENA, method = RequestMethod.POST)
+    public UsuarioResponse<?> nuevaContraseña(@RequestBody UsuarioRequest usuarioRequest) {
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.nuevaContrasena(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al cambiar contraseña - 05. " + e.getMessage());
+			logger.error("ERROR al cambiar contraseña",e);
+		}
+    	
+    	return result;
+    }
     
 }

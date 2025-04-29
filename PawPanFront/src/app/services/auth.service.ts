@@ -6,6 +6,7 @@ import { SessionManagerResponse } from '../model/SessionManagerResponse';
 import { HttpClient } from '@angular/common/http';
 import { L } from '@angular/cdk/keycodes';
 import { Usuario } from '../model/Usuario';
+import { AppComponent } from '../app.component';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class AuthService {
   }
 
   onLogOut(): Observable<SessionManagerResponse>{
+    AppComponent.app.tieneSesion = false;
+    AppComponent.app.cerrarSiveNav();
     return this.http.get<SessionManagerResponse>(this.baseURL + "/SessionLogout");
   }
 

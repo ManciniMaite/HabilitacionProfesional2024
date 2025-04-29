@@ -6,6 +6,7 @@ package com.seminario.integrador.pawplan.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -37,15 +38,15 @@ public class Veterinario extends Usuario {
     private String matricula;
     private boolean esIndependiente;
     private boolean haceGuardia;
-    @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<DiaHorarioAtencion> horarios;  
     private boolean haceDomicilio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "veterinaria_id")
     private Veterinaria veterinaria;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "veterinario_tipo_especie",
         joinColumns = @JoinColumn(name = "veterinario_id"),

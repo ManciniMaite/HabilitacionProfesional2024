@@ -21,7 +21,41 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>{
-    @Query(value = """
+    
+	
+	@Query(value = """
+	        select distinct
+				case when razon_social is null then 
+					u.nombre||' '||u.apellido 
+				else 
+					u.razon_social
+					end as nombre,
+					d.calle||' '||d.numero||', '||c.nombre as domicilio,
+					u.telefono
+				from usuario u 
+					inner join domicilio d ON d.usuario_id = u.id
+					inner join ciudad c ON c.id = d.ciudad_id
+					inner join Dia_Horario_Atencion dh ON u.id = dh.id_usuario
+				    inner join Horario h ON h.dia_horario_atencion_id = dh.id
+				where 
+					(u.hace_guardia = true and c.id= :idCiudad ) 
+					or 
+					(CURRENT_TIME BETWEEN h.hora_inicio::time AND h.hora_fin::time
+						 and upper(dh.dia) = (
+				              CASE EXTRACT(DOW FROM now())
+				                  WHEN 0 THEN 'DOMINGO'
+				                  WHEN 1 THEN 'LUNES'
+				                  WHEN 2 THEN 'MARTES'
+				                  WHEN 3 THEN 'MIERCOLES'
+				                  WHEN 4 THEN 'JUEVES'
+				                  WHEN 5 THEN 'VIERNES'
+				                  WHEN 6 THEN 'SABADO'
+				              END
+	         		) and c.id= :idCiudad)
+	    """, nativeQuery = true)
+	List<Object[]> findByCiudadHorario(@Param("idCiudad") Long idCiudad);
+	
+	@Query(value = """
         SELECT 
 			u.id,
 			u.nombre,

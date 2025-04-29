@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, Inject, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import {MatListModule} from '@angular/material/list';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -30,6 +30,8 @@ export class AppComponent implements OnDestroy, OnInit{
   menuItems: MenuItems[] = menuItems;
   role: string;
   tieneSesion: boolean;
+
+  @ViewChild('snav') snav!: MatSidenav;
   
 
   fillerContent = Array.from(
@@ -66,6 +68,13 @@ export class AppComponent implements OnDestroy, OnInit{
       this.tieneSesion = usuario? true : false;
       this.role = usuario?.rol;
     });
+  }
+
+  cerrarSiveNav(){
+    console.log('CERRAR')
+    if (!this.tieneSesion && this.snav?.opened) {
+      this.snav.close();
+    }
   }
 
   esRol(item: MenuItems): boolean{

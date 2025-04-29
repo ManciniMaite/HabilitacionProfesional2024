@@ -8,12 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 import { AtenderTurnoRq } from '../model/AtenderTurnoRq';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-atender-turno',
@@ -27,7 +28,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     TextFieldModule,
     MatFormFieldModule,
     FormsModule,
-    MatButton
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './atender-turno.component.html',
   styleUrl: './atender-turno.component.scss'
@@ -40,6 +42,7 @@ export class AtenderTurnoComponent implements OnInit {
   cargando: boolean = false;
 
   descripcion:string
+  descripcionPrivada:string
 
   constructor(
     private service: TurnoService,
@@ -55,7 +58,7 @@ export class AtenderTurnoComponent implements OnInit {
     this.cargando=true;
     this.route.paramMap.subscribe(params => {
       this.id = Number(params.get('id'));
-      this.service.getById(2).subscribe({
+      this.service.getById(this.id).subscribe({
         next:(data)=>{
           this.cargando=false
           this.turno=data;
@@ -96,12 +99,13 @@ export class AtenderTurnoComponent implements OnInit {
   save(){
     let rq: AtenderTurnoRq = new AtenderTurnoRq();
     rq.idTurno=this.id;
-    rq.descripcion=this.descripcion
+    rq.descripcionPublica=this.descripcion;
+    rq.descripcionPrivada=this.descripcionPrivada;
     this.service.atender(rq).subscribe({
       next: (data)=>{
         if (data.estado!= "ERROR"){
           this.openSnackBar('Cambios guardados!', 'Cerrar');
-          this.router.navigate(['adm-turnos-reservados']);
+          this.router.navigate(['adm-turnos-veterinario']);
         } else{
           this.dialog.open(GenericDialogComponent, {
             data: {
@@ -127,5 +131,8 @@ export class AtenderTurnoComponent implements OnInit {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+  volver(){
+    this.location.back();
   }
 }

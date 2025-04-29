@@ -66,7 +66,7 @@ public class UsuarioService {
 
 	@Autowired
 	private DiaHorarioAtencionRepository diaHorarioAtencionRepository;
-
+	
 	// @Autowired
 	// private DomicilioService domicilioService;
 
@@ -84,6 +84,26 @@ public class UsuarioService {
 	public Optional<Usuario> consultarUsuario(String us) {
 		Optional<Usuario> usuario = usuarioRepository.findByDniOrCuit(us);
 		return usuario;
+	}
+
+	public UsuarioResponse consultarUsuarioPorDni(String us) {
+		UsuarioResponse rs = new UsuarioResponse<>();
+		
+		try{
+			Optional<Usuario> usuario = usuarioRepository.findByDniOrCuit(us);
+			if(usuario.isPresent()){
+				rs.setUsuario(usuario.get());
+			} else {
+				rs.setUsuario(null);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			rs.setEstado("ERROR");
+			rs.setMensaje("Ocurrio un error al buscar el usuario");
+		}
+
+		rs.setEstado("OK");
+		return rs;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -104,7 +124,6 @@ public class UsuarioService {
 			break;
 			
 		case VETERINARIA:
-
 			Veterinaria veterinaria = new Veterinaria();
 
 			veterinaria.setRole(Role.VETERINARIA);
@@ -125,7 +144,6 @@ public class UsuarioService {
 			rs.setUsuario(veterinario);
 			
 			break;
-
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + usuarioRequest.getTipoUsuario());
 		}
@@ -194,27 +212,153 @@ public class UsuarioService {
 		return consulta;
 	}
 	
+	public UsuarioResponse<?> recuperarContrasena(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
+
+		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuario == null) {
+			throw new PawPlanRuleException(0,"USUARIO NULL");
+		}
+			
+		switch (usuario.getRole()) {
+		case PACIENTE:
+			Cliente cliente = (Cliente) usuario;
+			if (cliente.getDni().equals(usuarioRequest.getDniCuit())) {
+				
+				consulta.setPregunta(cliente.getPregunta());
+				consulta.setEstado("OK");
+				
+				return consulta;
+			}
+			break;
+		case VETERINARIA:
+			Veterinaria veterinaria = (Veterinaria) usuario;
+			if (veterinaria.getCuit().equals(usuarioRequest.getDniCuit())) {
+				consulta.setPregunta(veterinaria.getPregunta());
+				consulta.setEstado("OK");
+				return consulta;
+			}
+			break;
+		case VETERINARIO:
+			Veterinario veterinario = (Veterinario) usuario;
+			if (veterinario.getDni().equals(usuarioRequest.getDniCuit())) {
+				consulta.setPregunta(veterinario.getPregunta());
+				consulta.setEstado("OK");
+				return consulta;
+			}
+			break;
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + usuario.getRole());
+		}
+		
+		//no deberia pasar jamas por aca pero lo pide el metodo
+		return null;
+		
+	}
 	
+	
+	public UsuarioResponse<?> preguntaSecreta(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
+
+		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuario == null) {
+			throw new PawPlanRuleException(0,"USUARIO NULL");
+		}
+		
+		if( ! usuario.getRespuesta().equals(usuarioRequest.getRespuesta())) {
+			throw new PawPlanRuleException(1,"RESPUESTA INCORRECTA");
+		}
+		
+		consulta.setEstado("OK");
+		
+		return consulta;
+			
+		
+	}
+	
+	
+	public UsuarioResponse<?> nuevaContrasena(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
+
+		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuario == null) {
+			throw new PawPlanRuleException(0,"USUARIO NULL");
+		}
+			
+		usuario.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
+		
+		usuario = usuarioRepository.save(usuario);
+		
+		consulta.setEstado("OK");
+		
+		return consulta;
+			
+		
+	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
 	private Cliente crearModificarCliente(Cliente cliente, UsuarioRequest usuarioRequest) {
-		
-		cliente.setApellido(usuarioRequest.getApellido());
-		cliente.setNombre(usuarioRequest.getNombre());
-		cliente.setDni(usuarioRequest.getDni());
-		//cliente.setAnimales(usuarioRequest.getAnimales());
-		cliente.setTelefono(usuarioRequest.getTelefono());
-		cliente.setCorreo(usuarioRequest.getCorreo());
-		cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
+		List<Cliente> listCliente = clienteRepository.findBfindByDni(usuarioRequest.getDni());
+
+		if(listCliente!=null && !listCliente.isEmpty()){
+			//tenemos usuario ya creado
+			cliente = listCliente.get(0); 
+		}
+
+		cliente.setDni(usuarioRequest.getDni()); // no debe ser nunca null
+		//consulto si no es null para que en caso de que exista el cliente no sobreescribir algun atributo que venga como null y ya tenga datos
+		if (usuarioRequest.getApellido() != null) {
+			cliente.setApellido(usuarioRequest.getApellido());
+		}
+		if (usuarioRequest.getNombre() != null) {
+			cliente.setNombre(usuarioRequest.getNombre());
+		}
+		if (usuarioRequest.getTelefono() != null) {
+			cliente.setTelefono(usuarioRequest.getTelefono());
+		}
+		if (usuarioRequest.getCorreo() != null) {
+			cliente.setCorreo(usuarioRequest.getCorreo());
+		}
+		if (usuarioRequest.getContrasenia() != null) {
+			cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
+		}
+
+		cliente.setPregunta(usuarioRequest.getPregunta());
+		cliente.setRespuesta(usuarioRequest.getRespuesta());
+		
 		cliente = clienteRepository.save(cliente);
 
-		if(usuarioRequest.getAnimales()!=null){
-			for(AnimalRq a : usuarioRequest.getAnimales()){
-				a.setUsuarioId(cliente.getId());
-				this.animalService.crearAnimal(a);
+		// if(usuarioRequest.getAnimales()!=null){
+		// 	List<Animal> animalesExistentes = animalService.obtenerAnimalesPorUsuarioId(cliente.getId());
+		// 	for(AnimalRq a : usuarioRequest.getAnimales()){
+		// 		a.setUsuarioId(cliente.getId());
+		// 		this.animalService.crearAnimal(a);
+		// 	}
+		// }
+
+		if (usuarioRequest.getAnimales() != null && !usuarioRequest.getAnimales().isEmpty()) {
+			//Si ya existe el cliente traer los animales ya creados
+			List<Animal> animalesExistentes = animalService.obtenerAnimalesPorUsuarioId(cliente.getId());
+		
+			for (AnimalRq nuevoAnimal : usuarioRequest.getAnimales()) {
+				// Verificar si el nombre y raza del animal coinciden para no crearlo
+				boolean yaExiste = animalesExistentes.stream().anyMatch(animalExistente ->
+					animalExistente.getNombre().equalsIgnoreCase(nuevoAnimal.getNombre()) &&
+					animalExistente.getRaza().getId().equals(nuevoAnimal.getRazaId())
+				);
+		
+				//si no coincide ninguno, creamos el nuevo animal
+				if (!yaExiste) {
+					nuevoAnimal.setUsuarioId(cliente.getId());
+					this.animalService.crearAnimal(nuevoAnimal);
+				}
 			}
 		}
+		
 
 		if(usuarioRequest.getDomicilio() != null){
 			this.domicilioService.nuevDomicilio(usuarioRequest.getDomicilio());
@@ -233,6 +377,9 @@ public class UsuarioService {
 
 		veterinaria.setCuit(usuarioRequest.getCuit());
 		veterinaria.setHorarioAtencion(usuarioRequest.getHorario());
+		
+		veterinaria.setPregunta(usuarioRequest.getPregunta());
+		veterinaria.setRespuesta(usuarioRequest.getRespuesta());
 		
 		if(usuarioRequest.isLocalFisico()){
 			veterinaria.setHaceDomicilio(false);
@@ -284,6 +431,9 @@ public class UsuarioService {
 		veterinario.setCorreo(usuarioRequest.getCorreo());
 		veterinario.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
+		veterinario.setPregunta(usuarioRequest.getPregunta());
+		veterinario.setRespuesta(usuarioRequest.getRespuesta());
+		
 		veterinario.setFechaNac(usuarioRequest.getFechaNac());
 		veterinario.setMatricula(usuarioRequest.getMatricula());
 		veterinario.setEsIndependiente(usuarioRequest.isEsIndependiente());

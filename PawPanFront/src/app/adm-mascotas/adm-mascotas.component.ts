@@ -13,6 +13,8 @@ import { AnimalService } from '../services/animal.service';
 import { AuthService } from '../services/auth.service';
 import { Animal } from '../model/Animal';
 import { AgregarAnimalComponent } from '../model/dialog/agregar-animal/agregar-animal.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-adm-mascotas',
@@ -23,7 +25,8 @@ import { AgregarAnimalComponent } from '../model/dialog/agregar-animal/agregar-a
     MatButtonModule,
     MatIconModule,
     MatButton,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ],
   templateUrl: './adm-mascotas.component.html',
   styleUrl: './adm-mascotas.component.scss'
@@ -41,7 +44,7 @@ export class AdmMascotasComponent {
 
   constructor(
     private service: AnimalService,
-
+    private location: Location,
     private dialog: MatDialog
   ){}
 
@@ -86,6 +89,7 @@ export class AdmMascotasComponent {
         type: 'normal',
         title: 'Quitar Animal',
         body: '¿Está seguro que desea eliminar a '+ animal.nombre + '  de sus mascotas?',
+        body2: 'Te recordamos que si tiene turnos pendiendes, estos serán cancelados',
         acceptText: 'Sí, continuar',
         cancelText: 'Cancelar',
         onAccept: () => {
@@ -139,6 +143,10 @@ export class AdmMascotasComponent {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  volver(){
+    this.location.back();
   }
 
 }

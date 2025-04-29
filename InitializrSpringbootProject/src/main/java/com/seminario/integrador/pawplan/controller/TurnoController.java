@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.seminario.integrador.pawplan.Constantes;
 import com.seminario.integrador.pawplan.controller.values.AtenderTurnoRq;
+import com.seminario.integrador.pawplan.controller.values.ClientesDeVeterinarieRs;
 import com.seminario.integrador.pawplan.controller.values.DisponibilidadRq;
 import com.seminario.integrador.pawplan.controller.values.FiltroTurnoRq;
 import com.seminario.integrador.pawplan.controller.values.PaginaTurnosRs;
@@ -28,6 +29,8 @@ import com.seminario.integrador.pawplan.services.TurnoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -50,19 +53,19 @@ public class TurnoController {
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_CANCELAR, method = RequestMethod.POST)
-    public TurnoResponse reservarCancelar(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservarCancelar(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.cancelarTurno(request);
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_ACEPTAR, method = RequestMethod.POST)
-    public TurnoResponse reservaAceptado(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservaAceptado(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.aceptarTurno(request);
 	}
 	
 	@RequestMapping(value = Constantes.URL_PATH_RECHAZAR, method = RequestMethod.POST)
-    public TurnoResponse reservaRechazar(@RequestBody TurnoRequest request) {
+    public TurnoResponse reservaRechazar(@RequestBody AtenderTurnoRq request) {
 		
 		return turnoService.rechazarTurno(request);
 	}
@@ -81,6 +84,16 @@ public class TurnoController {
 	@GetMapping("/{id}")
 	public Turno getById(@PathVariable("id") Long id){
 		return turnoService.getById(id);
+	}
+
+	@GetMapping("/getClientesDeVeterinarie")
+	public ClientesDeVeterinarieRs getClientes() throws JsonMappingException, JsonProcessingException{
+		return turnoService.obtenerClientesConAnimales();
+	}
+
+	@GetMapping("/getClientesDeVeterinarieCompleto")
+	public ClientesDeVeterinarieRs getClientesCompletos() throws JsonMappingException, JsonProcessingException{
+		return turnoService.obtenerClientesConTodosSusAnimales();
 	}
 	
 }

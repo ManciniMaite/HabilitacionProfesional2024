@@ -30,6 +30,8 @@ import { validacionDni } from '../validators/validacionDni';
 import { UsuarioRequest } from '../model/UsuarioRq';
 import { DomicilioRq } from '../model/DomicilioRq';
 import { AnimalRq } from '../model/AnimalRq';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 
 @Component({
   selector: 'app-crear-cuenta-cliente',
@@ -60,6 +62,8 @@ export class CrearCuentaClienteComponent implements OnInit{
   mascota: FormGroup;
   ubicacion: FormGroup;
 
+  date: Date = new Date();
+
   animales: Animal[] = [];
 
   ciudades: Ciudad[] = [];
@@ -75,7 +79,8 @@ export class CrearCuentaClienteComponent implements OnInit{
     private service: UsuarioService,
     private especieService: EspecieService,
     private razasService: RazaService,
-    private ciudadesService: CiudadService
+    private ciudadesService: CiudadService,
+    private dialog: MatDialog
   ){
     this.datosPersonales = this.fb.group({
       nombre:               new FormControl('', Validators.required),
@@ -85,7 +90,9 @@ export class CrearCuentaClienteComponent implements OnInit{
       correo:               new FormControl('', [Validators.required, Validators.email,validacionFormatoCorreo]),
       telefono:             new FormControl('', [Validators.required, validacionTelefonoBasico]),
       contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
-      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)])
+      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)]),
+      preguntaSecreta:      new FormControl('', Validators.required),
+      respuestaSecreta:     new FormControl('', Validators.required),
     }, { validators: validacionContraseniasIguales });
 
     this.mascota = this.fb.group({
@@ -110,15 +117,25 @@ export class CrearCuentaClienteComponent implements OnInit{
             if(data.estado != "ERROR"){
               this.especies = data.especies;
             } else {
-              /**
-               * TODO: DIALOGO DE ERROR
-               */
+              this.dialog.open(GenericDialogComponent, {
+                data: {
+                  type: 'error',
+                  title: '¡Algo salió mal!',
+                  body: data.mensaje,
+                  cancelText: 'Cerrar'
+                }
+              });
               console.log(data.mensaje);
             }
         }, error: (error)=>{
-          /**
-           * TODO: DIALOGO DE ERROR 
-           */
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error interno al bucar las especies",
+              cancelText: 'Cerrar'
+            }
+          });
           console.log(error);
         }
       });
@@ -127,19 +144,29 @@ export class CrearCuentaClienteComponent implements OnInit{
             if(data.estado != "ERROR"){
               this.ciudades = data.ciudades;
             } else {
-              /**
-               * TODO: DIALOGO DE ERROR
-               */
+              this.dialog.open(GenericDialogComponent, {
+                data: {
+                  type: 'error',
+                  title: '¡Algo salió mal!',
+                  body: data.mensaje,
+                  cancelText: 'Cerrar'
+                }
+              });
               console.log(data.mensaje);
             }
         }, error: (error)=>{
-          /**
-           * TODO: DIALOGO DE ERROR 
-           */
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error interno al obtener las ciudades",
+              cancelText: 'Cerrar'
+            }
+          });
           console.log(error);
         }
       });
-  }
+    }
 
   getRazas(id: number){
     this.razasService.getAll(id).subscribe({
@@ -147,15 +174,25 @@ export class CrearCuentaClienteComponent implements OnInit{
           if(data.estado != "ERROR"){
             this.razas = data.razas;
           } else {
-            /**
-             * TODO: DIALOGO DE ERROR
-             */
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar'
+              }
+            });
             console.log(data.mensaje);
           }
       }, error: (error)=>{
-        /**
-         * TODO: DIALOGO DE ERROR 
-         */
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: '¡Algo salió mal!',
+            body: "ocurrio un error interno al obtener las razas",
+            cancelText: 'Cerrar'
+          }
+        });
         console.log(error);
       }
     });
@@ -179,14 +216,32 @@ export class CrearCuentaClienteComponent implements OnInit{
   }
  
   onConfirmar(){
-    if(this.validarDatosPersonales() && this.validarMascotas()){
+    if(this.validarDatosPersonales()){
       let rq : UsuarioRequest=this.getObject()
       console.log('us rq: ', rq)
       this.service.crearCuenta(rq).subscribe({
         next:(data) => {
-          this.usCreado = true;
-          console.log(data); 
+          if(data.estado!="ERROR"){
+            this.usCreado=true
+          } else{
+            this.dialog.open(GenericDialogComponent, {
+              data: {
+                type: 'error',
+                title: '¡Algo salió mal!',
+                body: data.mensaje,
+                cancelText: 'Cerrar',
+              }
+            });
+          }
         }, error: (error)=>{
+          this.dialog.open(GenericDialogComponent, {
+            data: {
+              type: 'error',
+              title: '¡Algo salió mal!',
+              body: "Ocurrio un error al confirmar la creacion del usuario",
+              cancelText: 'Cerrar'
+            }
+          });
           console.log(error);
         }
       });
@@ -203,6 +258,8 @@ export class CrearCuentaClienteComponent implements OnInit{
     rq.apellido=this.datosPersonales.get('apellido')?.value;
     rq.dni=this.datosPersonales.get('dni')?.value;
     rq.fechaNac=this.datosPersonales.get('fechaNac')?.value;
+    rq.pregunta=this.datosPersonales.get('preguntaSecreta')?.value;
+    rq.respuesta=this.datosPersonales.get('respuestaSecreta')?.value;
     
     let animalesRq: AnimalRq[] = []
     console.log('animales: ',this.animales)
@@ -243,6 +300,8 @@ export class CrearCuentaClienteComponent implements OnInit{
            (this.datosPersonales.get('telefono')?.value != null && this.datosPersonales.get('telefono')?.value != undefined && this.datosPersonales.get('telefono')?.value != "")&&
            (this.datosPersonales.get('contrasenia')?.value != null && this.datosPersonales.get('contrasenia')?.value != undefined && this.datosPersonales.get('contrasenia')?.value != "")&&
            (this.datosPersonales.get('validarContrasenia')?.value != null && this.datosPersonales.get('validarContrasenia')?.value != undefined && this.datosPersonales.get('validarContrasenia')?.value != "")&&
+           (this.datosPersonales.get('preguntaSecreta')?.value != null && this.datosPersonales.get('preguntaSecreta')?.value != undefined && this.datosPersonales.get('preguntaSecreta')?.value != "")&&
+           (this.datosPersonales.get('respuestaSecreta')?.value != null && this.datosPersonales.get('respuestaSecreta')?.value != undefined && this.datosPersonales.get('respuestaSecreta')?.value != "")&&
            this.validarContrasenias();
   }
 
