@@ -19,29 +19,37 @@ import { AdmTurnosClienteComponent } from './adm-turnos-cliente/adm-turnos-clien
 import { VerTurnoComponent } from './ver-turno/ver-turno.component';
 import { AdmDmiciliosComponent } from './adm-dmicilios/adm-dmicilios.component';
 import { NuevoTurnoComponent } from './nuevo-turno/nuevo-turno.component';
+import { ReportesComponent } from './reportes/reportes.component';
+import { TurnosPorVeterinarioComponent } from './reportes/turnos-por-veterinario/turnos-por-veterinario.component';
+import { TurnosPorEspecieComponent } from './reportes/turnos-por-especie/turnos-por-especie.component';
+import { TurnosPorEstadoComponent } from './reportes/turnos-por-estado/turnos-por-estado.component';
 
 export const routes: Routes = [
-  { path: 'home',                       component: HomeComponent, canActivate: [authGuard] },
-  { path: 'adm-horarios',               component: AdmHorariosComponent, canActivate: [authGuard] },
-  { path: 'adm-mascotas',               component: AdmMascotasComponent, canActivate: [authGuard] },
-  { path: 'adm-turnos-veterinario',     component: AdmTurnosVeterinarioComponent, canActivate: [authGuard] },
-  { path: 'adm-turnos-veterinaria',     component: AdmTurnosVeterinariaComponent, canActivate: [authGuard] },
-  { path: 'adm-turnos-cliente',         component: AdmTurnosClienteComponent, canActivate: [authGuard] },
-  { path: 'adm-reservar-turno',         component: AdmReservarTurnoComponent, canActivate: [authGuard] },
-  { path: 'adm-veterinarios',           component: AdmVeterinariosComponent, canActivate: [authGuard] },
-  { path: 'mascota/:id',                component: MascotaEditComponent, canActivate: [authGuard] },
-  { path: 'emergencia',                 component: EmergenciaComponent, canActivate: [authGuard] },
-  { path: 'atender-turno/:id',          component: AtenderTurnoComponent, canActivate: [authGuard] },
-  { path: 'ver-turno/:id',              component: VerTurnoComponent, canActivate: [authGuard] },
-  { path: 'adm-domicilios',             component: AdmDmiciliosComponent, canActivate: [authGuard] },
-  { path: 'nuevo-turno',                component: NuevoTurnoComponent, canActivate: [authGuard] },
+  { path: 'home',                                 component: HomeComponent,                 canActivate: [authGuard] },
+  { path: 'adm-horarios',                         component: AdmHorariosComponent,          canActivate: [authGuard] },
+  { path: 'adm-mascotas',                         component: AdmMascotasComponent,          canActivate: [authGuard] },
+  { path: 'adm-turnos-veterinario',               component: AdmTurnosVeterinarioComponent, canActivate: [authGuard] },
+  { path: 'adm-turnos-veterinaria',               component: AdmTurnosVeterinariaComponent, canActivate: [authGuard] },
+  { path: 'adm-turnos-cliente',                   component: AdmTurnosClienteComponent,     canActivate: [authGuard] },
+  { path: 'adm-reservar-turno',                   component: AdmReservarTurnoComponent,     canActivate: [authGuard] },
+  { path: 'adm-veterinarios',                     component: AdmVeterinariosComponent,      canActivate: [authGuard] },
+  { path: 'mascota/:id',                          component: MascotaEditComponent,          canActivate: [authGuard] },
+  { path: 'emergencia',                           component: EmergenciaComponent,           canActivate: [authGuard] },
+  { path: 'atender-turno/:id',                    component: AtenderTurnoComponent,         canActivate: [authGuard] },
+  { path: 'ver-turno/:id',                        component: VerTurnoComponent,             canActivate: [authGuard] },
+  { path: 'adm-domicilios',                       component: AdmDmiciliosComponent,         canActivate: [authGuard] },
+  { path: 'nuevo-turno',                          component: NuevoTurnoComponent,           canActivate: [authGuard] },
+  { path: 'reportes',                             component: ReportesComponent,             canActivate: [authGuard] },
+  { path: 'reportes/turnos-por-veterinario',      component: TurnosPorVeterinarioComponent, canActivate: [authGuard] },
+  { path: 'reportes/turnos-por-especie',          component: TurnosPorEspecieComponent,     canActivate: [authGuard] },
+  { path: 'reportes/turnos-por-estado',           component: TurnosPorEstadoComponent,      canActivate: [authGuard] },
 
   // Rutas públicas
-  { path: 'iniciar-sesion',             component: InicioComponent },
-  { path: 'crear-cuenta',               component: CrearCuentaComponent },
-  { path: 'crear-cuenta-paciente',      component: CrearCuentaClienteComponent },
-  { path: 'crear-cuenta-veterinario',   component: CrearCuentaVeterinarioComponent },
-  { path: 'crear-cuenta-local',         component: CrearCuentaLocalComponent },
+  { path: 'iniciar-sesion',                       component: InicioComponent },
+  { path: 'crear-cuenta',                         component: CrearCuentaComponent },
+  { path: 'crear-cuenta-paciente',                component: CrearCuentaClienteComponent },
+  { path: 'crear-cuenta-veterinario',             component: CrearCuentaVeterinarioComponent },
+  { path: 'crear-cuenta-local',                   component: CrearCuentaLocalComponent },
 
   { path: '**', redirectTo: 'iniciar-sesion' }
 ];

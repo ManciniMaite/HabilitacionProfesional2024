@@ -11,4 +11,5 @@ export const menuItems: MenuItems[]=[
     {id:7,  nombre: 'Administrar veterinarios',  icono:'../assets/iconos-menu-lateral/adm-vaterinarios.svg', path: 'adm-veterinarios',       hidden:false, tipo: 'accent', role:['VETERINARIA']},
     {id:8,  nombre: 'Mis domicilios',            icono:'../assets/iconos-menu-lateral/home.svg',             path: 'adm-domicilios',         hidden:false, tipo: 'accent', role:['PACIENTE']},
     {id:9,  nombre: 'Emergencia',                icono:'../assets/iconos-menu-lateral/e911_emergency.svg',   path: 'emergencia',             hidden:false, tipo: 'warn',   role:['PACIENTE']},
+    {id:10, nombre: 'Reportes',                  icono:'../assets/iconos-menu-lateral/reportes.svg',         path: 'reportes',               hidden:false, tipo: 'accent', role:['VETERINARIO','VETERINARIA']},
   ]
