@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -63,6 +64,7 @@ import com.seminario.integrador.pawplan.security.Role;
 import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TurnoService {
 	
 	private Logger logger = LoggerFactory.getLogger(TurnoService.class);
@@ -94,7 +96,7 @@ public class TurnoService {
 	@Autowired
 	private AnimalService animalService;
 	
-	@Transactional(rollbackFor = Throwable.class)
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public TurnoResponse getTurnosDisponibles(DisponibilidadRq turnoRequest) throws JsonMappingException, JsonProcessingException{
 		TurnoResponse result = new TurnoResponse();
 		
@@ -144,7 +146,7 @@ public class TurnoService {
 		return result;
 	}
 	
-	@Transactional( )
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public TurnoResponse reservarTurno(ReservarTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
@@ -346,6 +348,7 @@ public class TurnoService {
 		//return null;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public TurnoResponse cancelarTurno(AtenderTurnoRq turnoRequest) {
 		
 		TurnoResponse result = new TurnoResponse();
@@ -364,10 +367,10 @@ public class TurnoService {
 		//hacemos el cambio de estado
 		Turno turno = cambiarEstadoTurno(turnoRequest.getIdTurno(), estadoCancelado);
 
-		turno.getVeterinario().setHorarios(null);
+		/*turno.getVeterinario().setHorarios(null);
 		if(turno.getVeterinaria()!=null){
 			turno.getVeterinaria().setHorarioAtencion(null);
-		}
+		}*/
 
 		result.setTurno(turno);
 		
@@ -379,6 +382,7 @@ public class TurnoService {
 		return result;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public TurnoResponse buscarTurnos(TurnoRequest turnoRequest) {
 		
 		TurnoResponse result = new TurnoResponse();
@@ -420,6 +424,7 @@ public class TurnoService {
 		return result;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public TurnoResponse aceptarTurno(AtenderTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
@@ -455,6 +460,7 @@ public class TurnoService {
 		return result;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public TurnoResponse rechazarTurno(AtenderTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
@@ -490,6 +496,7 @@ public class TurnoService {
 		return result;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public TurnoResponse atenderTurno(AtenderTurnoRq turnoRequest) {
 		TurnoResponse result = new TurnoResponse();
 		
@@ -531,12 +538,14 @@ public class TurnoService {
 		return result;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Turno cambiarEstadoTurno(Long idTurno, Estado estado) {
 		Turno turno = turnoRepository.findById(idTurno).get();
 		turno.setEstado(estado);
 		return turnoRepository.save(turno);
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public PaginaTurnosRs getMisTurnos (FiltroTurnoRq turnoRequest){
 
 		PaginaTurnosRs rs = new PaginaTurnosRs();
@@ -661,7 +670,7 @@ public class TurnoService {
 		return rs;
 	}
 
-
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Turno getById(Long id){
 		Optional<Turno> ot = turnoRepository.findById(id);
 		if(ot.isPresent()){
@@ -676,6 +685,7 @@ public class TurnoService {
 		}
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ClientesDeVeterinarieRs obtenerClientesConAnimales() throws JsonProcessingException {
 
 		ClientesDeVeterinarieRs rs = new ClientesDeVeterinarieRs();
@@ -724,6 +734,7 @@ public class TurnoService {
 		return rs;
     }
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public ClientesDeVeterinarieRs obtenerClientesConTodosSusAnimales() throws JsonProcessingException {
 
 		ClientesDeVeterinarieRs rs = new ClientesDeVeterinarieRs();
