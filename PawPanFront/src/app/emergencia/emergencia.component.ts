@@ -6,20 +6,28 @@ import { VeterinariesService } from '../services/Veterinaries-service';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericDialogComponent } from '../model/dialog/generic-dialog/generic-dialog.component';
 import { Location } from '@angular/common';
+import { MatLabel, MatSelectModule } from '@angular/material/select';
+import { AuthService } from '../services/auth.service';
+import { DomicilioService } from '../services/Domicilio.service';
+import { Domicilio } from '../model/Domicilio';
 
 @Component({
   selector: 'app-emergencia',
   standalone: true,
   imports: [
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatLabel
   ],
   templateUrl: './emergencia.component.html',
   styleUrl: './emergencia.component.scss'
 })
 export class EmergenciaComponent {
-
+  cuilUs: string;
+  ciudades: Domicilio[];
   contactos: Emergencia[];
+  mostrarContactos: boolean = false;
   // contactos: Emergencia[] = [
   //   {
   //     nombre: "Juan Jose",
@@ -36,18 +44,45 @@ export class EmergenciaComponent {
   constructor(
     private veterinarieService: VeterinariesService,
     private dialog: MatDialog,
-    private location: Location
+    private location: Location,
+    private authService: AuthService,
+    private domicilioService: DomicilioService,
   ){}
 
   ngOnInit(){
-    this.getContactos();
+    this.authService.usuario$.subscribe(usuario => {
+      this.cuilUs = usuario?.cuil;
+      this.getCiudades();
+    });
   }
 
-  getContactos(){
-    this.veterinarieService.getEmergencia().subscribe({
+  getCiudades(){
+    this.domicilioService.getDoms(this.cuilUs).subscribe({
+      next:(data)=>{
+        this.ciudades = data;
+      }, error:(error)=>{
+        this.dialog.open(GenericDialogComponent, {
+          data: {
+            type: 'error',
+            title: 'Quitar Animal',
+            body: 'Ocurrio un error al obtener sus domicilios',
+            cancelText: 'Cerrar',
+          }
+        });
+      }
+    });
+  }
+
+  onCiudadSelected(ciudad: number) {
+    this.getContactos(ciudad);
+  }
+
+  getContactos(ciudad: number){
+    this.veterinarieService.getEmergencia(ciudad).subscribe({
       next:(data) =>{
         if (data && data.estado != "ERROR"){
           this.contactos = data.contactos;
+          this.mostrarContactos = true;
         } else {
           this.dialog.open(GenericDialogComponent, {
             data: {
