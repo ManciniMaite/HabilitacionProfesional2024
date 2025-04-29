@@ -131,8 +131,23 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al recuperar un usuarios - 05. " + e.getMessage());
-			logger.error("ERROR AL eliminsar USUARIOS",e);
+			result.setMensaje("Ocurrio un error al recuperar pregunta secreta - 05. " + e.getMessage());
+			logger.error("ERROR recuperar pregunta secreta",e);
+		}
+    	
+    	return result;
+    }
+    
+    @RequestMapping(value = Constantes.URL_PATH_PREGUNTA_SECRETA, method = RequestMethod.POST)
+    public UsuarioResponse<?> preguntaSecreta(@RequestBody UsuarioRequest usuarioRequest) {
+    	UsuarioResponse<?> result;
+    	try {
+    		result = usuarioService.preguntaSecreta(usuarioRequest);
+		} catch (Exception e) {
+			result = new UsuarioResponse<>();
+			result.setEstado("ERROR");
+			result.setMensaje("Ocurrio un error al comparar pregunta secreta - 05. " + e.getMessage());
+			logger.error("ERROR al comparar pregunta secreta",e);
 		}
     	
     	return result;
@@ -146,8 +161,8 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al recuperar un usuarios - 05. " + e.getMessage());
-			logger.error("ERROR AL eliminsar USUARIOS",e);
+			result.setMensaje("Ocurrio un error al cambiar contraseña - 05. " + e.getMessage());
+			logger.error("ERROR al cambiar contraseña",e);
 		}
     	
     	return result;

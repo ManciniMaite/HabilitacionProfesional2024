@@ -17,6 +17,11 @@ public class UsuarioRequest {
     private String correo;
     private String contrasenia;
     
+//variables recuperar usuario
+    private String dniCuit;
+    private String pregunta;
+    private String respuesta;
+    
 //PACIENTE - VETERINARIO
     private String nombre;
     private String apellido;

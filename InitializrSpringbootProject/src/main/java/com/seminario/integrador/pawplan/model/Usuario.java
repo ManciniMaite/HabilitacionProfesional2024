@@ -34,6 +34,9 @@ public class Usuario {
     @Column(unique = true,  nullable = true)
     private String correo;
     private String contrasenia;
+    
+    private String pregunta;
+    private String respuesta;
 
     private boolean isActivo = true;
     

@@ -224,21 +224,26 @@ public class UsuarioService {
 		switch (usuario.getRole()) {
 		case PACIENTE:
 			Cliente cliente = (Cliente) usuario;
-			if (cliente.getDni().equals(usuarioRequest.getDni())) {
+			if (cliente.getDni().equals(usuarioRequest.getDniCuit())) {
+				
+				consulta.setPregunta(cliente.getPregunta());
 				consulta.setEstado("OK");
+				
 				return consulta;
 			}
 			break;
 		case VETERINARIA:
 			Veterinaria veterinaria = (Veterinaria) usuario;
-			if (veterinaria.getCuit().equals(usuarioRequest.getCuit())) {
+			if (veterinaria.getCuit().equals(usuarioRequest.getDniCuit())) {
+				consulta.setPregunta(veterinaria.getPregunta());
 				consulta.setEstado("OK");
 				return consulta;
 			}
 			break;
 		case VETERINARIO:
 			Veterinario veterinario = (Veterinario) usuario;
-			if (veterinario.getDni().equals(usuarioRequest.getDni())) {
+			if (veterinario.getDni().equals(usuarioRequest.getDniCuit())) {
+				consulta.setPregunta(veterinario.getPregunta());
 				consulta.setEstado("OK");
 				return consulta;
 			}
@@ -251,6 +256,28 @@ public class UsuarioService {
 		return null;
 		
 	}
+	
+	
+	public UsuarioResponse<?> preguntaSecreta(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
+		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
+
+		Usuario usuario = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuario == null) {
+			throw new PawPlanRuleException(0,"USUARIO NULL");
+		}
+		
+		if( ! usuario.getRespuesta().equals(usuarioRequest.getRespuesta())) {
+			throw new PawPlanRuleException(1,"RESPUESTA INCORRECTA");
+		}
+		
+		consulta.setEstado("OK");
+		
+		return consulta;
+			
+		
+	}
+	
 	
 	public UsuarioResponse<?> nuevaContrasena(UsuarioRequest usuarioRequest) throws PawPlanRuleException {
 		UsuarioResponse<Usuario> consulta = new UsuarioResponse<>();
@@ -300,6 +327,9 @@ public class UsuarioService {
 			cliente.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 		}
 
+		cliente.setPregunta(usuarioRequest.getPregunta());
+		cliente.setRespuesta(usuarioRequest.getRespuesta());
+		
 		cliente = clienteRepository.save(cliente);
 
 		// if(usuarioRequest.getAnimales()!=null){
@@ -347,6 +377,9 @@ public class UsuarioService {
 
 		veterinaria.setCuit(usuarioRequest.getCuit());
 		veterinaria.setHorarioAtencion(usuarioRequest.getHorario());
+		
+		veterinaria.setPregunta(usuarioRequest.getPregunta());
+		veterinaria.setRespuesta(usuarioRequest.getRespuesta());
 		
 		if(usuarioRequest.isLocalFisico()){
 			veterinaria.setHaceDomicilio(false);
@@ -398,6 +431,9 @@ public class UsuarioService {
 		veterinario.setCorreo(usuarioRequest.getCorreo());
 		veterinario.setContrasenia(sessionManager.hashPassword(usuarioRequest.getContrasenia()));
 
+		veterinario.setPregunta(usuarioRequest.getPregunta());
+		veterinario.setRespuesta(usuarioRequest.getRespuesta());
+		
 		veterinario.setFechaNac(usuarioRequest.getFechaNac());
 		veterinario.setMatricula(usuarioRequest.getMatricula());
 		veterinario.setEsIndependiente(usuarioRequest.isEsIndependiente());
