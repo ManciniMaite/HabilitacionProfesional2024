@@ -260,10 +260,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
 
   habilitarAgregarHorario(){
     const corrido = this.horarioTrabajo.get('corrido')?.value;
-    // console.log('Corrido:', corrido);  // Verifica si el valor de 'corrido' es correcto
 
     const diasSeleccionados = (this.semana().dias?.filter(d => d.seleccionado).length ?? 0) > 0;
-    // console.log('Días seleccionados:', diasSeleccionados);  // Verifica si al menos un día está seleccionado
 
     if (!diasSeleccionados) {
       // console.log('No se han seleccionado días.');
@@ -274,11 +272,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
       // Si "corrido" está marcado, los campos de horario de apertura y cierre deben tener valor
       const horarioApertura = this.horarioTrabajo.get('horarioApertura')?.value;
       const horarioCierre = this.horarioTrabajo.get('horarioCierre')?.value;
-      // console.log('Horario Apertura:', horarioApertura);  // Verifica el valor de 'horarioApertura'
-      // console.log('Horario Cierre:', horarioCierre);      // Verifica el valor de 'horarioCierre'
       
-      const isValidHorario = !!horarioApertura && !!horarioCierre;
-      // console.log('Es válido el horario (corrido):', isValidHorario);  // Verifica si ambos horarios están completos
+      const isValidHorario = !!horarioApertura && !!horarioCierre && this.validarHorarios();
       
       return isValidHorario; // Si ambos tienen valor, habilitar el botón
     } else if(corrido == 'no') {
@@ -288,15 +283,9 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
       const tardeInicio = this.horarioTrabajo.get('tardeInicio')?.value;
       const tardeFin = this.horarioTrabajo.get('tardeFin')?.value;
 
-      // console.log('Mañana Inicio:', mañanaInicio); // Verifica el valor de 'mañanaInicio'
-      // console.log('Mañana Fin:', mañanaFin);       // Verifica el valor de 'mañanaFin'
-      // console.log('Tarde Inicio:', tardeInicio);   // Verifica el valor de 'tardeInicio'
-      // console.log('Tarde Fin:', tardeFin);         // Verifica el valor de 'tardeFin'
-
       const isValidPartesDelDia = !!mañanaInicio && !!mañanaFin && !!tardeInicio && !!tardeFin;
-      // console.log('Es válido el horario (no corrido):', isValidPartesDelDia);  // Verifica si todos los campos están completos
       
-      return isValidPartesDelDia; // Si todos los campos están completos, habilitar el botón
+      return isValidPartesDelDia && this.validarHorarios(); // Si todos los campos están completos, habilitar el botón
     } else{
       return false;
     }
@@ -311,11 +300,11 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
           const yaExiste = this.diasHorarios.some(dh => dh.dia === element.nombre);
           if (!yaExiste) {
 
-            console.log('Horario service: ', this.service.crearDiaHorarioAtencionCorrido(
-              element.nombre,
-              this.horarioTrabajo.get('horarioApertura')?.value,
-              this.horarioTrabajo.get('horarioCierre')?.value
-            ))
+            // console.log('Horario service: ', this.service.crearDiaHorarioAtencionCorrido(
+            //   element.nombre,
+            //   this.horarioTrabajo.get('horarioApertura')?.value,
+            //   this.horarioTrabajo.get('horarioCierre')?.value
+            // ))
 
             this.diasHorarios.push(
               this.service.crearDiaHorarioAtencionCorrido(
@@ -335,14 +324,14 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
           const yaExiste = this.diasHorarios.some(dh => dh.dia === element.nombre);
           if (!yaExiste) {
 
-            console.log('Dia horario del service: ', this.service.crearDiaHorarioAtencionCortado(
-              element.nombre,
-              this.horarioTrabajo.get('mañanaInicio')?.value,
-              this.horarioTrabajo.get('mañanaFin')?.value,
-              this.horarioTrabajo.get('tardeInicio')?.value,
-              this.horarioTrabajo.get('tardeFin')?.value
-            ))
-              console.log('element.nombre: ', element.nombre);
+            // console.log('Dia horario del service: ', this.service.crearDiaHorarioAtencionCortado(
+            //   element.nombre,
+            //   this.horarioTrabajo.get('mañanaInicio')?.value,
+            //   this.horarioTrabajo.get('mañanaFin')?.value,
+            //   this.horarioTrabajo.get('tardeInicio')?.value,
+            //   this.horarioTrabajo.get('tardeFin')?.value
+            // ))
+              // console.log('element.nombre: ', element.nombre);
             this.diasHorarios.push(
               this.service.crearDiaHorarioAtencionCortado(
                 element.nombre,
@@ -498,6 +487,50 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
         console.log(error);
       }
     });
+  }
+
+  validarHorarios(): boolean{
+    if(this.horarioTrabajo.value.corrido == 'si' && this.horarioTrabajo.get('horarioApertura')?.value && this.horarioTrabajo.get('horarioCierre')?.value ){
+      // console.log(this.horarioTrabajo.get('horarioApertura')?.value)
+      // console.log(this.horarioTrabajo.get('horarioCierre')?.value)
+      let horaInicio = this.parseTimeToDate(this.horarioTrabajo.get('horarioApertura')?.value);
+      let horaFin = this.parseTimeToDate(this.horarioTrabajo.get('horarioCierre')?.value);
+      return (horaFin>horaInicio);
+    } else if(this.horarioTrabajo.value.corrido == 'no' &&
+      this.horarioTrabajo.get('mañanaInicio')?.value &&
+      this.horarioTrabajo.get('mañanaFin')?.value &&
+      this.horarioTrabajo.get('tardeInicio')?.value &&
+      this.horarioTrabajo.get('tardeFin')?.value 
+    ){
+
+      let mañanaInicio = this.parseTimeToDate(this.horarioTrabajo.get('mañanaInicio')?.value);
+      let mañanaFin = this.parseTimeToDate(this.horarioTrabajo.get('mañanaFin')?.value);
+      let tardeInicio = this.parseTimeToDate(this.horarioTrabajo.get('tardeInicio')?.value);
+      let tardeFin = this.parseTimeToDate(this.horarioTrabajo.get('tardeFin')?.value);
+
+      return (mañanaInicio<mañanaFin) && (mañanaFin<tardeInicio) && (tardeInicio<tardeFin);
+    } else{
+      return false;
+    }
+  }
+
+  parseTimeToDate(timeString: string): Date {
+    const [time, meridian] = timeString.split(' ');
+    const [hoursStr, minutesStr] = time.split(':');
+    let hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+  
+    if (meridian === 'PM' && hours !== 12) {
+      hours += 12;
+    }
+    if (meridian === 'AM' && hours === 12) {
+      hours = 0;
+    }
+  
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0); // solo hora y minuto
+  
+    return date;
   }
 
 }

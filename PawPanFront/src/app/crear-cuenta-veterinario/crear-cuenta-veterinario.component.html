@@ -215,6 +215,7 @@
                                                     </div>
                                                 </mat-form-field>
                                             </div>
+                                            <span *ngIf="!validarHorarios()" style="width: 100%; display: flex; justify-content: center;">Los horarios ingresados no son validos</span>
                                         </mat-card>
         
                                         <!-- Horario cortado -->
@@ -261,6 +262,7 @@
                                                     </div>
                                                 </mat-form-field>
                                             </div>
+                                            <span *ngIf="!validarHorarios()" style="width: 100%; display: flex; justify-content: center;">Los horarios ingresados no son validos</span>
                                         </mat-card>
                                     </div>
         
