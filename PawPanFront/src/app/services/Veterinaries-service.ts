@@ -89,8 +89,8 @@ export class VeterinariesService {
     return this.http.get<any>(this.baseURL+"/veterinaries/"+dni);
   }
 
-  getEmergencia():Observable<EmergenciaRs>{
-    return this.http.get<EmergenciaRs>(this.baseURL+"/Emergencia");
+  getEmergencia(ciudad: number):Observable<EmergenciaRs>{
+    return this.http.get<EmergenciaRs>(this.baseURL+"/Emergencia/"+ciudad);
   }
 
 }
