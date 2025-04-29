@@ -25,13 +25,21 @@ public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>
 	
 	@Query(value = """
 	        select distinct
+				
 				case when razon_social is null then 
 					u.nombre||' '||u.apellido 
 				else 
 					u.razon_social
-					end as nombre,
-					d.calle||' '||d.numero||', '||c.nombre as domicilio,
+				end as nombre,
+				
+				case when (es_independiente=false or hace_domicilio = false) then
+					d.calle||' '||d.numero||', '||c.nombre
+				else
+					null
+				end as domicilio,
+					
 					u.telefono
+				
 				from usuario u 
 					inner join domicilio d ON d.usuario_id = u.id
 					inner join ciudad c ON c.id = d.ciudad_id
