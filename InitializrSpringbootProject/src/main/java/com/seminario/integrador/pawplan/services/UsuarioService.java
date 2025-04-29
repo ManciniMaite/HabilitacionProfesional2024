@@ -232,6 +232,7 @@ public class UsuarioService {
 				return consulta;
 			} else {
 				consulta.setEstado("ERROR");
+				consulta.setMensaje("ERROR");
 			}
 			break;
 		case VETERINARIA:
@@ -242,6 +243,7 @@ public class UsuarioService {
 				return consulta;
 			} else {
 				consulta.setEstado("ERROR");
+				consulta.setMensaje("ERROR");
 			}
 			break;
 		case VETERINARIO:
@@ -252,6 +254,7 @@ public class UsuarioService {
 				return consulta;
 			} else {
 				consulta.setEstado("ERROR");
+				consulta.setMensaje("ERROR");
 			}
 			break;
 		default:
