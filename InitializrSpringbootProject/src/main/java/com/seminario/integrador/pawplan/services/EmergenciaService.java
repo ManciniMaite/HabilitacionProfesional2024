@@ -38,7 +38,7 @@ public class EmergenciaService {
 	 @Autowired
 	 private VeterinarioRepository veterinarioRepository;
 	
-	public EmergenciaResponse emergencia() {
+	public EmergenciaResponse emergencia(long ciudadId) {
 		
 		EmergenciaResponse result = new EmergenciaResponse();
 		
@@ -67,12 +67,9 @@ public class EmergenciaService {
 			return result;
 		}
 		
-		//obtener direccion del usuario
-		Domicilio domicilio = domicilioRepository.findByUsuarioId(cliente.getId()).get(0);
-		
 		//obtener veterianarias en horario laboral y que hagan guardias		
 		List<Contactos> contactos = new ArrayList<>();
-		for (Object[] row : veterinarioRepository.findByCiudadHorario(domicilio.getCiudad().getId()) ) {
+		for (Object[] row : veterinarioRepository.findByCiudadHorario(ciudadId) ) {
 		    contactos.add(new Contactos(
 		        (String) row[0],
 		        (String) row[1],
