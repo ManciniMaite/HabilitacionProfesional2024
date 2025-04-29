@@ -232,7 +232,7 @@ public class UsuarioService {
 				return consulta;
 			} else {
 				consulta.setEstado("ERROR");
-				consulta.setMensaje("ERROR");
+				consulta.setMensaje("Los datos ingresado no son correctos");
 			}
 			break;
 		case VETERINARIA:
@@ -243,7 +243,7 @@ public class UsuarioService {
 				return consulta;
 			} else {
 				consulta.setEstado("ERROR");
-				consulta.setMensaje("ERROR");
+				consulta.setMensaje("Los datos ingresado no son correctos");
 			}
 			break;
 		case VETERINARIO:
@@ -254,7 +254,7 @@ public class UsuarioService {
 				return consulta;
 			} else {
 				consulta.setEstado("ERROR");
-				consulta.setMensaje("ERROR");
+				consulta.setMensaje("Los datos ingresado no son correctos");
 			}
 			break;
 		default:
