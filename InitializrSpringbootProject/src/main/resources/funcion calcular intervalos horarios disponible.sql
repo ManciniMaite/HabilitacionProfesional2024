@@ -1,5 +1,3 @@
-DROP FUNCTION IF EXISTS public.calcular_turnos_disponibles;
-
 CREATE OR REPLACE FUNCTION public.calcular_turnos_disponibles(
 	p_usuario_id bigint,
 	p_dia date)
@@ -71,7 +69,7 @@ BEGIN
         FROM Dia_Horario_Atencion d
         JOIN Usuario u ON u.id = d.id_usuario
         JOIN Horario h ON h.dia_horario_atencion_id = d.id
-        WHERE u.id = id_us --Si usamos el p_usuario_id y el veterinario trabaja para una veterinaria entonces no vamos a tener el horario :)
+        WHERE u.id = id_us
           AND upper(d.dia) = (
               CASE EXTRACT(DOW FROM p_dia)
                   WHEN 0 THEN 'DOMINGO'
@@ -127,7 +125,7 @@ BEGIN
             EXIT WHEN intervalo_actual >= hora_fin;
 
             -- Verificar si el turno está disponible
-
+raise notice '% % , %',p_dia + intervalo_actual,p_dia + intervalo_actual + duracion_predet,intervalo_actual;
             IF NOT EXISTS (
 			    SELECT 1 
 			    FROM Turno t 
@@ -137,13 +135,14 @@ BEGIN
 			    AND (t.fecha_hora, t.fecha_hora + (duracion_minutos || ' minutes')::INTERVAL) 
 			        OVERLAPS 
 			        (p_dia + intervalo_actual, p_dia + intervalo_actual + duracion_predet)
-			    AND e.nombre NOT IN ('CANCELADO')
+			    AND e.nombre NOT IN ('CANCELADO','RECHAZADO')
 			) THEN
 			    -- Agregar turno disponible
 			    horarios_json := horarios_json || jsonb_build_object(
 				    'horaInicio', intervalo_actual,
 				    'horaFin', intervalo_actual + duracion_predet::INTERVAL
 				);
+				raise notice 'agregar';
 			END IF;
 
             -- Avanzar al siguiente turno disponible
