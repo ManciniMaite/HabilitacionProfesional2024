@@ -16,6 +16,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.seminario.integrador.pawplan.controller.values.TurnoFb;
+import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Estado;
 import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.model.Veterinaria;
@@ -46,6 +47,16 @@ public interface TurnoRepository extends CrudRepository<Turno, Long>{
             @Param("estados") List<String> estados);
 
 
+    @Query("SELECT t FROM Turno t " +
+            //"WHERE (t.veterinario = :veterinario OR t.veterinaria = :veterinaria OR (t.veterinario = :veterinario AND t.veterinaria = :veterinaria) ) " +
+            "WHERE t.animal = :animal "+ 
+            "AND DATE(t.fechaHora) = DATE( :fechaHora ) " +
+            "AND t.estado.nombre IN :estados")
+    List<Turno> buscarTurnosPorAnimalYFechaYEstado(
+         @Param("animal") Animal animal,
+         @Param("fechaHora") Date fechaHora,
+         @Param("estados") List<String> estados);
+    
     @Query(value = "SELECT * FROM buscar_turnos_con_filtros_paginado_dinamico(:animalIds, :veterinariaId, :veterinarioId, :estadoId, :fecha, :page, :size, :orderBy, :orderDir)", nativeQuery = true)
     List<TurnoFb> buscarTurnosPagina(
         @Param("animalIds") String animalIds,

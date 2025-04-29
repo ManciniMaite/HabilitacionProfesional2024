@@ -302,11 +302,26 @@ public class TurnoService {
 		
 		//turnoFinal.setEsADomicilio(turnoRequest.isEsDomicilio());
 
-		//se puede guardar el turno??
-		// busco estados a tener en cuenta para poder guardar
+		//CONSULTO LOS TURNOS DEL ANIMAL 
 		List<String> estados = new ArrayList<>();
 		estados.add(EnumEstados.RESERVADO.getNombre());
 		estados.add(EnumEstados.ACEPTADO.getNombre());
+		List<Turno> turnosAnimal = turnoRepository.buscarTurnosPorAnimalYFechaYEstado(
+				turnoFinal.getAnimal(),
+				turnoFinal.getFechaHora(),
+				estados
+				);
+		
+		// si no devuelve turnos, quiere decir que no hay turnos y que puede guardarse sin problemas
+		if(!turnosAnimal.isEmpty()) {
+			result.setEstado(EnumEstadosGenerales.ERROR.getEstado());
+			result.setMensaje("El Animal posee un Turno registrado para esa fecha");
+			logger.error(result.getMensaje());
+			return result;
+		}
+		//se puede guardar el turno??
+		// busco estados a tener en cuenta para poder guardar
+		//AGREGO EL ESTADO FALTANTE EN LA CONSULTA
 		estados.add(EnumEstados.ATENDIDO.getNombre());
 		
 		//busco los turnos con los estados previos
@@ -316,8 +331,9 @@ public class TurnoService {
 				estados
 				);
 
+		
 		// si no devuelve turnos, quiere decir que no hay turnos y que puede guardarse sin problemas
-		if(!turnosObtenidos.isEmpty()) {
+		if(!turnosObtenidos.isEmpty() && !turnosAnimal.isEmpty()) {
 			result.setEstado(EnumEstadosGenerales.ERROR.getEstado());
 			result.setMensaje("Turno ya registrado");
 			logger.error(result.getMensaje());
