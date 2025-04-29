@@ -101,9 +101,8 @@ export class AdmTurnosVeterinariaComponent implements OnInit{
     this.filtros = new FiltroTurnoRq();
     this.filtros.page=0;
     this.filtros.size=10;
-    this.filtros.orderDir="DESC"
+    this.filtros.orderDir="ASC"
     this.filtros.orderBy="fecha_hora"
-    this.filtros.fecha = new Date().toISOString().split('T')[0];
     this.getTurnos();
     this.getVeterinarios();
     this.getClientes();
