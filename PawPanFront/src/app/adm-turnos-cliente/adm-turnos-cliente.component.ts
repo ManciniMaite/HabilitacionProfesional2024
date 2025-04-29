@@ -99,7 +99,7 @@ export class AdmTurnosClienteComponent {
     this.filtros.page=0;
     this.filtros.size=10;
     this.filtros.orderDir="DESC"
-    this.filtros.orderBy="fecha_hora"
+    this.filtros.orderBy="fecha_hora_reserva"
     this.getTurnos();
     this.getMascotas();
   }

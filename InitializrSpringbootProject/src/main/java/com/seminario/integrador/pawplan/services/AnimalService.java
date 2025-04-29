@@ -8,15 +8,22 @@ import com.seminario.integrador.pawplan.controller.values.AnimalRq;
 import com.seminario.integrador.pawplan.controller.values.AnimalRs;
 import com.seminario.integrador.pawplan.controller.values.ListaAnimalesRs;
 import com.seminario.integrador.pawplan.controller.values.Response;
+import com.seminario.integrador.pawplan.enums.EnumEstados;
 import com.seminario.integrador.pawplan.model.Animal;
 import com.seminario.integrador.pawplan.model.Cliente;
+import com.seminario.integrador.pawplan.model.Estado;
 import com.seminario.integrador.pawplan.model.Raza;
+import com.seminario.integrador.pawplan.model.Turno;
 import com.seminario.integrador.pawplan.model.Usuario;
 import com.seminario.integrador.pawplan.repository.AnimalRepository;
+import com.seminario.integrador.pawplan.repository.EstadoRepository;
 import com.seminario.integrador.pawplan.repository.RazaRepository;
+import com.seminario.integrador.pawplan.repository.TurnoRepository;
 import com.seminario.integrador.pawplan.repository.UsuarioRepository;
 import com.seminario.integrador.pawplan.security.PrincipalPawplan;
 import com.seminario.integrador.pawplan.security.utils.IAuthenticationFacade;
+
+import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,10 @@ public class AnimalService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private RazaRepository razaRepository;
+    @Autowired
+    private EstadoRepository estadoRepository;
+    @Autowired
+    private TurnoRepository turnoRepository;
     
     public ListaAnimalesRs findByCliente(String usuario){
     	
@@ -176,6 +187,7 @@ public class AnimalService {
         return rs;
     }
 
+    @Transactional
     public Response delete(Long id) {
         Response rs = new Response();
         try {
@@ -184,6 +196,19 @@ public class AnimalService {
                 rs.setEstado("ERROR");
                 rs.setMensaje("No fue posible recuperar el animal con ID: " + id);
                 return rs;
+            }
+
+            Estado estadoReservado = this.estadoRepository.findByNombre(EnumEstados.RESERVADO.getNombre()).get(0);
+            Estado estadoAceptado  = this.estadoRepository.findByNombre(EnumEstados.ATENDIDO.getNombre()).get(0);
+            Estado estadoCancelado = this.estadoRepository.findByNombre(EnumEstados.CANCELADO.getNombre()).get(0);
+
+            List<Turno> turnos = this.turnoRepository.findByAnimalIdAndEstadoIdIn(id, List.of(estadoReservado.getId(),estadoAceptado.getId()));
+
+            if(!turnos.isEmpty()){
+                for(Turno t:turnos){
+                    t.setEstado(estadoCancelado);
+                    turnoRepository.save(t);
+                }
             }
             
             animalExistente.get().setEsActivo(false);

@@ -4,8 +4,10 @@
         {{ data.type === 'error' ? 'error_outline' : 'info' }}
     </mat-icon>
     
-    <h2 *ngIf="data.title">{{ data.title }}</h2>
+    <h4 *ngIf="data.title">{{ data.title }}</h4>
     <p>{{ data.body }}</p>
+    <p *ngIf="data.body2">{{data.body2}}</p>
+
 
     <div style="margin-top: 20px;">
       <button mat-button color="primary" (click)="onCancel()" *ngIf="data.cancelText">{{ data.cancelText }}</button>

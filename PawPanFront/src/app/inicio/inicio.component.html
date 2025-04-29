@@ -20,12 +20,12 @@
                       La contraseña es requerida.
                     </mat-error>
                 </mat-form-field>
-                <a [routerLink]="'../recuperar-password'" style="margin-bottom: 20px;">¿No recuerdas tu contraseña? Recupérala aquí</a>
-                  
+                
                 <button mat-flat-button class="button" (click)="ingresar()">
                     <span style="margin-right: 15px;">Ingresar</span>
                     <mat-icon>login</mat-icon>
                 </button>
+                <a [routerLink]="'../recuperar-password'" style="margin-bottom: 20px;">¿No recuerdas tu contraseña? Recupérala aquí</a>
                 <a [routerLink]="'../crear-cuenta'">¿No tenes cuenta? Registrate aca</a>
 
             </mat-card-content>

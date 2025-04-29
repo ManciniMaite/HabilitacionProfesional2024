@@ -25,15 +25,15 @@ export class UsuarioService {
   }
 
   obtenerPregunta(rq:UsuarioRequest):Observable<UsuarioResponse>{
-    return this.http.post<UsuarioResponse>(this.baseURL+"/RecuperarContrasena", rq)
+    return this.http.post<UsuarioResponse>(this.baseURL+"/Usuario/RecuperarContrasena", rq)
   }
 
   respuestaSecreta(rq:UsuarioRequest):Observable<UsuarioResponse>{
-    return this.http.post<UsuarioResponse>(this.baseURL+"/RecuperarContrasena", rq)
+    return this.http.post<UsuarioResponse>(this.baseURL+"/Usuario/preguntaSecreta", rq)
   }
 
   nuevaPassword(rq:UsuarioRequest):Observable<UsuarioResponse>{
-    return this.http.post<UsuarioResponse>(this.baseURL+"/NuevaContrasena", rq)
+    return this.http.post<UsuarioResponse>(this.baseURL+"/Usuario/NuevaContrasena", rq)
   }
 
 }

@@ -220,17 +220,17 @@ public class TurnoService {
 				return result;
 		}
 
-		System.out.println("DNI: " + turnoRequest.getDniCliente());
-		System.out.println(usuario.getRole());
-		System.out.println((usuario.getRole() == Role.VETERINARIO || usuario.getRole() == Role.VETERINARIA));
+		// System.out.println("DNI: " + turnoRequest.getDniCliente());
+		// System.out.println(usuario.getRole());
+		// System.out.println((usuario.getRole() == Role.VETERINARIO || usuario.getRole() == Role.VETERINARIA));
 		if ((usuario.getRole() == Role.VETERINARIO || usuario.getRole() == Role.VETERINARIA) && (turnoRequest.getDniCliente() != null && !"".equals(turnoRequest.getDniCliente().trim()))) {
-			System.out.println("PASA FILTRO DNI Y ROL");
+			// System.out.println("PASA FILTRO DNI Y ROL");
 			Optional<Usuario> opCliente = usuarioRepository.findByDniOrCuit(turnoRequest.getDniCliente());
 			if (opCliente.isPresent()) {
-				System.out.println("IS PRESENT");
+				// System.out.println("IS PRESENT");
 				clienteTurno = (Cliente) opCliente.get();
 			} else {
-				System.out.println("NO ESTA EN BD");
+				// System.out.println("NO ESTA EN BD");
 				// Creamos un nuevo cliente con dni y su rol
 				Cliente nuevoCliente = new Cliente();
 				nuevoCliente.setDni(turnoRequest.getDniCliente());
@@ -312,7 +312,6 @@ public class TurnoService {
 		//busco los turnos con los estados previos
 		List<Turno> turnosObtenidos = turnoRepository.buscarTurnosPorVeterinariaVeterinarioYFechaYEstado(
 				turnoFinal.getVeterinario(),
-				turnoFinal.getVeterinaria(),
 				turnoFinal.getFechaHora(),
 				estados
 				);
@@ -596,13 +595,24 @@ public class TurnoService {
 			animalIds = List.of(turnoRequest.getIdAnimal());
 		} else if (turnoRequest.getIdCliente() != null && turnoRequest.getIdCliente() != 0) {
 			//si no hay un id especifico de animal y si hay de cliente entonces buscamos todos los animales que pertenecen a este cliente
-			animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
+
+			//si es el cliente quien consulta => solo mostramos la de los animales activos, caso contrario filtramos por TODOS los animales
+			if(role == Role.PACIENTE){
+				animalIds = animalRepository.findIdsByClienteIdAndEsActivo(turnoRequest.getIdCliente());
+				System.out.println("ANIMALES: " + animalIds);
+			} else {
+				animalIds = animalRepository.findIdsByClienteId(turnoRequest.getIdCliente());
+			}
 		}
 
 		if(animalIds!=null && !animalIds.isEmpty()){
 			animalesId = animalIds.stream().map(Object::toString).collect(Collectors.joining(","));  //[1,2] -> "1,2"
 		} else{
-			animalesId = null;
+			if(role == Role.PACIENTE){
+				animalesId = "-1";
+			} else {
+				animalesId = null;
+			}
 		}
 
 

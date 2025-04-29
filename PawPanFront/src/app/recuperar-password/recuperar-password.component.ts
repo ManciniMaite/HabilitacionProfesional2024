@@ -133,7 +133,7 @@ export class RecuperarPasswordComponent {
         if(data.estado=="OK"){
           this.dialog.open(GenericDialogComponent, {
             data: {
-              title: '¡Cuenta creada con éxito!',
+              title: '¡Contraseña cambiada con éxito!',
               body: "Ahora debes iniciar sesión con tu nueva contraseña",
               acceptText: "Iniciar Sesión",
               onAccept: () => {

@@ -85,7 +85,7 @@
                     </button>
                   </th>
                   <td mat-cell *matCellDef="let element">
-                    <button mat-icon-button (click)="onDialogConfirmar(element, 'Cancelar')" matTooltip="Cancelar turno"  *ngIf="element.estadoId==3">
+                    <button mat-icon-button (click)="onDialogConfirmar(element, 'Cancelar')" matTooltip="Cancelar turno"  *ngIf="element.estadoId==1 || element.estadoId==3">
                       <span class="material-symbols-outlined">
                         close
                       </span>
