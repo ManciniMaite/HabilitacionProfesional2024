@@ -24,4 +24,16 @@ export class UsuarioService {
     return this.http.get<UsuarioResponse>(this.baseURL+"/Usuario/"+dni)
   }
 
+  obtenerPregunta(rq:UsuarioRequest):Observable<UsuarioResponse>{
+    return this.http.post<UsuarioResponse>(this.baseURL+"/RecuperarContrasena", rq)
+  }
+
+  respuestaSecreta(rq:UsuarioRequest):Observable<UsuarioResponse>{
+    return this.http.post<UsuarioResponse>(this.baseURL+"/RecuperarContrasena", rq)
+  }
+
+  nuevaPassword(rq:UsuarioRequest):Observable<UsuarioResponse>{
+    return this.http.post<UsuarioResponse>(this.baseURL+"/NuevaContrasena", rq)
+  }
+
 }

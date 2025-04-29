@@ -106,7 +106,9 @@ export class CrearCuentaLocalComponent implements OnInit {
       correo:       new FormControl('', [Validators.required,Validators.email,validacionFormatoCorreo]),
       telefono:     new FormControl('',[Validators.required,validacionTelefonoBasico]),
       contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
-      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)])
+      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)]),
+      preguntaSecreta:      new FormControl('', Validators.required),
+      respuestaSecreta:     new FormControl('', Validators.required),
     }, { validators: validacionContraseniasIguales });
 
     this.horarioTrabajo = this.fb.group({
@@ -357,6 +359,8 @@ export class CrearCuentaLocalComponent implements OnInit {
 
       request.razonSocial= this.datosLocal.get('razonSocial')?.value;
       request.cuit= this.datosLocal.get('cuit')?.value;
+      request.pregunta=this.datosLocal.get('preguntaSecreta')?.value;
+      request.respuesta=this.datosLocal.get('respuestaSecreta')?.value;
       
       
       request.haceGuardia= this.horarioTrabajo.get('haceGuardia')?.value === 'SI';

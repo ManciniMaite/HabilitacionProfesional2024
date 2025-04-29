@@ -1,5 +1,5 @@
 <div style="text-align: center; padding: 20px;">
-    <mat-icon  
+    <mat-icon  *ngIf="data.type"
         [style.color]="data.type === 'error' ? 'red' : 'green'">
         {{ data.type === 'error' ? 'error_outline' : 'info' }}
     </mat-icon>

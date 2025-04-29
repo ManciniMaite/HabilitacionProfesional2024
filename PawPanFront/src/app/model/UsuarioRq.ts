@@ -12,6 +12,9 @@ export class UsuarioRequest {
     telefono: string;
     correo: string;
     contrasenia: string;
+    dniCuit: string;
+    pregunta: string;
+    respuesta: string;
 
     // PACIENTE - VETERINARIO
     nombre: string;

@@ -23,6 +23,7 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { TurnosPorVeterinarioComponent } from './reportes/turnos-por-veterinario/turnos-por-veterinario.component';
 import { TurnosPorEspecieComponent } from './reportes/turnos-por-especie/turnos-por-especie.component';
 import { TurnosPorEstadoComponent } from './reportes/turnos-por-estado/turnos-por-estado.component';
+import { RecuperarPasswordComponent } from './recuperar-password/recuperar-password.component';
 
 export const routes: Routes = [
   { path: 'home',                                 component: HomeComponent,                 canActivate: [authGuard] },
@@ -45,11 +46,12 @@ export const routes: Routes = [
   { path: 'reportes/turnos-por-estado',           component: TurnosPorEstadoComponent,      canActivate: [authGuard] },
 
   // Rutas públicas
-  { path: 'iniciar-sesion',                       component: InicioComponent },
-  { path: 'crear-cuenta',                         component: CrearCuentaComponent },
-  { path: 'crear-cuenta-paciente',                component: CrearCuentaClienteComponent },
-  { path: 'crear-cuenta-veterinario',             component: CrearCuentaVeterinarioComponent },
-  { path: 'crear-cuenta-local',                   component: CrearCuentaLocalComponent },
+  { path: 'iniciar-sesion',             component: InicioComponent },
+  { path: 'crear-cuenta',               component: CrearCuentaComponent },
+  { path: 'crear-cuenta-paciente',      component: CrearCuentaClienteComponent },
+  { path: 'crear-cuenta-veterinario',   component: CrearCuentaVeterinarioComponent },
+  { path: 'crear-cuenta-local',         component: CrearCuentaLocalComponent },
+  { path: 'recuperar-password',         component: RecuperarPasswordComponent },
 
   { path: '**', redirectTo: 'iniciar-sesion' }
 ];

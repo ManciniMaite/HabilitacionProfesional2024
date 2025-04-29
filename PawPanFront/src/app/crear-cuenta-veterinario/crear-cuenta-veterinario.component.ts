@@ -115,7 +115,9 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
       correo:     new FormControl('', [Validators.required, Validators.email, validacionFormatoCorreo]),
       telefono:   new FormControl('', [Validators.required, validacionTelefonoBasico]),
       contrasenia:          new FormControl('', [Validators.required, Validators.minLength(6)]),
-      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)])
+      validarContrasenia:   new FormControl('', [Validators.required, Validators.minLength(6)]),
+      preguntaSecreta:      new FormControl('', Validators.required),
+      respuestaSecreta:     new FormControl('', Validators.required),
     }, { validators: validacionContraseniasIguales });
 
     this.matricula = this.fb.group({
@@ -234,6 +236,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
            (this.datosPersonales.get('telefono')?.value != null && this.datosPersonales.get('telefono')?.value != undefined && this.datosPersonales.get('telefono')?.value != "")&&
            (this.datosPersonales.get('contrasenia')?.value != null && this.datosPersonales.get('contrasenia')?.value != undefined && this.datosPersonales.get('contrasenia')?.value != "")&&
            (this.datosPersonales.get('validarContrasenia')?.value != null && this.datosPersonales.get('validarContrasenia')?.value != undefined && this.datosPersonales.get('validarContrasenia')?.value != "")&&
+           (this.datosPersonales.get('preguntaSecreta')?.value != null && this.datosPersonales.get('preguntaSecreta')?.value != undefined && this.datosPersonales.get('preguntaSecreta')?.value != "")&&
+           (this.datosPersonales.get('respuestaSecreta')?.value != null && this.datosPersonales.get('respuestaSecreta')?.value != undefined && this.datosPersonales.get('respuestaSecreta')?.value != "")&&
            this.validarContrasenias();
   }
 
@@ -423,14 +427,16 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     let rq: UsuarioRequest = new UsuarioRequest();
 
     rq.tipoUsuario = "VETERINARIO";
-    rq.telefono= this.datosPersonales.get('telefono')?.value
-    rq.correo =this.datosPersonales.get('correo')?.value
-    rq.contrasenia =this.datosPersonales.get('contrasenia')?.value
+    rq.telefono= this.datosPersonales.get('telefono')?.value;
+    rq.correo =this.datosPersonales.get('correo')?.value;
+    rq.contrasenia =this.datosPersonales.get('contrasenia')?.value;
   
-    rq.nombre =this.datosPersonales.get('nombre')?.value
-    rq.apellido =this.datosPersonales.get('apellido')?.value
-    rq.dni= this.datosPersonales.get('dni')?.value
-    rq.fechaNac = this.datosPersonales.get('fechaNac')?.value
+    rq.nombre =this.datosPersonales.get('nombre')?.value;
+    rq.apellido =this.datosPersonales.get('apellido')?.value;
+    rq.dni= this.datosPersonales.get('dni')?.value;
+    rq.fechaNac = this.datosPersonales.get('fechaNac')?.value;
+    rq.pregunta=this.datosPersonales.get('preguntaSecreta')?.value;
+    rq.respuesta=this.datosPersonales.get('respuestaSecreta')?.value;
 
     rq.matricula = this.matricula.get('numeroMatricula')?.value;
     rq.tipoEspeciesIds= []

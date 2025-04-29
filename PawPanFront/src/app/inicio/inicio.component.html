@@ -4,7 +4,7 @@
             <mat-card-title class="cardTitle">
                 <img src="../../assets/LogoCompleto.png" alt="pawplan" style="width: 50%;">
             </mat-card-title>
-            <mat-card-content class="cardContent"> 
+            <mat-card-content class="cardContent">
                 <mat-form-field appearance="outline" class="field">
                     <mat-label>Usuario</mat-label>
                     <input matInput formControlName="usuario" placeholder="Ingrese su usuario" />
@@ -20,6 +20,7 @@
                       La contraseña es requerida.
                     </mat-error>
                 </mat-form-field>
+                <a [routerLink]="'../recuperar-password'" style="margin-bottom: 20px;">¿No recuerdas tu contraseña? Recupérala aquí</a>
                   
                 <button mat-flat-button class="button" (click)="ingresar()">
                     <span style="margin-right: 15px;">Ingresar</span>
