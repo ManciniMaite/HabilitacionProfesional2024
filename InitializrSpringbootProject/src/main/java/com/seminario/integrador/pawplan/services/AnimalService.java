@@ -88,7 +88,7 @@ public class AnimalService {
             
             if(animales == null){
                 rs.setEstado("ERROR");
-                rs.setMensaje("Ocurrio un error al obtener los animales - 02");
+                rs.setMensaje("Ocurrio un error al obtener los animales");
                 return rs;
             }
             
@@ -96,7 +96,7 @@ public class AnimalService {
         } catch (Exception e){
             e.printStackTrace();
             rs.setEstado("ERROR");
-            rs.setMensaje("Ocurrio un error al obtener los animales - 01");
+            rs.setMensaje("Ocurrio un error al obtener los animales");
             return rs;
         }
                
@@ -153,7 +153,7 @@ public class AnimalService {
         } catch (Exception e){
             e.printStackTrace();
             rs.setEstado("ERROR");
-            rs.setMensaje("Ocurrio un error al guardar el animal - 01");
+            rs.setMensaje("Ocurrio un error al guardar el animal");
             return rs;
         }
         return rs;

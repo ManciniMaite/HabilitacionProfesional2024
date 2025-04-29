@@ -51,7 +51,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al obtener todos los usuarios - 01. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al obtener todos los usuarios");
 			logger.error("ERROR AL CONSULTAR USUARIOS",e);
 		}
     	
@@ -68,7 +68,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al crear un usuarios");
 			logger.error("ERROR AL crear USUARIOS",e);
 		}
     	
@@ -86,7 +86,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al crear un usuarios");
 			logger.error("ERROR AL modificar USUARIOS",e);
 		}
     	
@@ -103,7 +103,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al crear un usuarios - 02. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al eliminar un usuarios");
 			logger.error("ERROR AL eliminsar USUARIOS",e);
 		}
     	
@@ -131,7 +131,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al recuperar pregunta secreta - 05. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al recuperar pregunta secreta");
 			logger.error("ERROR recuperar pregunta secreta",e);
 		}
     	
@@ -146,7 +146,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al comparar pregunta secreta - 05. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al comparar pregunta secreta");
 			logger.error("ERROR al comparar pregunta secreta",e);
 		}
     	
@@ -161,7 +161,7 @@ public class UsuarioRestController {
 		} catch (Exception e) {
 			result = new UsuarioResponse<>();
 			result.setEstado("ERROR");
-			result.setMensaje("Ocurrio un error al cambiar contraseña - 05. " + e.getMessage());
+			result.setMensaje("Ocurrio un error al cambiar contraseña");
 			logger.error("ERROR al cambiar contraseña",e);
 		}
     	
