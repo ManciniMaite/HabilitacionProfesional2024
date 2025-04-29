@@ -37,10 +37,10 @@ public class Turno {
     @ManyToOne()
     @JoinColumn(name = "animal_id")
     private Animal animal;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "veterinaria_id")
     private Veterinaria veterinaria;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "veterinario_id")
     private Veterinario veterinario;
     private boolean esADomicilio;
