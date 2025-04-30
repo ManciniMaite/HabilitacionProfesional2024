@@ -284,7 +284,8 @@ export class NuevoTurnoComponent implements OnInit{
     this.banderaNuevoAnimal=false;
     this.idVeterinarioTurno=0;
     this.limpiarFormAnimal();
-    this.getAnimalesDeCliente(cliente.clienteId);
+    //this.getAnimalesDeCliente(cliente.clienteId);
+    this.getAnimalesByDni(cliente.dni);
   }
 
   getAnimalesDeCliente(id: number) {
