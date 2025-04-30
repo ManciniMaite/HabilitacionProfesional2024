@@ -35,7 +35,7 @@
                             @if(animales && animales.length>0 && !banderaBuscarCliente){
                                 <div>
                                     <mat-form-field appearance="outline" style="width: 400px;">
-                                    <mat-label>Filtrar por mascota</mat-label>
+                                    <mat-label>Seleccionar mascota</mat-label>
                                     <mat-select [(ngModel)]="idAnimalTurno">
                                         <mat-option *ngFor="let animal of animales" [value]="animal.id" (click)="selectAnimal()">
                                         {{ animal.nombre }}
@@ -81,7 +81,7 @@
                             @if(animales && animales.length>0){
                                 <div>
                                     <mat-form-field appearance="outline" style="width: 400px;">
-                                    <mat-label>Filtrar por mascota</mat-label>
+                                    <mat-label>Seleccionar mascota</mat-label>
                                     <mat-select [(ngModel)]="idAnimalTurno">
                                         <mat-option *ngFor="let animal of animales" [value]="animal.id" (click)="selectAnimal()">
                                         {{ animal.nombre }}
