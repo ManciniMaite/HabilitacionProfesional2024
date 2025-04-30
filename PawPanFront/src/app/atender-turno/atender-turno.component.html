@@ -71,7 +71,7 @@
                     </div>
                 </mat-card-content>
                 <mat-card-actions style="display: flex; justify-content: end;">
-                    <button mat-flat-button (click)="onDialogSave()">Guardar</button>
+                    <button mat-flat-button (click)="onDialogSave()"  [disabled]="deshabilitarGuardar()">Guardar</button>
                 </mat-card-actions>
             }
             @if(cargando){

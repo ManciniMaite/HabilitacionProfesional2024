@@ -104,7 +104,7 @@
                                 </div>
                             </form>
                         </mat-step>
-                        <mat-step [completed]="matriculaValidada">
+                        <mat-step [stepControl]="matricula">
                             <form [formGroup]="matricula">
                                 <ng-template matStepLabel>Matrícula</ng-template>
                                 <div style="display: flex; flex-direction: column;">
@@ -296,15 +296,12 @@
                                             </mat-chip-row>
                                         </ng-container>
                                     </mat-chip-set>
-                                        
-            
-                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                        <button mat-button matStepperPrevious>Anterior</button>
-                                    </div>
+                                    
                                 </form>
                                 <form [formGroup]="ubicacion">
                                     <ng-template matStepLabel>Domicilio</ng-template>
                                     <div style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        Ingrese su dirección
                                         <mat-form-field appearance="outline" style="margin-bottom: 5px; width: 80%;">
                                             <mat-label>Ciudad</mat-label>
                                             <mat-select formControlName="ciudad" required>
@@ -323,6 +320,9 @@
                                     </div>
                                 </form>
                             }
+                            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                <button mat-button matStepperPrevious>Anterior</button>
+                            </div>
                             <div style="display: flex; flex-direction: row; justify-content: flex-end;" *ngIf="habilitarCrearCuenta()">
                                 <button mat-button (click)="onConfirmar()">Crear cuenta</button>
                             </div>

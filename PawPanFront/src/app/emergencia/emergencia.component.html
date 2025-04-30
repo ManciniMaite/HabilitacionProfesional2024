@@ -24,6 +24,9 @@
             @if (vete.domicilio) {
               <p>Domicilio: <b>{{vete.domicilio}}</b></p>
             }
+            @if(!vete.domicilio){
+              Atencion a domicilio
+            }
           </mat-expansion-panel>
         }
       </mat-accordion>

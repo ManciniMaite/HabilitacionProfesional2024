@@ -32,6 +32,8 @@ export class AgregarVeterinarioComponent {
 
   private _snackBar = inject(MatSnackBar);
 
+  mensaje:string="";
+
   constructor(
     private dialogRef: MatDialogRef<AgregarVeterinarioComponent>,
     private dialog: MatDialog,
@@ -39,7 +41,7 @@ export class AgregarVeterinarioComponent {
     private service: VeterinariesService
   ) {
     this.form = this.fb.group({
-      dni: new FormControl('',Validators.required)
+      dni: new FormControl('',[Validators.required,Validators.minLength(7),Validators.maxLength(8)])
     });
   }
 
@@ -47,6 +49,9 @@ export class AgregarVeterinarioComponent {
     this.service.buscarPorDni(this.form.get('dni')?.value).subscribe({
       next: (data)=>{
         this.usuario=data;
+        if(this.usuario==null){
+          this.mensaje = "No se encontró un profesional con el DNI indicado"
+        }
       }, error:(error)=>{
         console.log(error);
       }

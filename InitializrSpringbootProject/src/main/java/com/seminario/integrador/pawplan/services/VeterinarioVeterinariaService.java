@@ -256,6 +256,14 @@ public class VeterinarioVeterinariaService {
     public Usuario getByDni(String dni){
         Optional<Usuario> us = this.usuarioRepository.findByDniOrCuit(dni); 
 
-        return us.get();
+        if(us.isPresent()){
+            if(us.get().getRole()  != Role.VETERINARIO){
+                return null;
+            } else{
+                return us.get();
+            }
+        }
+
+        return null;
     }
 }

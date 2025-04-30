@@ -92,7 +92,13 @@ public class UsuarioService {
 		try{
 			Optional<Usuario> usuario = usuarioRepository.findByDniOrCuit(us);
 			if(usuario.isPresent()){
-				rs.setUsuario(usuario.get());
+				if(usuario.get().getRole()!=Role.PACIENTE){
+					rs.setEstado("ERROR");
+					rs.setMensaje("El DNI ingresado se encuentra registrado en la aplicacion como Profesional");
+					return rs;
+				}else{
+					rs.setUsuario(usuario.get());
+				}
 			} else {
 				rs.setUsuario(null);
 			}

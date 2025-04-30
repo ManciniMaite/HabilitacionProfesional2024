@@ -121,7 +121,8 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
     }, { validators: validacionContraseniasIguales });
 
     this.matricula = this.fb.group({
-      numeroMatricula: new FormControl('',Validators.required)
+      numeroMatricula: new FormControl('',Validators.required),
+      matriculaVerificada: new FormControl('',Validators.requiredTrue)
     });
 
     this.formaTrabajo = this.fb.group({
@@ -219,6 +220,7 @@ export class CrearCuentaVeterinarioComponent implements OnInit{
           this.mensajeMatricula=data.mensaje;
         }  else{
           this.mensajeMatricula=data.mensaje;
+          this.matricula.get('matriculaVerificada')?.setValue(true);
           this.matriculaValidada = true;
         }
       }, error: (error)=>{

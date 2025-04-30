@@ -276,6 +276,7 @@ export class AdmReservarTurnoComponent implements OnInit, OnDestroy {
   }
 
   getHorariosDisponibles(){
+    this.turnero.get('hora')?.setValue(null);
     let rq: DisponibilidadRq = new DisponibilidadRq();
     //rq.fecha = this.obtenerFechaFormateada();
     rq.fecha = this.turnero.get('fecha')?.value;

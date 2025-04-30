@@ -129,6 +129,10 @@ export class AtenderTurnoComponent implements OnInit {
     });
   }
 
+  deshabilitarGuardar(){
+    return !this.descripcion || this.descripcion.trim() === "";
+  }
+
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }

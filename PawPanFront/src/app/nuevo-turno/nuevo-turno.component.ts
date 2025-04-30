@@ -355,11 +355,13 @@ export class NuevoTurnoComponent implements OnInit{
   }
 
   getAnimalesByDni(dni:string){
-
     this.animalService.getAnimales(dni).subscribe({
       next:(data)=>{
         if(data.estado!="ERROR"){
           this.animales = data.animales
+          if(this.animales.length ==0){
+            this.banderaNuevoAnimal = true;
+          }
         } else{
           this.dialog.open(GenericDialogComponent, {
             data: {
@@ -423,6 +425,7 @@ export class NuevoTurnoComponent implements OnInit{
 
 
   getHorariosDisponibles(){
+    this.turnero.get('hora')?.setValue(null);
     let rq: DisponibilidadRq = new DisponibilidadRq();
     //rq.fecha = this.obtenerFechaFormateada();
     rq.fecha = this.turnero.get('fecha')?.value;
@@ -468,7 +471,7 @@ export class NuevoTurnoComponent implements OnInit{
       data: {
         type: 'normal',
         title: 'Reservar turno',
-        body: '¿Está seguro de que desea reservar un turno el día: ' + fechaFormateada + 'a las ' + this.turnero.get('hora')?.value.horaInicio + 'hs, ?' ,
+        body: '¿Está seguro de que desea reservar un turno el día: ' + fechaFormateada + 'a las ' + this.turnero.get('hora')?.value.horaInicio + 'hs?' ,
         acceptText: 'Sí, continuar',
         cancelText: 'Cancelar',
         onAccept: () => {
