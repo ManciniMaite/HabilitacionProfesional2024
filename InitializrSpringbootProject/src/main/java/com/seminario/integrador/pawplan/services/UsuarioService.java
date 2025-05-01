@@ -402,6 +402,8 @@ public class UsuarioService {
 			veterinaria.setHaceDomicilio(true);
 		}
 
+		veterinaria.setHaceGuardia(usuarioRequest.isHaceGuardia());
+
 		veterinaria = veterinariaRepository.save(veterinaria);
 		
 		if(usuarioRequest.getDomicilio() != null){
