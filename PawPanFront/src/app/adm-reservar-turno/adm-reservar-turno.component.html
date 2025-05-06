@@ -91,7 +91,7 @@
                                     <ng-container>
                                       <mat-label style="margin-top: 15px;">Seleccioná un profesional</mat-label>
                                       <span *ngIf="veterinarios.length===0"> Lo sentimos, no hay veterinarios disponibles</span>
-                                      <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                      <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;" (click)="limpiarFechaHora()">
                                         <mat-radio-button *ngFor="let vete of veterinarios" [value]="vete.id">
                                           {{ vete.nombre }} {{ vete.apellido }}
                                         </mat-radio-button>
@@ -115,7 +115,7 @@
                                           @if(veterinaries.value.veterinariaSeleccionada){
                                               <div>
                                                 <mat-label style="margin-top: 15px;">Selecciona un profesional de la Veterinaria</mat-label>
-                                                <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;">
+                                                <mat-radio-group formControlName="veterinario" style="margin-left: 20px; display: flex; flex-direction: column;" (click)="limpiarFechaHora()">
                                                   <mat-radio-button *ngFor="let empleado of  getVeterinariosDeVeterinaria(veterinaries.value.veterinariaSeleccionada)" [value]="empleado.id">
                                                     {{ empleado.nombre }} {{ empleado.apellido }}
                                                   </mat-radio-button>
@@ -147,7 +147,7 @@
                                 <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Fecha:</mat-label>
-                                        <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="minFecha">
+                                        <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="minFecha" (dateChange)="getHorariosDisponibles()">
                                         <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                                         <mat-datepicker-toggle matIconSuffix [for]="dp3" ></mat-datepicker-toggle>
                                         <mat-datepicker #dp3 disabled="false"></mat-datepicker>
@@ -155,7 +155,7 @@
                                             La fecha debe ser igual o posterior a hoy.
                                           </mat-error>
                                     </mat-form-field>
-                                    <button mat-button (click)="getHorariosDisponibles()">Consultar</button>
+                                    <!-- <button mat-button (click)="getHorariosDisponibles()">Consultar</button> -->
                                 </div>
                                 @if (horarios.length > 0) {
                                     <div style="margin-top: 15px;">

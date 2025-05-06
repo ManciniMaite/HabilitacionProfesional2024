@@ -98,7 +98,9 @@
                         }
     
                         @if(esClienteNuevo){
-                            No se encontró un usuario con el DNI ingresado, pero no te preocupes, ingresaremos el turno para el DNI indicado.
+                            <div style="width: 100%; display: flex; justify-content: center;">
+                                No se encontró un usuario con el DNI ingresado, pero no te preocupes, ingresaremos el turno para el DNI indicado.
+                            </div>
                         }
                         @if(banderaNuevoAnimal){
                             <mat-card-subtitle style="width: 100%; display: flex; justify-content: center;">Ingresá los datos del nuevo animal</mat-card-subtitle>
@@ -166,7 +168,7 @@
                                     <div style="margin-top: 15px; display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
                                         <mat-form-field  appearance="outline">
                                             <mat-label>Fecha:</mat-label>
-                                            <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="date">
+                                            <input matInput formControlName="fecha" [matDatepicker]="dp3" [min]="date" (dateChange)="getHorariosDisponibles()">
                                             <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                                             <mat-datepicker-toggle matIconSuffix [for]="dp3" ></mat-datepicker-toggle>
                                             <mat-datepicker #dp3 disabled="false"></mat-datepicker>
@@ -174,7 +176,7 @@
                                                 La fecha debe ser igual o posterior a hoy.
                                             </mat-error>
                                         </mat-form-field>
-                                        <button mat-button (click)="getHorariosDisponibles()" [disabled]="!turnero.get('fecha')?.value">Consultar</button>
+                                        <!-- <button mat-button (click)="getHorariosDisponibles()" [disabled]="!turnero.get('fecha')?.value">Consultar</button> -->
                                     </div>
                                     @if (horarios.length > 0) {
                                         <div style="margin-top: 15px;">

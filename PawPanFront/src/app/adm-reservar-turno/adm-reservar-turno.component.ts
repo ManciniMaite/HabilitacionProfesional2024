@@ -407,4 +407,10 @@ export class AdmReservarTurnoComponent implements OnInit, OnDestroy {
     this.idVeterinaria=0;
   }
 
+  limpiarFechaHora(){
+    this.turnero.reset();
+    this.busquedaTurnos = false;
+    this.horarios=[];
+  }
+
 }
