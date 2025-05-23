@@ -48,8 +48,10 @@ public interface VeterinarioRepository extends CrudRepository<Veterinario, Long>
 				where 
 					(u.hace_guardia = true and c.id= :idCiudad ) 
 					or 
-					(CURRENT_TIME BETWEEN h.hora_inicio::time AND h.hora_fin::time
-						 and upper(dh.dia) = (
+					(CURRENT_TIME BETWEEN 
+						REPLACE(REPLACE(h.hora_inicio, ' AM', ''), ' PM', '')::time AND 
+    					REPLACE(REPLACE(h.hora_fin, ' AM', ''), ' PM', '')::time
+					AND upper(dh.dia) = (
 				              CASE EXTRACT(DOW FROM now())
 				                  WHEN 0 THEN 'DOMINGO'
 				                  WHEN 1 THEN 'LUNES'
